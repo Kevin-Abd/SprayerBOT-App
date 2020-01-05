@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>VideoPlayer.qml</file>
+        <file>MachineStatus.qml</file>
+        <file>SpeedGaugeStyle.qml</file>
+        <file>TankLevel.qml</file>
+        <file>VerticalGaugeStyle.qml</file>
+        <file>ApplicationRate.qml</file>
+        <file>BoomHeight.qml</file>
+        <file>Triangle.qml</file>
+        <file>NozzleStatus.qml</file>
+        <file>Nozzle.qml</file>
+        <file>CoverageMap.qml</file>
+        <file>Weather.qml</file>
+        <file>ForecastIcon.qml</file>
+        <file>WeatherIcon.qml</file>
+        <file>BigForecastIcon.qml</file>
+        <file>Forecast.qml</file>
+        <file>EngineStartStop.qml</file>
+        <file>ValueSource.qml</file>
+        <file>CurrentWeather.qml</file>
+        <file>RectangularButton.qml</file>
+        <file>XButton.qml</file>
+        <file>NotificationsManager.js</file>
+    </qresource>
+</RCC>
