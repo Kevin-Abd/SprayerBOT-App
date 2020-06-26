@@ -11,8 +11,8 @@ Item {
     property real level
     property string name
     property real minValue: 0
-    property real maxValue: 20
-    property real tickInterval: 5
+    property real maxValue: 5
+    property real tickInterval: 1
     property real minorTickInterval: 1
 
     Gauge {
@@ -66,7 +66,7 @@ Item {
         anchors {
             bottomMargin: -10
             bottom: verticalGauge.top
-            horizontalCenterOffset: 25
+            horizontalCenterOffset: 22.5
             horizontalCenter: parent.horizontalCenter
         }
 
@@ -84,7 +84,7 @@ Item {
                 font.pixelSize: Math.min(12, base.width * 0.2)
                 anchors {
                     verticalCenterOffset: -8
-                    horizontalCenterOffset: -3.5
+                    horizontalCenterOffset: -7.5
                     verticalCenter: parent.verticalCenter
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -93,14 +93,14 @@ Item {
             Text {
                 id: unitLabel
 
-                text: "L"
+                text: "gal"
                 color: "Black"
-                font.pixelSize: 10
+                font.pixelSize: 11
                 font.weight: Font.DemiBold
                 anchors {
                     left: tankText.right
                     bottom: tankText.bottom
-                    leftMargin: width - 2.5
+                    leftMargin: 3
                 }
             }
 
@@ -110,7 +110,7 @@ Item {
                 text: name
                 color: "black"
                 bottomPadding: 7.5
-                font.pixelSize: 8
+                font.pixelSize: 10
                 font.letterSpacing: 0.5
                 anchors {
                     top: tankText.bottom

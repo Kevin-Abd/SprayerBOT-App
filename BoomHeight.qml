@@ -25,6 +25,7 @@ Item {
             nozzle1Status.state = "blocked"
             if (NotificationsManager.numberOfEntries(notificationsList, notification1) === 0) {
                 notificationsList.append({message: notification1, status: "error"})
+                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
             }
 
         } else if (value === "on") {
@@ -41,6 +42,7 @@ Item {
             nozzle2Status.state = "blocked"
             if (NotificationsManager.numberOfEntries(notificationsList, notification2) === 0) {
                 notificationsList.append({message: notification2, status: "error"})
+                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
             }
         } else if (value === "on") {
             nozzle2Status.state = "on"
@@ -56,6 +58,7 @@ Item {
             nozzle3Status.state = "blocked"
             if (NotificationsManager.numberOfEntries(notificationsList, notification3) === 0) {
                 notificationsList.append({message: notification3, status: "error"})
+                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
             }
         } else if (value === "on") {
             nozzle3Status.state = "on"
@@ -71,6 +74,7 @@ Item {
             nozzle4Status.state = "blocked"
             if (NotificationsManager.numberOfEntries(notificationsList, notification4) === 0) {
                 notificationsList.append({message: notification4, status: "error"})
+                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
             }
         } else if (value === "on") {
             nozzle4Status.state = "on"
@@ -86,6 +90,7 @@ Item {
             nozzle5Status.state = "blocked"
             if (NotificationsManager.numberOfEntries(notificationsList, notification5) === 0) {
                 notificationsList.append({message: notification5, status: "error"})
+                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
             }
         } else if (value === "on") {
             nozzle5Status.state = "on"
@@ -101,6 +106,7 @@ Item {
             nozzle6Status.state = "blocked"
             if (NotificationsManager.numberOfEntries(notificationsList, notification6) === 0) {
                 notificationsList.append({message: notification6, status: "error"})
+                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
             }
         } else if (value === "on") {
             nozzle6Status.state = "on"
@@ -117,8 +123,9 @@ Item {
     Gauge {
         id: verticalGauge
 
-        minimumValue: 50
-        maximumValue: 80
+        minimumValue: 20
+        maximumValue: 30
+        tickmarkStepSize: 5
         minorTickmarkCount: 4
         value: boomHeightElement.val
 

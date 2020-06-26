@@ -79,9 +79,18 @@ ApplicationWindow {
                     stopButton.checked = false;
                     stopButton.mainColor = "Red";
 
-                    coverageMap.active = true       // Activate the map's "navigating" state
+                    coverageMap.active = true           // Activate the map's "navigating" state
                     coverageMap.state = "navigating"
-                    liveValue.startUpdates()        // Start receiving updates from agbotwebserver
+                    //liveValue.startUpdates()          // Start receiving updates from agbotwebserver
+                    if (sim.start == false) {
+                        sim.start = true                // start simulation
+                    }
+                    else {
+                        sim.pause = false
+                        rate1.value = sim.appRate1
+                        rate2.value = sim.appRate2
+                        speedometer.value = sim.speed
+                    }
 
                     /* Replace the notifications bar with an empty string while removing
                       removing instructional and nominal messages from the notifications list. */
@@ -113,8 +122,8 @@ ApplicationWindow {
                 Layout.topMargin: 5
                 Layout.bottomMargin: 5
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: root.width * 0.45
-                Layout.preferredHeight: parent.height * 0.45
+                Layout.preferredWidth: root.width * 0.475
+                Layout.preferredHeight: parent.height * 0.475
 
                 MachineStatus {
                     id: statusIndicator
@@ -131,8 +140,8 @@ ApplicationWindow {
                 Item {
                     id: notificationsContainer
 
-                    height: parent.height * 0.9
-                    width: parent.width * 0.9
+                    height: parent.height * 0.8
+                    width: parent.width * 0.85
                     anchors.left: statusIndicator.right
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -140,11 +149,11 @@ ApplicationWindow {
                         id: alertMessage
 
                         text: qsTr(notificationsBar.alert)
-                        font.pixelSize: Math.max(11, parent.width * 0.035)
+                        font.pixelSize: Math.max(12, parent.width * 0.0425)
                         horizontalAlignment: Text.AlignVCenter
                         wrapMode: Text.Wrap
                         anchors.centerIn: parent
-                        anchors.leftMargin: 7
+                        anchors.leftMargin: 7.5
                         width: parent.width
                     }
                 }
@@ -175,7 +184,7 @@ ApplicationWindow {
                     fontSizeMode: Text.HorizontalFit
                     font.weight: Font.Bold
                     anchors.left: parent.left
-                    anchors.bottomMargin: 63.75
+                    anchors.bottomMargin: 70
                     anchors.right: parent.right
                     anchors.top: buttonLabel2.bottom
                     anchors.bottom: parent.bottom
@@ -194,7 +203,7 @@ ApplicationWindow {
                     font.weight: Font.Bold
                     font.letterSpacing: 1.5
                     font.capitalization: Font.AllUppercase
-                    anchors.bottomMargin: 25
+                    anchors.bottomMargin: 27
                     anchors.leftMargin: 2
                     anchors.topMargin: -5
                     anchors.fill: parent
@@ -221,7 +230,10 @@ ApplicationWindow {
                     startButton.mainColor = "Green";
 
                     coverageMap.active = false
-                    liveValue.stopUpdates()
+                    // liveValue.stopUpdates()
+                    if (sim.start == true) {
+                        sim.pause = true                // pause simulation
+                    }
 
                     NotificationsManager.removeNotification(notificationsList,
                                                             notificationsList.startupInstruction)
@@ -352,8 +364,8 @@ ApplicationWindow {
                                                         id: tank1
 
                                                         name: "Tank 1"
-                                                        maxValue: 100
-                                                        tickInterval: 25
+                                                        maxValue: 25
+                                                        tickInterval: 5
                                                         minorTickInterval: 0
                                                         Layout.leftMargin: parent.width * 0.0725
                                                         Layout.topMargin: parent.height * 0.25
@@ -394,8 +406,8 @@ ApplicationWindow {
                                                         id: tank2
 
                                                         name: "Tank 2"
-                                                        maxValue: 20
-                                                        tickInterval: 5
+                                                        maxValue: 5
+                                                        tickInterval: 1
                                                         minorTickInterval: 0
                                                         Layout.leftMargin: parent.width * 0.0925
                                                         Layout.topMargin: parent.height * 0.25
@@ -465,7 +477,7 @@ ApplicationWindow {
                                             anchors {
                                                 verticalCenter: parent.verticalCenter
                                                 horizontalCenter: parent.horizontalCenter
-                                                verticalCenterOffset: 5
+                                                verticalCenterOffset: 12.5
                                                 horizontalCenterOffset: 7
                                             }
 
@@ -490,11 +502,11 @@ ApplicationWindow {
                                             Text {
                                                 id: unitLabel
 
-                                                text: " cm"
+                                                text: " in"
 
                                                 color: "Black"
                                                 font.weight: Font.DemiBold
-                                                font.pixelSize: Math.max(12, parent.width * 0.20)
+                                                font.pixelSize: Math.max(12, parent.width * 0.2)
                                                 anchors.left: valueText.right
                                                 anchors.bottom: valueText.bottom
 
@@ -508,7 +520,7 @@ ApplicationWindow {
                                                 color: "black"
                                                 bottomPadding: 3.5
                                                 font.letterSpacing: 1.15
-                                                font.pixelSize: Math.max(7, parent.width * 0.11)
+                                                font.pixelSize: Math.max(8, parent.width * 0.125)
 
                                                 anchors {
                                                     topMargin: 3.5
@@ -541,27 +553,61 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Item {
-                                id: travelSpeed
+                                id: gauges
 
                                 Layout.preferredWidth: parent.width
                                 Layout.preferredHeight: parent.height * 0.45
 
-                                CircularGauge {
-                                    id: speedometer
+                                RowLayout {
+                                    spacing: 5
+                                    anchors.fill: parent
 
-                                    readonly property string highSpeedWarning: "The machine is moving too fast!"
-                                    readonly property string lowSpeedWarning: "The machine is moving too slow!"
+                                    Item {
+                                        id: travelSpeed
 
-                                    height: parent.height * 0.90
-                                    width: height
+                                        Layout.preferredWidth: parent.width * 0.45
+                                        Layout.preferredHeight: parent.height
 
-                                    stepSize: 1
-                                    maximumValue: 15            // maximum speed
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: parent.width * 0.025
-                                    anchors.verticalCenter: parent.verticalCenter
+                                        CircularGauge {
+                                            id: speedometer
 
-                                    style: SpeedGaugeStyle {}
+                                            readonly property string highSpeedWarning: "The machine is moving too fast!"
+                                            readonly property string lowSpeedWarning: "The machine is moving too slow!"
+
+                                            height: parent.height * 0.90
+                                            width: parent.width
+
+                                            stepSize: 0.1
+                                            maximumValue: 9            // maximum speed
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: parent.width * 0.02
+                                            anchors.verticalCenter: parent.verticalCenter
+
+                                            style: SpeedGaugeStyle {}
+                                        }
+                                    }
+
+                                    Item {
+                                        id: engineSpeed
+
+                                        Layout.preferredWidth: parent.width * 0.45
+                                        Layout.preferredHeight: parent.height
+
+                                        CircularGauge {
+                                            id: tachometer
+
+                                            height: parent.height * 0.90
+                                            width: parent.width
+
+                                            stepSize: 0.1
+                                            maximumValue: 8            // maximum rev per min
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: parent.width * 0.015
+                                            anchors.verticalCenter: parent.verticalCenter
+
+                                            style: TachometerStyle {}
+                                        }
+                                    }
                                 }
                             }
 
@@ -629,20 +675,22 @@ ApplicationWindow {
         }
     }
 
-    ValueSource {
-        id: liveValue
+    Simulation {
+        id: sim
 
         onSpeedChanged: {
             speedometer.value = speed
 
-            if (speed > 0 && speed <= 5) {
+            if (speed > 0 && speed <= 3) {
                 if (NotificationsManager.numberOfEntries(notificationsList, speedometer.lowSpeedWarning) === 0) {
                     notificationsList.append({message: speedometer.lowSpeedWarning, status: "warning"})
+                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
                 }
                 NotificationsManager.removeNotification(notificationsList, speedometer.highSpeedWarning)
-            } else if (speed > 10) {
+            } else if (speed > 6) {
                 if (NotificationsManager.numberOfEntries(notificationsList, speedometer.highSpeedWarning) === 0) {
                     notificationsList.append({message: speedometer.highSpeedWarning, status: "warning"})
+                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
                 }
                 NotificationsManager.removeNotification(notificationsList, speedometer.lowSpeedWarning)
             } else {
@@ -651,17 +699,23 @@ ApplicationWindow {
             }
         }
 
+        onRpmChanged: {
+            tachometer.value = sim.rpm
+        }
+
         onBoomHeightChanged: {
             boomHeightElement.val = boomHeight
 
-            if (boomHeight > 75) {
+            if (boomHeight > 28) {
                 if (NotificationsManager.numberOfEntries(notificationsList, boomHeightElement.highHeightWarning) === 0) {
                     notificationsList.append({message: boomHeightElement.highHeightWarning, status: "warning"})
+                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
                 }
                 NotificationsManager.removeNotification(notificationsList, boomHeightElement.lowHeightWarning)
-            } else if (boomHeight < 55) {
+            } else if (boomHeight < 22) {
                 if (NotificationsManager.numberOfEntries(notificationsList, boomHeightElement.lowHeightWarning) === 0) {
                     notificationsList.append({message: boomHeightElement.lowHeightWarning, status: "warning"})
+                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
                 }
                 NotificationsManager.removeNotification(notificationsList, boomHeightElement.highHeightWarning)
             } else {
@@ -671,70 +725,70 @@ ApplicationWindow {
         }
 
         onTankLevel1Changed: {
-            tank1.level = tankLevel1
+            tank1.level = sim.tankLevel1
         }
 
-        onApplicationRate1Changed: {
-            rate1.value = applicationRate1
+        onAppRate1Changed: {
+            rate1.value = appRate1
         }
 
         onTankLevel2Changed: {
-            tank2.level = tankLevel2
+            tank2.level = sim.tankLevel2
         }
 
-        onApplicationRate2Changed: {
-            rate2.value = applicationRate2
+        onAppRate2Changed: {
+            rate2.value = appRate2
         }
 
-        onNozzle1StateChanged: {
-            if (pumpState === true && nozzle1State === true && applicationRate1 < 15.0) {
+        onNozzle1StatusChanged: {
+            if (nozzle1Status == "blocked") {
                 boomHeightElement.changeNozzle1State("blocked")
-            } else if (pumpState == true && nozzle1State == true) {
+            } else if (nozzle1Status == "on") {
                 boomHeightElement.changeNozzle1State("on")
             } else {
                 boomHeightElement.changeNozzle1State("off")
             }
         }
-        onNozzle2StateChanged: {
-            if (nozzle2State === true && applicationRate2 < 15.0) {
+        onNozzle2StatusChanged: {
+            if (nozzle2Status == "blocked") {
                 boomHeightElement.changeNozzle2State("blocked")
-            } else if (nozzle2State == true) {
+            } else if (nozzle2Status == "on") {
                 boomHeightElement.changeNozzle2State("on")
             } else {
                 boomHeightElement.changeNozzle2State("off")
             }
         }
-        onNozzle3StateChanged: {
-            if (pumpState === true && nozzle3State === true && applicationRate1 < 15.0) {
+        onNozzle3StatusChanged: {
+            if (nozzle3Status == "blocked") {
                 boomHeightElement.changeNozzle3State("blocked")
-            } else if (pumpState == true && nozzle3State == true) {
+            } else if (nozzle3Status == "on") {
                 boomHeightElement.changeNozzle3State("on")
             } else {
                 boomHeightElement.changeNozzle3State("off")
             }
         }
-        onNozzle4StateChanged: {
-            if (pumpState === true && nozzle4State === true && applicationRate1 < 15.0) {
+        onNozzle4StatusChanged: {
+            if (nozzle1Status == "blocked") {
                 boomHeightElement.changeNozzle4State("blocked")
-            } else if (pumpState == true && nozzle4State == true) {
+            } else if (nozzle1Status == "on") {
                 boomHeightElement.changeNozzle4State("on")
             } else {
                 boomHeightElement.changeNozzle4State("off")
             }
         }
-        onNozzle5StateChanged: {
-            if (nozzle5State === true && applicationRate2 < 15.0) {
+        onNozzle5StatusChanged: {
+            if (nozzle1Status == "blocked") {
                 boomHeightElement.changeNozzle5State("blocked")
-            } else if (nozzle5State == true) {
+            } else if (nozzle1Status == "on") {
                 boomHeightElement.changeNozzle5State("on")
             } else {
                 boomHeightElement.changeNozzle5State("off")
             }
         }
-        onNozzle6StateChanged: {
-            if (pumpState === true && nozzle6State === true && applicationRate1 < 15.0) {
+        onNozzle6StatusChanged: {
+            if (nozzle1Status == "blocked") {
                 boomHeightElement.changeNozzle6State("blocked")
-            } else if (pumpState == true && nozzle6State == true) {
+            } else if (nozzle1Status == "on") {
                 boomHeightElement.changeNozzle6State("on")
             } else {
                 boomHeightElement.changeNozzle6State("off")
@@ -742,10 +796,23 @@ ApplicationWindow {
         }
     }
 
+    Loader {
+        source: "Simulation.qml"
+        onLoaded: {
+            tank1.level = sim.tankLevel1
+            tank2.level = sim.tankLevel2
+            rate1.value = sim.appRate1
+            rate2.value = sim.appRate2
+            speedometer.value = sim.speed
+            boomHeightElement.val = sim.boomHeight
+        }
+    }
+
     onClosing: {
         leftPlayer.stop()
         frontPlayer.stop()
         rightPlayer.stop()
-        liveValue.stopUpdates()
+        sim.start = false
+        // liveValue.stopUpdates()
     }
 } // End of ApplicationWindow

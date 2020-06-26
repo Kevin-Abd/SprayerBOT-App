@@ -114,7 +114,7 @@ GaugeStyle {
 
     tickmarkLabel: Text {
         text: styleData.value
-        font.pixelSize: 10
+        font.pixelSize: 11
         antialiasing: true
         color: "black"
     }

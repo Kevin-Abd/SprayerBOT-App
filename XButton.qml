@@ -16,7 +16,7 @@ Button {
 
     Text {
         text: qsTr("x")
-        font.pixelSize: 10
+        font.pixelSize: 11
         anchors.centerIn: parent
     }
 }

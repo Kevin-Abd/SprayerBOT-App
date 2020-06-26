@@ -7,10 +7,12 @@ DelayButton {
     id: control
 
     property bool active: false                 // button state
+    property int pressCounter: 0                // number of times the button is pressed
     property string mainColor: "Green"          // button when deactivated
     property string activeColor: "#17a81a"      // button color when activated
+    readonly property int pressLimit: 3            // number of 'pressed' events needed to trigger live mode
 
-    delay: 300                                  // 300 ms
+    delay: 350                                  // 350 ms
     Layout.leftMargin: 10
 
     background: Item {
@@ -49,7 +51,7 @@ DelayButton {
         onPaint: {
             var ctx = getContext("2d")
             ctx.clearRect(0, 0, width, height)
-            ctx.strokeStyle = "Gray"
+            ctx.strokeStyle = "Black"
             ctx.lineWidth = 4
             ctx.beginPath()
             var startAngle = Math.PI / 5 * 7

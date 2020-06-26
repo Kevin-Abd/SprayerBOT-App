@@ -42,16 +42,11 @@ Popup {
             Layout.preferredWidth: iconRow.iconWidth
             Layout.preferredHeight: iconRow.iconHeight
 
-            time:  (model.hasValidWeather ?
-                      model.forecast[1].timeOfDay : "??")
-            temperature:  (model.hasValidWeather ?
-                         model.forecast[1].temperature : "??")
-            weatherIcon: (model.hasValidWeather ?
-                      model.forecast[1].weatherIcon : "01d")
-            description: (model.hasValidWeather ?
-                      model.forecast[1].weatherDescription : "No Weather Data")
-            wind: (model.hasValidWeather ?
-                       model.forecast[1].windSpeed : "??")
+            time:  (model.hasValidWeather ? model.forecast[1].timeOfDay : "??")
+            temperature:  (model.hasValidWeather ? model.forecast[1].temperature : "??")
+            weatherIcon: (model.hasValidWeather ? model.forecast[1].weatherIcon : "01d")
+            description: (model.hasValidWeather ? model.forecast[1].weatherDescription : "No Weather Data")
+            wind: (model.hasValidWeather ? model.forecast[1].windSpeed : "??")
         }
     }
 

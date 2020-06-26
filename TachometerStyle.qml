@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls.Styles 1.4
 
 CircularGaugeStyle {
-    id: speedGaugeStyle
+    id: tachometerStyle
 
     property real xCenter: outerRadius
     property real yCenter: outerRadius
@@ -10,7 +10,16 @@ CircularGaugeStyle {
     property real needleBaseWidth: outerRadius * 0.06
     property real needleLength: outerRadius - tickmarkInset * 0.5
 
-    readonly property real speed: control.value
+    readonly property real rpm: control.value
+
+    minorTickmarkInset: tickmarkInset
+    tickmarkInset: outerRadius * 0.15
+    labelInset: outerRadius * 0.35
+    minimumValueAngle: -120
+    maximumValueAngle: 120
+    minorTickmarkCount: 1
+    tickmarkStepSize: 2
+    labelStepSize: 1
 
     function degToRad(degrees) {
         return degrees * (Math.PI / 180);
@@ -35,32 +44,16 @@ CircularGaugeStyle {
         ctx.lineWidth = tickmarkInset / 1.25;
         ctx.strokeStyle = "green";
         ctx.arc(xCenter, yCenter, outerRadius - ctx.lineWidth / 1.5,
-                degToRad(valueToAngle(3) - 90), degToRad(valueToAngle(6) - 90));
+                degToRad(valueToAngle(0) - 90), degToRad(valueToAngle(6) - 90));
         ctx.stroke();
 
         ctx.beginPath();
         ctx.lineWidth = tickmarkInset / 1.25;
         ctx.strokeStyle = "red";
         ctx.arc(xCenter, yCenter, outerRadius - ctx.lineWidth / 1.5,
-                degToRad(valueToAngle(0) - 90), degToRad(valueToAngle(3) - 90));
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.lineWidth = tickmarkInset / 1.25;
-        ctx.strokeStyle = "red";
-        ctx.arc(xCenter, yCenter, outerRadius - ctx.lineWidth / 1.5,
-                degToRad(valueToAngle(6) - 90), degToRad(valueToAngle(speedometer.maximumValue) - 90));
+                degToRad(valueToAngle(6) - 90), degToRad(valueToAngle(8) - 90));
         ctx.stroke();
     }
-
-    minorTickmarkInset: tickmarkInset
-    tickmarkInset: outerRadius * 0.15
-    labelInset: outerRadius * 0.35
-    minimumValueAngle: -135
-    maximumValueAngle: 135
-    minorTickmarkCount: 1
-    tickmarkStepSize: 2
-    labelStepSize: 1
 
     tickmark: Rectangle {
         implicitWidth: outerRadius * 0.02
@@ -134,9 +127,9 @@ CircularGaugeStyle {
            anchors.centerIn: parent
 
            Text {
-               id: speedText
+               id: rpmText
 
-               text: speed.toFixed()
+               text: rpm.toFixed()
                color: "black"
                font.bold: true
                anchors.centerIn: parent
@@ -144,7 +137,16 @@ CircularGaugeStyle {
            }
 
            Text {
-               text: "mph"
+               text: "x1000"
+               color: "black"
+               anchors.top: rpmText.bottom
+               font.pixelSize: outerRadius * 0.15
+               anchors.topMargin: outerRadius * - 0.015
+               anchors.horizontalCenter: parent.horizontalCenter
+           }
+
+           Text {
+               text: "rev/min"
                color: "black"
                anchors.top: parent.bottom
                font.pixelSize: outerRadius * 0.2

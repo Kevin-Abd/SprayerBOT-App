@@ -23,5 +23,7 @@
         <file>RectangularButton.qml</file>
         <file>XButton.qml</file>
         <file>NotificationsManager.js</file>
+        <file>Simulation.qml</file>
+        <file>TachometerStyle.qml</file>
     </qresource>
 </RCC>

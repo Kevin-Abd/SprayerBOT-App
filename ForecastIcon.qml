@@ -162,7 +162,7 @@ Item {
 
                 text: top.wind
                 font.weight: Font.DemiBold
-                font.pixelSize: Math.max(8, parent.width * 0.085)
+                font.pixelSize: Math.max(11, parent.width * 0.1)
             }
         }
     }

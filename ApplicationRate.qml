@@ -28,7 +28,7 @@ Item {
 
             anchors {
                 verticalCenterOffset: -10
-                horizontalCenterOffset: -10
+                horizontalCenterOffset: -15
                 leftMargin: unitLabel.width
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
@@ -38,11 +38,11 @@ Item {
         Text {
             id: unitLabel
 
-            text: " L/Ha"
+            text: " gal/ac"
 
             color: "Black"
             font.weight: Font.DemiBold
-            font.pixelSize: Math.max(10, parent.width * 0.125)
+            font.pixelSize: Math.max(12, parent.width * 0.15)
 
             anchors {
                 left: valueText.right
@@ -57,8 +57,8 @@ Item {
             text: "Application Rate"
 
             color: "black"
-            font.letterSpacing: 1.15
-            font.pixelSize: Math.max(7, parent.width * 0.1)
+            font.letterSpacing: 1.125
+            font.pixelSize: Math.max(7, parent.width * 0.125)
             bottomPadding: 5
 
             anchors {

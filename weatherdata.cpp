@@ -414,13 +414,13 @@ void AppModel::refreshWeather()
 
 static QString niceTemperatureString(double t)
 {
-    return QString::number(qRound(t-ZERO_KELVIN)) + QChar(0xB0) + QChar('C');
+    return QString::number(qRound(((t-ZERO_KELVIN) * 1.8) + 32)) + QChar(0xB0) + QChar('F');
 }
 
 static QString niceWindSpeedString(double ws)
 {
-    QString unit = " km/h";
-    return QString::number(qRound(ws * 3.6)) + unit;
+    QString unit = " mph";
+    return QString::number(qRound(ws * 2.23694)) + unit;
 }
 
 static QString niceWindDirectionString(double wd)

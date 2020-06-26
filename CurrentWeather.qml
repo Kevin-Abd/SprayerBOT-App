@@ -18,11 +18,12 @@ Popup {
         id: model
 
         onWeatherChanged: {
-            /* Warn user when wind speed is greater than 20 km/hr
+            /* Warn user when wind speed is greater than 12 mph
                 Reference: https://sprayers101.com/five-tips-for-spraying-in-the-wind/ */
-            if (parseInt(model.weather.windSpeed, 10) > 20) {
+            if (parseInt(model.weather.windSpeed, 10) > 12) {
                 if (NotificationsManager.numberOfEntries(notificationsList, notification) === 0) {
                     notificationsList.append({message: notification, status: "warning"})
+                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
                 }
             } else {
                 NotificationsManager.removeNotification(notificationsList, notification)
@@ -74,7 +75,7 @@ Popup {
                                ? model.weather.windSpeed
                                : "??")
                         font.weight: Font.DemiBold
-                        font.pixelSize: Math.max(10, parent.width * 0.1)
+                        font.pixelSize: Math.max(11, parent.width * 0.115)
                     }
                 }
             }
@@ -108,7 +109,7 @@ Popup {
                                ? model.weather.windDirection
                                : "??")
                         font.weight: Font.DemiBold
-                        font.pixelSize: Math.max(10, parent.width * 0.1)
+                        font.pixelSize: Math.max(11, parent.width * 0.115)
                     }
                 }
             }
