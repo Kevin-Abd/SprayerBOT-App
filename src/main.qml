@@ -67,9 +67,9 @@ ApplicationWindow {
                     startButton.mainColor = "#17a81a";
 
                     // play all the videos
-                    leftPlayer.play();
+                    //leftPlayer.play();
                     frontPlayer.play();
-                    rightPlayer.play();
+                    //rightPlayer.play();
 
                     /* Deactivate emergency stop button by changing the EngineStartStop
                        active and mainColor properties, and the DelayButton checked property.
@@ -81,6 +81,7 @@ ApplicationWindow {
 
                     coverageMap.active = true           // Activate the map's "navigating" state
                     coverageMap.state = "navigating"
+
                     //liveValue.startUpdates()          // Start receiving updates from agbotwebserver
                     if (sim.start == false) {
                         sim.start = true                // start simulation
@@ -221,9 +222,9 @@ ApplicationWindow {
                     stopButton.active = true;
                     stopButton.mainColor = "#b30000";
 
-                    leftPlayer.pause();
+                    //leftPlayer.pause();
                     frontPlayer.pause();
-                    rightPlayer.pause();
+                    //rightPlayer.pause();
 
                     startButton.active = false
                     startButton.checked = false
@@ -267,7 +268,8 @@ ApplicationWindow {
                     spacing: 7
                     anchors.fill: parent
 
-                    VideoPlayer {
+
+                    /**VideoPlayer {
                         id: video1
 
                         source: leftPlayer          // allows for the creation of multiple videos
@@ -280,7 +282,7 @@ ApplicationWindow {
                             loops: MediaPlayer.Infinite
                             onPlaybackStateChanged: video1.state = "after"
                         }
-                    }
+                    }**/
 
                     VideoPlayer {
                         id: video2
@@ -297,7 +299,7 @@ ApplicationWindow {
                         }
                     }
 
-                    VideoPlayer {
+                    /**VideoPlayer {
                         id: video3
 
                         source: rightPlayer
@@ -310,7 +312,7 @@ ApplicationWindow {
                             loops: MediaPlayer.Infinite
                             onPlaybackStateChanged: video3.state = "after"
                         }
-                    }
+                    }**/
                 }
             } // End of videos
 
