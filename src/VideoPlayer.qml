@@ -8,7 +8,7 @@ Item {
     property string view
     property QtObject source
 
-    Layout.preferredWidth: parent.width * (1/3)
+    Layout.preferredWidth: parent.width
     Layout.fillHeight: true
     state: "before"
 
@@ -41,6 +41,7 @@ Item {
         VideoOutput {
             id: videoout
 
+            //fillMode: VideoOutput.Stretch
             anchors.fill: parent
             autoOrientation: true
             source: videoplayer.source

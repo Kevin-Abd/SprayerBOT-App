@@ -10,7 +10,7 @@ DelayButton {
     property int pressCounter: 0                // number of times the button is pressed
     property string mainColor: "Green"          // button when deactivated
     property string activeColor: "#17a81a"      // button color when activated
-    readonly property int pressLimit: 3            // number of 'pressed' events needed to trigger live mode
+    readonly property int pressLimit: 3         // number of 'pressed' events needed to trigger live mode
 
     delay: 350                                  // 350 ms
     Layout.leftMargin: 10
@@ -38,6 +38,7 @@ DelayButton {
         }
     }
 
+    // draws a black line around the button as it's loading
     Canvas {
         id: canvas
 
