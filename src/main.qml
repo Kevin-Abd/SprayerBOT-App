@@ -248,15 +248,13 @@ ApplicationWindow {
                 }
             }
 
+            ButtonAlertPrecived{
+                id: buttonAlertPrecived
+
+            }
+
             SimpleStatus {
                 id: statInd
-//                text: 'OK'
-
-//                Layout.topMargin: 5
-//                Layout.leftMargin: -5
-//                Layout.rightMargin: 15
-//                Layout.bottomMargin: 5
-//                Layout.alignment: Qt.AlignLeft
 
             }
         }
