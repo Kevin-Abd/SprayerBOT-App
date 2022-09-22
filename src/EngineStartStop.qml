@@ -15,6 +15,7 @@ DelayButton {
     delay: 350                                  // 350 ms
     Layout.leftMargin: 10
 
+
     background: Item {
         id: backgroundContainer
 
