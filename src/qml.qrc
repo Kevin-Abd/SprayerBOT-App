@@ -25,5 +25,6 @@
         <file>NotificationsManager.js</file>
         <file>Simulation.qml</file>
         <file>TachometerStyle.qml</file>
+        <file>SimpleStatus.qml</file>
     </qresource>
 </RCC>
