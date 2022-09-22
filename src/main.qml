@@ -330,7 +330,7 @@ ApplicationWindow {
                 id: graphicalElements
 
                 Layout.preferredWidth: parent.width
-                Layout.preferredHeight: parent.height * 0.65
+                Layout.preferredHeight: parent.height * 0.55
 
                 RowLayout {
                     anchors.fill: parent

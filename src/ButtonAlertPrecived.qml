@@ -29,7 +29,7 @@ DelayButton {
 
         width: parent.width
         color: "White"
-        font.pixelSize: 12
+        font.pixelSize: 11
         font.capitalization: Font.AllUppercase
         fontSizeMode: Text.HorizontalFit
         font.weight: Font.Bold
