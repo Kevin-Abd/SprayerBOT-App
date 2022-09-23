@@ -8,8 +8,8 @@ DelayButton {
 
     property bool active: false                 // button state
     property int pressCounter: 0                // number of times the button is pressed
-    property string mainColor: "Red"          // button when deactivated
-    property string activeColor: "#b30000"      // button color when activated
+    property string mainColor: "darkgoldenrod"  // button when deactivated
+    property string activeColor: "goldenrod"    // button color when activated
 
     delay: 500                                  // 350 ms
     Layout.leftMargin: 10
