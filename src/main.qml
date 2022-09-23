@@ -663,6 +663,7 @@ ApplicationWindow {
         function setAlertMessage() {
             notificationsBar.alert = notificationsList.get(counter).message;
             statusIndicator.state = notificationsList.get(counter).status;
+            statInd.setStatus(statusIndicator.state)
         }
 
         triggeredOnStart: true
