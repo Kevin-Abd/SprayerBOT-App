@@ -7,7 +7,6 @@ import QtQuick.Window 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.3
-import "NotificationsManager.js" as NotificationsManager
 
 ApplicationWindow {
     id: root
@@ -95,12 +94,9 @@ ApplicationWindow {
 
                     /* Replace the notifications bar with an empty string while removing
                       removing instructional and nominal messages from the notifications list. */
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.startupInstruction)
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.allClear)
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.emergency)
+                    notificationsList.removeNotification(notificationsList.startupInstruction)
+                    notificationsList.removeNotification(notificationsList.allClear)
+                    notificationsList.removeNotification(notificationsList.emergency)
 
                     notificationsBar.alert = ""
                     statusIndicator.state = "off"
@@ -110,11 +106,11 @@ ApplicationWindow {
             EngineStartStop {
                 id: stopButton
 
-//                Layout.topMargin: 5
-//                Layout.leftMargin: -5
-//                Layout.rightMargin: 15
-//                Layout.bottomMargin: 5
-//                Layout.alignment: Qt.AlignRight
+                //                Layout.topMargin: 5
+                //                Layout.leftMargin: -5
+                //                Layout.rightMargin: 15
+                //                Layout.bottomMargin: 5
+                //                Layout.alignment: Qt.AlignRight
 
                 text: ""                            // Clears the default text
                 mainColor: "Red"
@@ -183,10 +179,8 @@ ApplicationWindow {
                         sim.pause = true                // pause simulation
                     }
 
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.startupInstruction)
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.allClear)
+                    notificationsList.removeNotification(notificationsList.startupInstruction)
+                    notificationsList.removeNotification(notificationsList.allClear)
 
                     statusIndicator.state = "error"
                     notificationsBar.alert = "The machine has been stopped!"
@@ -653,6 +647,22 @@ ApplicationWindow {
             message: "To begin, press and hold the START button."
             status: "off"
         }
+
+
+        function numberOfEntries(arg) {
+            var num = 0
+            for (var i = 0; i < notificationsList.count; i++)
+                if (notificationsList.get(i).message === arg)
+                    num++
+            return num
+        }
+
+        function removeNotification(arg) {
+            for (var i = 0; i < notificationsList.count; i++)
+                if (notificationsList.get(i).message === arg)
+                    notificationsList.remove(i);
+        }
+
     }
 
     Timer {
@@ -695,20 +705,20 @@ ApplicationWindow {
             speedometer.value = speed
 
             if (speed > 0 && speed <= 3) {
-                if (NotificationsManager.numberOfEntries(notificationsList, speedometer.lowSpeedWarning) === 0) {
+                if (notificationsList.numberOfEntries(speedometer.lowSpeedWarning) === 0) {
                     notificationsList.append({message: speedometer.lowSpeedWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
+                    notificationsList.removeNotification(notificationsList.allClear)
                 }
-                NotificationsManager.removeNotification(notificationsList, speedometer.highSpeedWarning)
+                notificationsList.removeNotification(notificationsList, speedometer.highSpeedWarning)
             } else if (speed > 6) {
-                if (NotificationsManager.numberOfEntries(notificationsList, speedometer.highSpeedWarning) === 0) {
+                if (notificationsList.numberOfEntries(speedometer.highSpeedWarning) === 0) {
                     notificationsList.append({message: speedometer.highSpeedWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
+                    notificationsList.removeNotification( notificationsList.allClear)
                 }
-                NotificationsManager.removeNotification(notificationsList, speedometer.lowSpeedWarning)
+                notificationsList.removeNotification(speedometer.lowSpeedWarning)
             } else {
-                NotificationsManager.removeNotification(notificationsList, speedometer.lowSpeedWarning)
-                NotificationsManager.removeNotification(notificationsList, speedometer.highSpeedWarning)
+                notificationsList.removeNotification(speedometer.lowSpeedWarning)
+                notificationsList.removeNotification(speedometer.highSpeedWarning)
             }
         }
 
@@ -720,20 +730,20 @@ ApplicationWindow {
             boomHeightElement.val = boomHeight
 
             if (boomHeight > 28) {
-                if (NotificationsManager.numberOfEntries(notificationsList, boomHeightElement.highHeightWarning) === 0) {
+                if (notificationsList.numberOfEntries(boomHeightElement.highHeightWarning) === 0) {
                     notificationsList.append({message: boomHeightElement.highHeightWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
+                    notificationsList.removeNotification(notificationsList.allClear)
                 }
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.lowHeightWarning)
+                notificationsList.removeNotification(boomHeightElement.lowHeightWarning)
             } else if (boomHeight < 22) {
-                if (NotificationsManager.numberOfEntries(notificationsList, boomHeightElement.lowHeightWarning) === 0) {
+                if (notificationsList.numberOfEntries(boomHeightElement.lowHeightWarning) === 0) {
                     notificationsList.append({message: boomHeightElement.lowHeightWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
+                    notificationsList.removeNotification(notificationsList.allClear)
                 }
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.highHeightWarning)
+                notificationsList.removeNotification(boomHeightElement.highHeightWarning)
             } else {
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.highHeightWarning)
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.lowHeightWarning)
+                notificationsList.removeNotification(boomHeightElement.highHeightWarning)
+                notificationsList.removeNotification(boomHeightElement.lowHeightWarning)
             }
         }
 
