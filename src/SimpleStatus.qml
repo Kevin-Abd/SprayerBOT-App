@@ -6,14 +6,21 @@ import QtQuick.Controls 2.10
 Control {
     id: control
 
-    property bool ok: true                     // Component state
-    property string statOkColor: "DarkGreen"   // Status OK color
-    property string statAlertColor: "#Red"     // Status Alert color
-    property string text: "OK/ALERT"
+    readonly property string statOkColor: "DarkGreen"
+    readonly property string statOkText: "OK"
+
+    readonly property string statAlertColor: "firebrick"
+    readonly property string statAlertText: "ALERT!!!"
+
+    property bool ok: true
+
+    property string text: ok ? statOkText: statAlertText
+    property string color: ok ? statOkColor: statAlertColor
 
     Layout.leftMargin: 5
-    //    Layout.rightMargin: 35
     padding: 5
+
+
 
     contentItem:     Text {
         text: qsTr(parent.text)
@@ -26,11 +33,6 @@ Control {
         font.weight: Font.Bold
 
         fontSizeMode: Text.HorizontalFit
-
-        //        anchors.left: parent.left
-        //        anchors.bottomMargin: 70
-        //        anchors.right: parent.right
-        //        anchors.bottom: parent.bottom
         anchors.fill: parent
 
         style: Text.Normal
@@ -50,6 +52,7 @@ Control {
 
             readonly property real size: Math.min(backgroundContainer.width - 5,
                                                   backgroundContainer.height - 5)
+            color: control.color
 
             width: size * 2
             height: size
@@ -57,13 +60,26 @@ Control {
 
             border.width: 2
             border.color: "#303030"
-
             anchors.centerIn: parent
-            color: control.ok ? control.statOkColor : control.statAlertColor
-
-            opacity: .7
+            opacity: enabled ? 1 : 0.3
 
 
         }
     }
+
+    function setStatus(state) {
+
+        if (state === "off" || state === "nominal"){
+            control.ok = true
+//            console.info(state)
+        }
+        else if (state === "warning" || state === "error"){
+            control.ok = false
+//            console.info(state)
+        }
+        else{
+            console.warn(state)
+        }
+    }
+
 }
