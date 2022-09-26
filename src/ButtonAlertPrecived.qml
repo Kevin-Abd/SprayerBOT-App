@@ -6,15 +6,20 @@ import QtQuick.Controls 2.10
 DelayButton {
     id: control
 
-    property bool active: false                 // button state
     property int pressCounter: 0                // number of times the button is pressed
     property string mainColor: "darkgoldenrod"  // button when deactivated
     property string activeColor: "goldenrod"    // button color when activated
 
-    delay: 500                                  // 350 ms
-    Layout.leftMargin: 10
-
+    delay: 500
+//    Layout.leftMargin: 10
+    enabled: false
     text: ""                            // Clears the default text
+
+    onActivated: {
+        buttonStatusIndicator.setOverride()
+        checked = false
+        enabled = false
+    }
 
     Text {
         id: buttonLabel1
@@ -55,7 +60,7 @@ DelayButton {
             radius: size / 2
             border.color: "#606060"
             anchors.centerIn: parent
-            opacity: enabled ? 1 : 0.3
+            opacity: enabled ? 1 : 0.5
             color: control.down ? control.activeColor : control.mainColor
         }
     }

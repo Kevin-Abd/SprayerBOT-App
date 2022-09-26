@@ -13,12 +13,47 @@ Control {
     readonly property string statAlertText: "ALERT!!!"
 
     property bool ok: true
+    property string last_alert : ""
+    property string last_state : ""
+
+    property bool override: true
+    property string last_alert_override: ""
+    property string last_state_override: ""
 
     property string text: ok ? statOkText: statAlertText
     property string color: ok ? statOkColor: statAlertColor
 
-    Layout.leftMargin: 5
-    padding: 5
+    function setOverride() {
+        last_alert_override = last_alert
+        last_state_override = last_state
+        ok = true
+        override = true
+    }
+
+    function setStatus(alert, state) {
+        last_alert = alert
+        last_state = state
+
+        if (state === "off" || state === "nominal"){
+            ok = true
+            // console.info(state)
+        }
+        else if (state === "warning" || state === "error"){
+            // TODO timer repeats satus & alert
+            buttonAlertPrecived.enabled = true
+            ok = false
+            override = false
+
+            // console.info(state)
+        }
+        else{
+            console.warn(state)
+        }
+        console.warn(backgroundContainer.width + ", "+ backgroundContainer.height)
+    }
+
+//    Layout.leftMargin: 5
+//    padding: 5
 
 
 
@@ -66,20 +101,4 @@ Control {
 
         }
     }
-
-    function setStatus(state) {
-
-        if (state === "off" || state === "nominal"){
-            control.ok = true
-//            console.info(state)
-        }
-        else if (state === "warning" || state === "error"){
-            control.ok = false
-//            console.info(state)
-        }
-        else{
-            console.warn(state)
-        }
-    }
-
 }
