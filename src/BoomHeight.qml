@@ -4,7 +4,6 @@ import LiveVehicleData 1.0
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.12
 import QtQuick.Controls.Material 2.3
-import "NotificationsManager.js" as NotificationsManager
 
 Item {
     id: boomHeightElement
@@ -23,97 +22,78 @@ Item {
     function changeNozzle1State(value) {
         if (value === "blocked") {
             nozzle1Status.state = "blocked"
-            if (NotificationsManager.numberOfEntries(notificationsList, notification1) === 0) {
-                notificationsList.append({message: notification1, status: "error"})
-                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-            }
-
+            notificationsList.addNewAlert(notification1, "error")
         } else if (value === "on") {
             nozzle1Status.state = "on"
-            NotificationsManager.removeNotification(notificationsList, notification1)
+            notificationsList.removeNotification(notification1)
         } else {
             nozzle1Status.state = "off"
-            NotificationsManager.removeNotification(notificationsList, notification1)
+            notificationsList.removeNotification(notification1)
         }
     }
 
     function changeNozzle2State(value) {
         if (value === "blocked") {
             nozzle2Status.state = "blocked"
-            if (NotificationsManager.numberOfEntries(notificationsList, notification2) === 0) {
-                notificationsList.append({message: notification2, status: "error"})
-                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-            }
+            notificationsList.addNewAlert(notification2, "error")
         } else if (value === "on") {
             nozzle2Status.state = "on"
-            NotificationsManager.removeNotification(notificationsList, notification2)
+            notificationsList.removeNotification(notification2)
         } else {
             nozzle2Status.state = "off"
-            NotificationsManager.removeNotification(notificationsList, notification2)
+            notificationsList.removeNotification(notification2)
         }
     }
 
     function changeNozzle3State(value) {
         if (value === "blocked") {
             nozzle3Status.state = "blocked"
-            if (NotificationsManager.numberOfEntries(notificationsList, notification3) === 0) {
-                notificationsList.append({message: notification3, status: "error"})
-                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-            }
+            notificationsList.addNewAlert(notification3, "error")
         } else if (value === "on") {
             nozzle3Status.state = "on"
-            NotificationsManager.removeNotification(notificationsList, notification3)
+            notificationsList.removeNotification(notification3)
         } else {
             nozzle3Status.state = "off"
-            NotificationsManager.removeNotification(notificationsList, notification3)
+            notificationsList.removeNotification(notification3)
         }
     }
 
     function changeNozzle4State(value) {
         if (value === "blocked") {
             nozzle4Status.state = "blocked"
-            if (NotificationsManager.numberOfEntries(notificationsList, notification4) === 0) {
-                notificationsList.append({message: notification4, status: "error"})
-                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-            }
+            notificationsList.addNewAlert(notification4, "error")
         } else if (value === "on") {
             nozzle4Status.state = "on"
-            NotificationsManager.removeNotification(notificationsList, notification4)
+            notificationsList.removeNotification(notification4)
         } else {
             nozzle4Status.state = "off"
-            NotificationsManager.removeNotification(notificationsList, notification4)
+            notificationsList.removeNotification(notification4)
         }
     }
 
     function changeNozzle5State(value) {
         if (value === "blocked") {
             nozzle5Status.state = "blocked"
-            if (NotificationsManager.numberOfEntries(notificationsList, notification5) === 0) {
-                notificationsList.append({message: notification5, status: "error"})
-                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-            }
+            notificationsList.addNewAlert(notification5, "error")
         } else if (value === "on") {
             nozzle5Status.state = "on"
-            NotificationsManager.removeNotification(notificationsList, notification5)
+            notificationsList.removeNotification(notification5)
         } else {
             nozzle5Status.state = "off"
-            NotificationsManager.removeNotification(notificationsList, notification5)
+            notificationsList.removeNotification(notification5)
         }
     }
 
     function changeNozzle6State(value) {
         if (value === "blocked") {
             nozzle6Status.state = "blocked"
-            if (NotificationsManager.numberOfEntries(notificationsList, notification6) === 0) {
-                notificationsList.append({message: notification6, status: "error"})
-                NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-            }
+            notificationsList.addNewAlert(notification6, "error")
         } else if (value === "on") {
             nozzle6Status.state = "on"
-            NotificationsManager.removeNotification(notificationsList, notification6)
+            notificationsList.removeNotification(notification6)
         } else {
             nozzle6Status.state = "off"
-            NotificationsManager.removeNotification(notificationsList, notification6)
+            notificationsList.removeNotification(notification6)
         }
     }
 

@@ -648,6 +648,16 @@ ApplicationWindow {
             status: "off"
         }
 
+        function addNewAlert(notif, status) {
+            if (numberOfEntries(notif) === 0) {
+                append({message: notif, status: status})
+                removeNotification(notificationsList.allClear)
+            }
+        }
+
+        function removeAllClear(){
+            removeNotification(notificationsList.allClear)
+        }
 
         function numberOfEntries(arg) {
             var num = 0
@@ -705,16 +715,10 @@ ApplicationWindow {
             speedometer.value = speed
 
             if (speed > 0 && speed <= 3) {
-                if (notificationsList.numberOfEntries(speedometer.lowSpeedWarning) === 0) {
-                    notificationsList.append({message: speedometer.lowSpeedWarning, status: "warning"})
-                    notificationsList.removeNotification(notificationsList.allClear)
-                }
-                notificationsList.removeNotification(notificationsList, speedometer.highSpeedWarning)
+                notificationsList.addNewAlert(speedometer.lowSpeedWarning, "warning")
+                notificationsList.removeNotification(speedometer.highSpeedWarning)
             } else if (speed > 6) {
-                if (notificationsList.numberOfEntries(speedometer.highSpeedWarning) === 0) {
-                    notificationsList.append({message: speedometer.highSpeedWarning, status: "warning"})
-                    notificationsList.removeNotification( notificationsList.allClear)
-                }
+                notificationsList.addNewAlert(speedometer.highSpeedWarning, "warning")
                 notificationsList.removeNotification(speedometer.lowSpeedWarning)
             } else {
                 notificationsList.removeNotification(speedometer.lowSpeedWarning)
@@ -730,16 +734,10 @@ ApplicationWindow {
             boomHeightElement.val = boomHeight
 
             if (boomHeight > 28) {
-                if (notificationsList.numberOfEntries(boomHeightElement.highHeightWarning) === 0) {
-                    notificationsList.append({message: boomHeightElement.highHeightWarning, status: "warning"})
-                    notificationsList.removeNotification(notificationsList.allClear)
-                }
+                notificationsList.addNewAlert(boomHeightElement.highHeightWarning, "warning")
                 notificationsList.removeNotification(boomHeightElement.lowHeightWarning)
             } else if (boomHeight < 22) {
-                if (notificationsList.numberOfEntries(boomHeightElement.lowHeightWarning) === 0) {
-                    notificationsList.append({message: boomHeightElement.lowHeightWarning, status: "warning"})
-                    notificationsList.removeNotification(notificationsList.allClear)
-                }
+                notificationsList.addNewAlert(boomHeightElement.lowHeightWarning, "warning")
                 notificationsList.removeNotification(boomHeightElement.highHeightWarning)
             } else {
                 notificationsList.removeNotification(boomHeightElement.highHeightWarning)
