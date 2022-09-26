@@ -248,7 +248,7 @@ ApplicationWindow {
             }
 
             SimpleStatus {
-                id: statInd
+                id: buttonStatusIndicator
 
             }
         }
@@ -681,9 +681,16 @@ ApplicationWindow {
         property real counter: 0
 
         function setAlertMessage() {
+            // This function updates visual alerts based on notificationsList/counter
+            // TODO play sound
+            // TODO heptic feedback
+
+            // Update notificationsBar
             notificationsBar.alert = notificationsList.get(counter).message;
             statusIndicator.state = notificationsList.get(counter).status;
-            statInd.setStatus(statusIndicator.state)
+            // Update Status button
+            buttonStatusIndicator.setStatus(notificationsBar.alert, statusIndicator.state)
+
         }
 
         triggeredOnStart: true
