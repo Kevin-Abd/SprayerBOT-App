@@ -49,7 +49,7 @@ Control {
         else{
             console.warn(state)
         }
-        console.warn(backgroundContainer.width + ", "+ backgroundContainer.height)
+        // console.warn(backgroundContainer.width + ", "+ backgroundContainer.height)
     }
 
 //    Layout.leftMargin: 5
@@ -79,7 +79,7 @@ Control {
     background : Item {
         id: backgroundContainer
 
-        implicitWidth: Math.min(72, (root.height + 2) / 7.65)
+        implicitWidth: Math.min(72, (root.height + 2) / 7.65) * 2
         implicitHeight: Math.min(72, (root.height + 2) / 7.65)
 
         Rectangle {
