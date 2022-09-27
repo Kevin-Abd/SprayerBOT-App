@@ -683,16 +683,41 @@ ApplicationWindow {
         id: alertSoundEffect
     }
 
-    Timer {
-        id: timer
+
+    QtObject{
+        id: statusManager
+        property string lastNotif
+        property string lastState
+        property string alert
+        property string state
 
         property real counter: 0
 
-        function statusManager(newState, newNotification){
+        function checkForNewStatus(){
+
+            if (notificationsList.count === 0)
+                notificationsList.setAllClear()
+
+            if (counter < notificationsList.count - 1)
+                counter++
+            else
+                counter = 0
+
+            var state = notificationsList.get(counter).status
+            var notif = notificationsList.get(counter).message
+
+            if (state !== lastState || notif !== lastNotif)
+                processNewStatus(state, notif)
+
+        }
+
+        function processNewStatus(newState, newNotification){
             /* Function to handle new status
              * It is responsible for trigggering warning displays and feedback
              * TODO
              */
+            lastState = newState
+            lastNotif = newNotification
 
             // Update notificationsBar
             notificationsBar.alert = newState
@@ -713,7 +738,7 @@ ApplicationWindow {
                 alertSoundEffect.start()
             }
             else{
-                console.warn(state)
+                console.warn("Warning: got unexpected state: " + state)
             }
         }
 
@@ -727,11 +752,11 @@ ApplicationWindow {
             alertSoundEffect.stop()
         }
 
+    }
 
-        function setAlertMessage() {
-            // This function selects status/notification based on notificationsList + counter
-            statusManager(notificationsList.get(counter).status, notificationsList.get(counter).message)
-        }
+
+    Timer {
+        id: timer
 
         triggeredOnStart: true
         interval: 5000
@@ -739,19 +764,7 @@ ApplicationWindow {
         repeat: true
 
         onTriggered: {
-            if (notificationsList.count === 0) {
-                notificationsList.set(0, {message: notificationsList.allClear, status: "nominal"})
-                counter = 0
-                setAlertMessage()
-            }
-
-            if (counter < notificationsList.count) {
-                setAlertMessage()
-                counter++
-            } else {
-                counter = 0
-                setAlertMessage()
-            }
+            statusManager.checkForNewStatus()
         }
     }
 
