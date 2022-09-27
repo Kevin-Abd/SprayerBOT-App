@@ -720,8 +720,8 @@ ApplicationWindow {
             lastNotif = newNotification
 
             // Update notificationsBar
-            notificationsBar.alert = newState
-            statusIndicator.state = newNotification
+            notificationsBar.alert = newNotification
+            statusIndicator.state = newState
 
             // Update Status button
             // Play sound
@@ -735,7 +735,10 @@ ApplicationWindow {
                 // TODO timer repeats satus & alert
                 buttonAlertPrecived.enabled = true
                 alertSimpleDisplay.setStatusAlert()
-                alertSoundEffect.start()
+
+                if (alertSoundEffect.playing == false)
+                    alertSoundEffect.play()
+                console.info("newSate = "+newState)
             }
             else{
                 console.warn("Warning: got unexpected state: " + state)

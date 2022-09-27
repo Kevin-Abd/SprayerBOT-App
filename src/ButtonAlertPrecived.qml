@@ -16,7 +16,7 @@ DelayButton {
     text: ""                            // Clears the default text
 
     onActivated: {
-        timer.userOverride()
+        statusManager.userOverride()
     }
 
     Text {
