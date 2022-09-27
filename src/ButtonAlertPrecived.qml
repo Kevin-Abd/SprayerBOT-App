@@ -16,9 +16,7 @@ DelayButton {
     text: ""                            // Clears the default text
 
     onActivated: {
-        buttonStatusIndicator.setOverride()
-        checked = false
-        enabled = false
+        timer.userOverride()
     }
 
     Text {
