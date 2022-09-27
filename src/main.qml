@@ -659,6 +659,10 @@ ApplicationWindow {
             removeNotification(notificationsList.allClear)
         }
 
+        function setAllClear(){
+            notificationsList.set(0, {message: notificationsList.allClear, status: "nominal"})
+        }
+
         function numberOfEntries(arg) {
             var num = 0
             for (var i = 0; i < notificationsList.count; i++)
