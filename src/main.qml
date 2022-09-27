@@ -675,22 +675,60 @@ ApplicationWindow {
 
     }
 
+    AlertSoundEffect {
+        id: alertSoundEffect
+    }
+
     Timer {
         id: timer
 
         property real counter: 0
 
+        function statusManager(newState, newNotification){
+            /* Function to handle new status
+             * It is responsible for trigggering warning displays and feedback
+             * TODO
+             */
+
+            // Update notificationsBar
+            notificationsBar.alert = newState
+            statusIndicator.state = newNotification
+
+            // Update Status button
+            // Play sound
+            // TODO heptic feedback
+            if (newState === "off" || newState === "nominal"){
+                buttonAlertPrecived.enabled = false
+                buttonStatusIndicator.setStatusOk()
+                alertSoundEffect.stop()
+            }
+            else if (newState === "warning" || newState === "error"){
+                // TODO timer repeats satus & alert
+                buttonAlertPrecived.enabled = true
+                buttonStatusIndicator.setStatusAlert()
+                alertSoundEffect.start()
+            }
+            else{
+                console.warn(state)
+            }
+        }
+
+        function userOverride(){
+            /* Function called by buttonAlertPrecived when user aknowlegdes the alert */
+            buttonAlertPrecived.checked = false
+            buttonAlertPrecived.enabled = false
+
+            // TODO stop heptic feedback
+            buttonStatusIndicator.setStatusOk()
+            alertSoundEffect.stop()
+        }
+
+
         function setAlertMessage() {
             // This function updates visual alerts based on notificationsList/counter
             // TODO play sound
             // TODO heptic feedback
-
-            // Update notificationsBar
-            notificationsBar.alert = notificationsList.get(counter).message;
-            statusIndicator.state = notificationsList.get(counter).status;
-            // Update Status button
-            buttonStatusIndicator.setStatus(notificationsBar.alert, statusIndicator.state)
-            // console.info("Notif: " + notificationsBar.width)
+            statusManager(notificationsList.get(counter).status, notificationsList.get(counter).message)
         }
 
         triggeredOnStart: true

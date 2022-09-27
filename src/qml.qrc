@@ -27,5 +27,6 @@
         <file>TachometerStyle.qml</file>
         <file>SimpleStatus.qml</file>
         <file>ButtonAlertPrecived.qml</file>
+        <file>AlertSoundEffect.qml</file>
     </qresource>
 </RCC>
