@@ -247,8 +247,8 @@ ApplicationWindow {
 
             }
 
-            SimpleStatus {
-                id: buttonStatusIndicator
+            AlertSimpleDisplay {
+                id: alertSimpleDisplay
 
             }
         }
@@ -699,13 +699,13 @@ ApplicationWindow {
             // TODO heptic feedback
             if (newState === "off" || newState === "nominal"){
                 buttonAlertPrecived.enabled = false
-                buttonStatusIndicator.setStatusOk()
+                alertSimpleDisplay.setStatusOk()
                 alertSoundEffect.stop()
             }
             else if (newState === "warning" || newState === "error"){
                 // TODO timer repeats satus & alert
                 buttonAlertPrecived.enabled = true
-                buttonStatusIndicator.setStatusAlert()
+                alertSimpleDisplay.setStatusAlert()
                 alertSoundEffect.start()
             }
             else{
@@ -719,15 +719,13 @@ ApplicationWindow {
             buttonAlertPrecived.enabled = false
 
             // TODO stop heptic feedback
-            buttonStatusIndicator.setStatusOk()
+            alertSimpleDisplay.setStatusOk()
             alertSoundEffect.stop()
         }
 
 
         function setAlertMessage() {
-            // This function updates visual alerts based on notificationsList/counter
-            // TODO play sound
-            // TODO heptic feedback
+            // This function selects status/notification based on notificationsList + counter
             statusManager(notificationsList.get(counter).status, notificationsList.get(counter).message)
         }
 
