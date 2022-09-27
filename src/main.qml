@@ -690,7 +690,7 @@ ApplicationWindow {
             statusIndicator.state = notificationsList.get(counter).status;
             // Update Status button
             buttonStatusIndicator.setStatus(notificationsBar.alert, statusIndicator.state)
-
+            // console.info("Notif: " + notificationsBar.width)
         }
 
         triggeredOnStart: true
