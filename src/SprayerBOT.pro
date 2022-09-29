@@ -19,6 +19,7 @@ SOURCES += \
         phidgetInterface.cpp \
         livedata.cpp \
         main.cpp \
+        phidgetqml.cpp \
         weatherdata.cpp
 
 RESOURCES += qml.qrc \
@@ -43,6 +44,7 @@ DISTFILES += \
 HEADERS += \
     phidgetInterface.h \
     livedata.h \
+    phidgetqml.h \
     weatherdata.h
 
 INCLUDEPATH += C:/OpenSSL-Win32/include
