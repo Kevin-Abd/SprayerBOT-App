@@ -22,11 +22,11 @@
         <file>CurrentWeather.qml</file>
         <file>RectangularButton.qml</file>
         <file>XButton.qml</file>
-        <file>NotificationsManager.js</file>
         <file>Simulation.qml</file>
         <file>TachometerStyle.qml</file>
         <file>AlertSimpleDisplay.qml</file>
         <file>ButtonAlertPrecived.qml</file>
         <file>AlertSoundEffect.qml</file>
+        <file>PhidgetFeedback.qml</file>
     </qresource>
 </RCC>
