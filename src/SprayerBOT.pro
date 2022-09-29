@@ -44,3 +44,10 @@ HEADERS += \
     weatherdata.h
 
 INCLUDEPATH += C:/OpenSSL-Win32/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/phidget22-windevel/lib/c/x64/ -lphidget22
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/phidget22-windevel/lib/c/x64/ -lphidget22
+
+INCLUDEPATH += $$PWD/../lib/phidget22-windevel/lib/c/
+INCLUDEPATH += $$PWD/../lib/phidget22-windevel/lib/c/x64
+DEPENDPATH += $$PWD/../lib/phidget22-windevel/lib/c/x64
