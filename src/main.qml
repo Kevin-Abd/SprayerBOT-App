@@ -683,6 +683,9 @@ ApplicationWindow {
         id: alertSoundEffect
     }
 
+    PhidgetFeedback {
+        id: phidgetFeedback
+    }
 
     QtObject{
         id: statusManager
@@ -730,15 +733,17 @@ ApplicationWindow {
                 buttonAlertPrecived.enabled = false
                 alertSimpleDisplay.setStatusOk()
                 alertSoundEffect.stop()
+                phidgetFeedback.deactivate()
             }
             else if (newState === "warning" || newState === "error"){
                 // TODO timer repeats satus & alert
                 buttonAlertPrecived.enabled = true
                 alertSimpleDisplay.setStatusAlert()
+                phidgetFeedback.activate()
 
                 if (alertSoundEffect.playing == false)
                     alertSoundEffect.play()
-                console.info("newSate = "+newState)
+                console.info("newSate = " + newState)
             }
             else{
                 console.warn("Warning: got unexpected state: " + state)
@@ -753,6 +758,7 @@ ApplicationWindow {
             // TODO stop heptic feedback
             alertSimpleDisplay.setStatusOk()
             alertSoundEffect.stop()
+            phidgetFeedback.deactivate()
         }
 
     }
