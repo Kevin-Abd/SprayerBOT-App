@@ -36,18 +36,18 @@ Item {
                 if (value >= (0.45 * control.maximumValue)) {
                     mainColor = "#325125"
                     lightColor = "#a5cd38"
-                    notificationsList.removeWarning(notification)
+                    notifications.removeWarning(notification)
                 }
                 else if (value >= (0.25 * control.maximumValue) &&
                          value < (0.45 * control.maximumValue)) {
                     mainColor = "#fad201"
                     lightColor = "#FFFFE0"
-                    notificationsList.removeWarning(notification)
+                    notifications.removeWarning(notification)
                 }
                 else {
                     mainColor = "#d64228"
                     lightColor = "#edb1b1"
-                    notificationsList.addWarning(notification)
+                    notifications.addWarning(notification)
                 }
             }
         }

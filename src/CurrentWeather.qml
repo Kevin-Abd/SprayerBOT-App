@@ -20,9 +20,9 @@ Popup {
             /* Warn user when wind speed is greater than 12 mph
                 Reference: https://sprayers101.com/five-tips-for-spraying-in-the-wind/ */
             if (parseInt(model.weather.windSpeed, 10) > 12) {
-                notificationsList.addWarning(notification)
+                notifications.addWarning(notification)
             } else {
-                notificationsList.removeWarning(notification)
+                notifications.removeWarning(notification)
             }
         }
     }
