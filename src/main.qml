@@ -93,9 +93,7 @@ ApplicationWindow {
                     }
 
                     /* Start the mahine with nominal status */
-                    notificationsList.setSpecial("clear")
-
-                    notificationsBar.setState("", "off")
+                    notifications.setSpecial("clear")
                 }
             }
 
@@ -175,8 +173,7 @@ ApplicationWindow {
                         sim.pause = true                // pause simulation
                     }
 
-                    notificationsList.setSpecial("stopped")
-//                    notificationsBar.statusIndicator.state = "off"
+                    notifications.setSpecial("stopped")
                 }
             }
 
@@ -756,14 +753,14 @@ ApplicationWindow {
             speedometer.value = speed
 
             if (speed > 0 && speed <= 3) {
-                notificationsList.addWarning(speedometer.lowSpeedWarning)
-                notificationsList.removeWarning(speedometer.highSpeedWarning)
+                notifications.addWarning(speedometer.lowSpeedWarning)
+                notifications.removeWarning(speedometer.highSpeedWarning)
             } else if (speed > 6) {
-                notificationsList.addWarning(speedometer.highSpeedWarning)
-                notificationsList.removeWarning(speedometer.lowSpeedWarning)
+                notifications.addWarning(speedometer.highSpeedWarning)
+                notifications.removeWarning(speedometer.lowSpeedWarning)
             } else {
-                notificationsList.removeWarning(speedometer.lowSpeedWarning)
-                notificationsList.removeWarning(speedometer.highSpeedWarning)
+                notifications.removeWarning(speedometer.lowSpeedWarning)
+                notifications.removeWarning(speedometer.highSpeedWarning)
             }
         }
 
@@ -775,14 +772,14 @@ ApplicationWindow {
             boomHeightElement.val = boomHeight
 
             if (boomHeight > 28) {
-                notificationsList.addWarning(boomHeightElement.highHeightWarning)
-                notificationsList.removeWarning(boomHeightElement.lowHeightWarning)
+                notifications.addWarning(boomHeightElement.highHeightWarning)
+                notifications.removeWarning(boomHeightElement.lowHeightWarning)
             } else if (boomHeight < 22) {
-                notificationsList.addWarning(boomHeightElement.lowHeightWarning)
-                notificationsList.removeWarning(boomHeightElement.highHeightWarning)
+                notifications.addWarning(boomHeightElement.lowHeightWarning)
+                notifications.removeWarning(boomHeightElement.highHeightWarning)
             } else {
-                notificationsList.removeWarning(boomHeightElement.highHeightWarning)
-                notificationsList.removeWarning(boomHeightElement.lowHeightWarning)
+                notifications.removeWarning(boomHeightElement.highHeightWarning)
+                notifications.removeWarning(boomHeightElement.lowHeightWarning)
             }
         }
 
