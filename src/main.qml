@@ -95,8 +95,7 @@ ApplicationWindow {
                     /* Start the mahine with nominal status */
                     notificationsList.setSpecial("clear")
 
-                    notificationsBar.alert = ""
-                    statusIndicator.state = "off"
+                    notificationsBar.setState("", "off")
                 }
             }
 
@@ -177,62 +176,12 @@ ApplicationWindow {
                     }
 
                     notificationsList.setSpecial("stopped")
-
-                    statusIndicator.state = "off"
+//                    notificationsBar.statusIndicator.state = "off"
                 }
             }
 
-            Rectangle {
+            NotificationsBar {
                 id: notificationsBar
-
-                /* This element displays notifications about the different elements
-                   presented on the UI, using both text and */
-
-                property string alert          // holds the current notification message on display
-
-                radius: parent.width * 0.25
-
-                border.width: 1
-                border.color: "gray"
-
-                Layout.topMargin: 5
-                Layout.bottomMargin: 5
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: root.width * 0.475
-                Layout.preferredHeight: parent.height * 0.475
-
-                MachineStatus {
-                    id: statusIndicator
-
-                    /* Uses the StatusIndicator element to display the state of the machine
-                       and the severity of the notification. */
-                    height: notificationsBar.height
-                    width: height
-                    Layout.leftMargin: 10
-                    Layout.alignment: Qt.AlignLeft
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Item {
-                    id: notificationsContainer
-
-                    height: parent.height * 0.8
-                    width: parent.width * 0.85
-                    anchors.left: statusIndicator.right
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    Text {
-                        id: alertMessage
-
-                        text: qsTr(notificationsBar.alert)
-                        font.pixelSize: Math.max(12, parent.width * 0.0425)
-                        horizontalAlignment: Text.AlignVCenter
-                        wrapMode: Text.Wrap
-                        anchors.centerIn: parent
-                        anchors.leftMargin: 7.5
-                        width: parent.width
-                    }
-                }
             }
 
             ButtonAlertPerceived{
@@ -240,10 +189,10 @@ ApplicationWindow {
 
             }
 
-            AlertSimpleDisplay {
-                id: alertSimpleDisplay
+//            AlertSimpleDisplay {
+//                id: alertSimpleDisplay
 
-            }
+//            }
         }
     } // End of ToolBar
 
@@ -747,22 +696,21 @@ ApplicationWindow {
             lastNotif = newNotification
 
             // Update notificationsBar
-            notificationsBar.alert = newNotification
-            statusIndicator.state = newState
+            notificationsBar.setState(newNotification, newState)
 
             // Update Status button
             // Play sound
             // TODO heptic feedback
             if (newState === "off" || newState === "nominal"){
                 buttonAlertPerceived.enabled = false
-                alertSimpleDisplay.setStatusOk()
+//                alertSimpleDisplay.setStatusOk()
                 alertSoundEffect.stop()
                 phidgetFeedback.deactivate()
             }
             else if (newState === "warning" || newState === "error"){
                 // TODO timer repeats satus & alert
                 buttonAlertPerceived.enabled = true
-                alertSimpleDisplay.setStatusAlert()
+//                alertSimpleDisplay.setStatusAlert()
                 phidgetFeedback.activate()
 
                 if (alertSoundEffect.playing == false)
@@ -780,7 +728,7 @@ ApplicationWindow {
             buttonAlertPerceived.enabled = false
 
             // TODO stop heptic feedback
-            alertSimpleDisplay.setStatusOk()
+//            alertSimpleDisplay.setStatusOk()
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
