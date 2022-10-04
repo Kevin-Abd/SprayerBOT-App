@@ -184,6 +184,10 @@ ApplicationWindow {
             ButtonAlertPerceived{
                 id: buttonAlertPerceived
 
+                Component.onCompleted: {
+                    // TODO check if it works
+                    buttonAlertPerceived.activated.connect(statusManager.userOverride)
+                }
             }
 
 //            AlertSimpleDisplay {
@@ -657,79 +661,12 @@ ApplicationWindow {
 
     }
 
-    QtObject{
+    StatusManager{
         id: statusManager
-        property string lastNotif
-        property string lastState
-        property string alert
-        property string state
-
-        property real counter: 0
-
-        function checkForNewStatus(){
-
-            if (notificationsList.count === 0)
-                notificationsList.setAllClear(true)
-
-            if (counter < notificationsList.count - 1)
-                counter++
-            else
-                counter = 0
-
-            var state = notificationsList.get(counter).status
-            var notif = notificationsList.get(counter).message
-
-            if (state !== lastState || notif !== lastNotif)
-                processNewStatus(state, notif)
-
-        }
-
-        function processNewStatus(newState, newNotification){
-            /* Function to handle new status
-             * It is responsible for trigggering warning displays and feedback
-             * TODO
-             */
-            lastState = newState
-            lastNotif = newNotification
-
-            // Update notificationsBar
-            notificationsBar.setState(newNotification, newState)
-
-            // Update Status button
-            // Play sound
-            // TODO heptic feedback
-            if (newState === "off" || newState === "nominal"){
-                buttonAlertPerceived.enabled = false
-//                alertSimpleDisplay.setStatusOk()
-                alertSoundEffect.stop()
-                phidgetFeedback.deactivate()
-            }
-            else if (newState === "warning" || newState === "error"){
-                // TODO timer repeats satus & alert
-                buttonAlertPerceived.enabled = true
-//                alertSimpleDisplay.setStatusAlert()
-                phidgetFeedback.activate()
-
-                if (alertSoundEffect.playing == false)
-                    alertSoundEffect.play()
-                console.info("newSate = " + newState)
-            }
-            else{
-                console.warn("Warning: got unexpected state: " + state)
-            }
-        }
-
-        function userOverride(){
-            /* Function called by buttonAlertPerceived when user aknowlegdes the alert */
-            buttonAlertPerceived.checked = false
-            buttonAlertPerceived.enabled = false
-
-            // TODO stop heptic feedback
-//            alertSimpleDisplay.setStatusOk()
-            alertSoundEffect.stop()
-            phidgetFeedback.deactivate()
-        }
-
+        alertSoundEffect: alertSoundEffect
+        phidgetFeedback: phidgetFeedback
+        notificationsBar: notificationsBar
+        buttonAlertPerceived: buttonAlertPerceived
     }
 
 
@@ -742,7 +679,7 @@ ApplicationWindow {
         repeat: true
 
         onTriggered: {
-            statusManager.checkForNewStatus()
+            // statusManager.checkForNewStatus()
         }
     }
 

@@ -28,6 +28,7 @@
         <file>AlertSoundEffect.qml</file>
         <file>PhidgetFeedback.qml</file>
         <file>NotificationsBar.qml</file>
+        <file>StatusManager.qml</file>
         <file>NotificationsList.qml</file>
     </qresource>
 </RCC>

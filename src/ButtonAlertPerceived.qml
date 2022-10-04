@@ -15,10 +15,6 @@ DelayButton {
     enabled: false
     text: ""                            // Clears the default text
 
-    onActivated: {
-        statusManager.userOverride()
-    }
-
     Text {
         id: buttonLabel1
 
