@@ -95,7 +95,7 @@ ApplicationWindow {
                     /* Replace the notifications bar with an empty string while removing
                       removing instructional and nominal messages from the notifications list. */
                     notificationsList.removeNotification(notificationsList.startupInstruction)
-                    notificationsList.removeNotification(notificationsList.allClear)
+                    notificationsList.removeNotification(notificationsList.allClearMessage)
                     notificationsList.removeNotification(notificationsList.emergency)
 
                     notificationsBar.alert = ""
@@ -180,12 +180,10 @@ ApplicationWindow {
                     }
 
                     notificationsList.removeNotification(notificationsList.startupInstruction)
-                    notificationsList.removeNotification(notificationsList.allClear)
+                    notificationsList.removeNotification(notificationsList.allClearMessage)
+                    notificationsList.setOffMessage(notificationsList.emergency)
 
-                    statusIndicator.state = "error"
-                    notificationsBar.alert = "The machine has been stopped!"
-                    notificationsList.append({message: notificationsList.emergency,
-                                                 status: "error"})
+                    statusIndicator.state = "off"
                 }
             }
 
@@ -641,26 +639,43 @@ ApplicationWindow {
 
         readonly property string startupInstruction: "To begin, press and hold the START button."
         readonly property string emergency: "The machine has been stopped!"
-        readonly property string allClear: "All systems are normal"
+        readonly property string allClearMessage: "All systems are normal"
 
+        property bool isAllClear: false
         ListElement {
             message: "To begin, press and hold the START button."
             status: "off"
         }
 
-        function addNewAlert(notif, status) {
+        function setOffMessage(notif){
             if (numberOfEntries(notif) === 0) {
-                append({message: notif, status: status})
-                removeNotification(notificationsList.allClear)
+                append({message: notif, status: "off"})
+                setAllClear(false)
+                statusManager.checkForNewStatus()
             }
         }
 
-        function removeAllClear(){
-            removeNotification(notificationsList.allClear)
+        function addWarning(notif) {
+            if (numberOfEntries(notif) === 0) {
+                append({message: notif, status: "warning"})
+                setAllClear(false)
+                statusManager.checkForNewStatus()
+            }
         }
 
-        function setAllClear(){
-            notificationsList.set(0, {message: notificationsList.allClear, status: "nominal"})
+        function removeWarning(notif) {
+            removeNotification(notif)
+        }
+
+        function setAllClear(val){
+            if (val===true) {
+                isAllClear = true
+                set(0, {message: allClearMessage, status: "nominal"})
+            }
+            else {
+                isAllClear = true
+                removeNotification(allClearMessage)
+            }
         }
 
         function numberOfEntries(arg) {
@@ -699,7 +714,7 @@ ApplicationWindow {
         function checkForNewStatus(){
 
             if (notificationsList.count === 0)
-                notificationsList.setAllClear()
+                notificationsList.setAllClear(true)
 
             if (counter < notificationsList.count - 1)
                 counter++
@@ -784,14 +799,14 @@ ApplicationWindow {
             speedometer.value = speed
 
             if (speed > 0 && speed <= 3) {
-                notificationsList.addNewAlert(speedometer.lowSpeedWarning, "warning")
-                notificationsList.removeNotification(speedometer.highSpeedWarning)
+                notificationsList.addWarning(speedometer.lowSpeedWarning)
+                notificationsList.removeWarning(speedometer.highSpeedWarning)
             } else if (speed > 6) {
-                notificationsList.addNewAlert(speedometer.highSpeedWarning, "warning")
-                notificationsList.removeNotification(speedometer.lowSpeedWarning)
+                notificationsList.addWarning(speedometer.highSpeedWarning)
+                notificationsList.removeWarning(speedometer.lowSpeedWarning)
             } else {
-                notificationsList.removeNotification(speedometer.lowSpeedWarning)
-                notificationsList.removeNotification(speedometer.highSpeedWarning)
+                notificationsList.removeWarning(speedometer.lowSpeedWarning)
+                notificationsList.removeWarning(speedometer.highSpeedWarning)
             }
         }
 
@@ -803,14 +818,14 @@ ApplicationWindow {
             boomHeightElement.val = boomHeight
 
             if (boomHeight > 28) {
-                notificationsList.addNewAlert(boomHeightElement.highHeightWarning, "warning")
-                notificationsList.removeNotification(boomHeightElement.lowHeightWarning)
+                notificationsList.addWarning(boomHeightElement.highHeightWarning)
+                notificationsList.removeWarning(boomHeightElement.lowHeightWarning)
             } else if (boomHeight < 22) {
-                notificationsList.addNewAlert(boomHeightElement.lowHeightWarning, "warning")
-                notificationsList.removeNotification(boomHeightElement.highHeightWarning)
+                notificationsList.addWarning(boomHeightElement.lowHeightWarning)
+                notificationsList.removeWarning(boomHeightElement.highHeightWarning)
             } else {
-                notificationsList.removeNotification(boomHeightElement.highHeightWarning)
-                notificationsList.removeNotification(boomHeightElement.lowHeightWarning)
+                notificationsList.removeWarning(boomHeightElement.highHeightWarning)
+                notificationsList.removeWarning(boomHeightElement.lowHeightWarning)
             }
         }
 
