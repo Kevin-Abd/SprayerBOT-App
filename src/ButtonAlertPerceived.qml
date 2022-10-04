@@ -22,7 +22,7 @@ DelayButton {
     Text {
         id: buttonLabel1
 
-        text: qsTr("Alert Precived")
+        text: qsTr("Alert Perceived")
         wrapMode: Text.WordWrap
 
         style: Text.Normal
