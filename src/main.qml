@@ -92,11 +92,8 @@ ApplicationWindow {
                         speedometer.value = sim.speed
                     }
 
-                    /* Replace the notifications bar with an empty string while removing
-                      removing instructional and nominal messages from the notifications list. */
-                    notificationsList.removeNotification(notificationsList.startupInstruction)
-                    notificationsList.removeNotification(notificationsList.allClearMessage)
-                    notificationsList.removeNotification(notificationsList.emergency)
+                    /* Start the mahine with nominal status */
+                    notificationsList.setSpecial("clear")
 
                     notificationsBar.alert = ""
                     statusIndicator.state = "off"
@@ -179,9 +176,7 @@ ApplicationWindow {
                         sim.pause = true                // pause simulation
                     }
 
-                    notificationsList.removeNotification(notificationsList.startupInstruction)
-                    notificationsList.removeNotification(notificationsList.allClearMessage)
-                    notificationsList.setOffMessage(notificationsList.emergency)
+                    notificationsList.setSpecial("stopped")
 
                     statusIndicator.state = "off"
                 }
@@ -634,17 +629,39 @@ ApplicationWindow {
         }
     } // End of contentItem
 
+    AlertSoundEffect {
+        id: alertSoundEffect
+    }
+
+    PhidgetFeedback {
+        id: phidgetFeedback
+    }
+
+
     ListModel {
         id: notificationsList
 
         readonly property string startupInstruction: "To begin, press and hold the START button."
-        readonly property string emergency: "The machine has been stopped!"
+        readonly property string restarInstruction: "The machine has been stopped!"
         readonly property string allClearMessage: "All systems are normal"
 
         property bool isAllClear: false
         ListElement {
             message: "To begin, press and hold the START button."
             status: "off"
+        }
+
+        function setSpecial(mode){
+            if (mode === "start"){
+                notificationsList.clear()
+                set(0, {message: startupInstruction, status: "off"})
+            } else if (mode === "stopped"){
+                notificationsList.clear()
+                set(0, {message: restarInstruction, status: "off"})
+            } else if (mode === "clear") {
+                notificationsList.clear()
+                set(0, {message: allClearMessage, status: "nominal"})
+            }
         }
 
         function setOffMessage(notif){
@@ -692,14 +709,6 @@ ApplicationWindow {
                     notificationsList.remove(i);
         }
 
-    }
-
-    AlertSoundEffect {
-        id: alertSoundEffect
-    }
-
-    PhidgetFeedback {
-        id: phidgetFeedback
     }
 
     QtObject{
