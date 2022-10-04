@@ -235,8 +235,8 @@ ApplicationWindow {
                 }
             }
 
-            ButtonAlertPrecived{
-                id: buttonAlertPrecived
+            ButtonAlertPerceived{
+                id: buttonAlertPerceived
 
             }
 
@@ -754,14 +754,14 @@ ApplicationWindow {
             // Play sound
             // TODO heptic feedback
             if (newState === "off" || newState === "nominal"){
-                buttonAlertPrecived.enabled = false
+                buttonAlertPerceived.enabled = false
                 alertSimpleDisplay.setStatusOk()
                 alertSoundEffect.stop()
                 phidgetFeedback.deactivate()
             }
             else if (newState === "warning" || newState === "error"){
                 // TODO timer repeats satus & alert
-                buttonAlertPrecived.enabled = true
+                buttonAlertPerceived.enabled = true
                 alertSimpleDisplay.setStatusAlert()
                 phidgetFeedback.activate()
 
@@ -775,9 +775,9 @@ ApplicationWindow {
         }
 
         function userOverride(){
-            /* Function called by buttonAlertPrecived when user aknowlegdes the alert */
-            buttonAlertPrecived.checked = false
-            buttonAlertPrecived.enabled = false
+            /* Function called by buttonAlertPerceived when user aknowlegdes the alert */
+            buttonAlertPerceived.checked = false
+            buttonAlertPerceived.enabled = false
 
             // TODO stop heptic feedback
             alertSimpleDisplay.setStatusOk()
