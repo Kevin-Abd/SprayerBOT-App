@@ -24,7 +24,6 @@
         <file>XButton.qml</file>
         <file>Simulation.qml</file>
         <file>TachometerStyle.qml</file>
-        <file>AlertSimpleDisplay.qml</file>
         <file>ButtonAlertPerceived.qml</file>
         <file>AlertSoundEffect.qml</file>
         <file>PhidgetFeedback.qml</file>
