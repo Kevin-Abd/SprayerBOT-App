@@ -642,7 +642,7 @@ ApplicationWindow {
         id: notificationsList
 
         readonly property string startupInstruction: "To begin, press and hold the START button."
-        readonly property string restarInstruction: "The machine has been stopped!"
+        readonly property string restarInstruction: "Press and hold the START button to start the machine"
         readonly property string allClearMessage: "All systems are normal"
 
         property bool isAllClear: false
