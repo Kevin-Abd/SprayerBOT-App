@@ -28,5 +28,6 @@
         <file>ButtonAlertPerceived.qml</file>
         <file>AlertSoundEffect.qml</file>
         <file>PhidgetFeedback.qml</file>
+        <file>NotificationsBar.qml</file>
     </qresource>
 </RCC>
