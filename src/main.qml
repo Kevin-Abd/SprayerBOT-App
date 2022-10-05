@@ -588,75 +588,44 @@ ApplicationWindow {
     }
 
 
-    ListModel {
-        id: notificationsList
+    QtObject {
+        id: notifications
 
         readonly property string startupInstruction: "To begin, press and hold the START button."
         readonly property string restarInstruction: "Press and hold the START button to start the machine"
         readonly property string allClearMessage: "All systems are normal"
 
-        property bool isAllClear: false
-        ListElement {
-            message: "To begin, press and hold the START button."
-            status: "off"
+        property NotificationsList list : NotificationsList {
+
         }
+
 
         function setSpecial(mode){
-            if (mode === "start"){
-                notificationsList.clear()
-                set(0, {message: startupInstruction, status: "off"})
-            } else if (mode === "stopped"){
-                notificationsList.clear()
-                set(0, {message: restarInstruction, status: "off"})
-            } else if (mode === "clear") {
-                notificationsList.clear()
-                set(0, {message: allClearMessage, status: "nominal"})
-            }
+            if (mode === "start") list.setSingle(startupInstruction, "off")
+            else if (mode === "stopped") list.setSingle(startupInstruction, "off")
+            else if (mode === "clear") list.clear()
         }
 
-        function setOffMessage(notif){
-            if (numberOfEntries(notif) === 0) {
-                append({message: notif, status: "off"})
-                setAllClear(false)
+
+        function addWarning(message) {
+            if (list.index(message) === -1) {
+                list.add(message, "warning")
                 statusManager.checkForNewStatus()
             }
         }
 
-        function addWarning(notif) {
-            if (numberOfEntries(notif) === 0) {
-                append({message: notif, status: "warning"})
-                setAllClear(false)
+        function removeWarning(message) {
+            var res = list.removeIfpresent(message)
+            if (res === true)
                 statusManager.checkForNewStatus()
-            }
         }
 
-        function removeWarning(notif) {
-            removeNotification(notif)
+        function getUnprocessed(){
+            return list.getUnprocessed()
         }
 
-        function setAllClear(val){
-            if (val===true) {
-                isAllClear = true
-                set(0, {message: allClearMessage, status: "nominal"})
-            }
-            else {
-                isAllClear = true
-                removeNotification(allClearMessage)
-            }
-        }
-
-        function numberOfEntries(arg) {
-            var num = 0
-            for (var i = 0; i < notificationsList.count; i++)
-                if (notificationsList.get(i).message === arg)
-                    num++
-            return num
-        }
-
-        function removeNotification(arg) {
-            for (var i = 0; i < notificationsList.count; i++)
-                if (notificationsList.get(i).message === arg)
-                    notificationsList.remove(i);
+        function setProccessed(message){
+            return list.process(message)
         }
 
     }
