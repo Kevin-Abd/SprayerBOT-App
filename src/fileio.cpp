@@ -12,14 +12,18 @@ FileIO::~FileIO()
 
 bool FileIO::open(const QString& fileName)
 {
+//    qDebug("FileIO open");
+//    qDebug(fileName.toStdString().c_str());
     if (fileName.isEmpty())
         return false;
 
     file = new QFile(fileName);
     isOpen = file->open(QFile::Append);
-
+//    qDebug(isOpen ? "Open" : "NotOpen");
     if(isOpen)
         fout = new QTextStream(file);
+    else
+        qErrnoWarning("FileIO Open failed");
 
     return isOpen;
 }
