@@ -6,48 +6,54 @@ import QtQuick.Controls 2.10
 Control {
     id: status
     property string text
+    property string textColor
     property string color
-
+    state: "off"
 //    implicitHeight: parent.height - 10
 //    implicitWidth: (parent.height - 10) * 2
 
 
-    state: "off"
 
     states: [
         State {
             name: "off"
-            PropertyChanges {target: status; color: "BLACK"}
             PropertyChanges {target: status; text: "OFF"}
+            PropertyChanges {target: status; color: "Black"}
+            PropertyChanges {target: status; textColor: "White"}
         },
         State {
             name: "nominal"
-            PropertyChanges {target: status; color: "DarkGreen"}
             PropertyChanges {target: status; text: "OK"}
+            PropertyChanges {target: status; color: "Yellow"}
+            PropertyChanges {target: status; textColor: "Green"}
         },
         State {
             name: "warning"
-            PropertyChanges {target: status; color: "goldenrod"}
             PropertyChanges {target: status; text: "ALERT!!!"}
+            PropertyChanges {target: status; color: "Yellow"}
+            PropertyChanges {target: status; textColor: "Blue"}
         },
         State {
             name: "error"
             PropertyChanges {target: status; color: "firebrick"}
             PropertyChanges {target: status; text: "ERROR"}
+            PropertyChanges {target: status; textColor: "White"}
         }
     ]
 
 
     contentItem:     Text {
+        id: text1
         text: qsTr(parent.text)
-        width: parent.width
-        color: "White"
-        font.pixelSize: 17
+        color: parent.textColor
+        font.pixelSize: 45
         font.capitalization: Font.AllUppercase
-        font.letterSpacing: 1.5
+        font.letterSpacing: 1
         font.weight: Font.Bold
-        fontSizeMode: Text.HorizontalFit
+        fontSizeMode: Text.Fit
+
         anchors.fill: parent
+        padding: 0.1 * parent.height
         style: Text.Normal
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
