@@ -15,7 +15,7 @@ public:
     ~PhidgetInterface();
 
     bool setHandlers(Phidget_OnAttachCallback handlerAttach, Phidget_OnDetachCallback handlerDetach, void *ctx);
-    bool opne();
+    bool open();
     bool activate();
     bool deactivate();
     int getState();
