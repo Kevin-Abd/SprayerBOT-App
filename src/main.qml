@@ -602,8 +602,10 @@ ApplicationWindow {
 
         function setSpecial(mode){
             if (mode === "start") list.setSingle(startupInstruction, "off")
-            else if (mode === "stopped") list.setSingle(startupInstruction, "off")
+            else if (mode === "stopped") list.setSingle(restarInstruction, "off")
             else if (mode === "clear") list.clear()
+
+            statusManager.checkForNewStatus()
         }
 
 
