@@ -7,7 +7,7 @@ PhidgetQml::PhidgetQml(QObject *parent) : QObject(parent)
     // qDebug("PhidgetQml setting handlers");
     phidget->setHandlers(onAttach, onDetach, NULL);
     // qDebug("PhidgetQml openning");
-    phidget ->opne();
+    phidget ->open();
     // qDebug("PhidgetQml done");
 }
 
