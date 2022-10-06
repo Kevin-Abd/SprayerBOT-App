@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.10
 import QtQuick.Controls 2.10
+import FileIO 1.0
 
 QtObject{
     id: statusManager
@@ -31,6 +32,10 @@ QtObject{
             State { name: "tutorial_tactile" },
             State { name: "experminets" }
         ]
+    }
+
+    property FileIO file: FileIO {
+        id: fileio
     }
 
     function checkForNewStatus(){
