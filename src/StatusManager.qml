@@ -36,6 +36,23 @@ QtObject{
 
     property FileIO file: FileIO {
         id: fileio
+
+        property var locale: Qt.locale()
+        property date currentDate: new Date()
+//        property string dateString: currentDate.toISOString()
+//        property string dateString: currentDate.toLocaleDateString(locale, "yyyy-MM-ddT-hh-mm")
+        property string dateString: Qt.formatDateTime(currentDate ,"yyyy-MM-ddThh-mm")
+        property string fileName: dateString + ".log"
+    }
+
+    Component.onCompleted: {
+        print(fileio.fileName);
+        var res = fileio.open(fileio.fileName)
+        console.log("FileIO open: " + res)
+    }
+
+    Component.onDestruction: {
+        fileio.close()
     }
 
     function checkForNewStatus(){
@@ -67,7 +84,7 @@ QtObject{
          * Function to handle new status
          * It is responsible for trigggering warning displays and feedback
          */
-        console.debug(`state: ${state})\t status: ${newStatus}, ${newNotification}`)
+        console.debug(`state: ${state}) status: ${newStatus}, ${newNotification}` + `| ${Date.now()}`)
 
         if (state === "warmup") processForWarmup(newStatus, newNotification)
         else if (state === "tutorial_clear") processForTutorial(newStatus, newNotification, "clear")
@@ -141,6 +158,7 @@ QtObject{
 
             if (lastStatus === "warning"){
                 // TODO log alert missed
+                fileio.write(`Missed\n`)
             }
         }
         else if (newStatus === "warning"){
@@ -148,6 +166,7 @@ QtObject{
             if (feedback === "auditory") alertSoundEffect.play()
             else if (feedback === "tactile") phidgetFeedback.activate()
             buttonAlertPerceived.enabled = true
+            fileio.write(`${Date.now()}, `)
             // TODO log alert start time + type
         }
         else
@@ -166,6 +185,7 @@ QtObject{
         alertSoundEffect.stop()
         phidgetFeedback.deactivate()
         notificationsBar.setState(notifications.allClearMessage, "nominal")
+        fileio.write(`${Date.now()}\n`)
         // TODO log time
     }
 
