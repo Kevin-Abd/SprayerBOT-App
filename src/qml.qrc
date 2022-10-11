@@ -30,5 +30,6 @@
         <file>NotificationsBar.qml</file>
         <file>StatusManager.qml</file>
         <file>NotificationsList.qml</file>
+        <file>GraphicalDisplay.qml</file>
     </qresource>
 </RCC>
