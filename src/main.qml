@@ -106,7 +106,7 @@ ApplicationWindow {
                 //                Layout.bottomMargin: 5
                 //                Layout.alignment: Qt.AlignRight
 
-                text: ""                            // Clears the default text
+                text: ""
                 mainColor: "Red"
                 activeColor: "#b30000"
 
@@ -179,21 +179,17 @@ ApplicationWindow {
 
             NotificationsBar {
                 id: notificationsBar
+                anchors.centerIn: parent
+                // Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
 
             ButtonAlertPerceived{
                 id: buttonAlertPerceived
 
                 Component.onCompleted: {
-                    // TODO check if it works
                     buttonAlertPerceived.activated.connect(statusManager.userOverride)
                 }
             }
-
-//            AlertSimpleDisplay {
-//                id: alertSimpleDisplay
-
-//            }
         }
     } // End of ToolBar
 
