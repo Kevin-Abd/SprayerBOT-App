@@ -78,8 +78,8 @@ ApplicationWindow {
                     stopButton.checked = false;
                     stopButton.mainColor = "Red";
 
-                    coverageMap.active = true           // Activate the map's "navigating" state
-                    coverageMap.state = "navigating"
+                    graphicalDisplay.coverageMap.active = true           // Activate the map's "navigating" state
+                    graphicalDisplay.coverageMap.state = "navigating"
 
                     //liveValue.startUpdates()          // Start receiving updates from agbotwebserver
                     if (sim.start == false) {
@@ -87,9 +87,9 @@ ApplicationWindow {
                     }
                     else {
                         sim.pause = false
-                        rate1.value = sim.appRate1
-                        rate2.value = sim.appRate2
-                        speedometer.value = sim.speed
+                        graphicalDisplay.appRate1.value = sim.appRate1
+                        graphicalDisplay.appRate2.value = sim.appRate2
+                        graphicalDisplay.speed.value = sim.speed
                     }
 
                     /* Start the mahine with nominal status */
@@ -167,7 +167,7 @@ ApplicationWindow {
                     startButton.checked = false
                     startButton.mainColor = "Green";
 
-                    coverageMap.active = false
+                    graphicalDisplay.coverageMap.active = false
                     // liveValue.stopUpdates()
                     if (sim.start == true) {
                         sim.pause = true                // pause simulation
@@ -258,320 +258,25 @@ ApplicationWindow {
                     }
                 }
             } // End of videos
-
-            Item {
-                id: graphicalElements
-
-                Layout.preferredWidth: parent.width
-                Layout.preferredHeight: parent.height * 0.55
-
-                RowLayout {
-                    anchors.fill: parent
-
-                    Item {
-                        id: sprayerElements
-
-                        Layout.preferredHeight: parent.height
-                        Layout.preferredWidth: parent.width * 0.7
-
-                        RowLayout {
-                            anchors.fill: parent
-
-                            Item {
-                                id: sprayerInfoContainer
-
-                                Layout.preferredHeight: parent.height
-                                Layout.preferredWidth: parent.width * 0.4
-
-                                ColumnLayout {
-                                    anchors.fill: parent
-
-                                    Item {
-                                        id: tankContainer
-
-                                        Layout.preferredHeight: parent.height * 0.75
-                                        Layout.preferredWidth: parent.width
-
-                                        ColumnLayout {
-                                            anchors.fill: parent
-
-                                            Item {
-                                                id: tank1Container
-
-                                                Layout.preferredWidth: parent.width
-                                                Layout.preferredHeight: parent.height / 2.5
-
-                                                RowLayout {
-                                                    spacing: 5
-                                                    anchors.fill: parent
-
-                                                    TankLevel {
-                                                        id: tank1
-
-                                                        name: "Tank 1"
-                                                        maxValue: 25
-                                                        tickInterval: 5
-                                                        minorTickInterval: 0
-                                                        Layout.leftMargin: parent.width * 0.0725
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.preferredHeight: parent.height * 0.8
-                                                        Layout.preferredWidth: Math.min
-                                                                               (67.5, parent.width *
-                                                                                0.3)
-                                                    }
-
-                                                    ApplicationRate {
-                                                        id: rate1
-
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.alignment: Qt.AlignCenter
-
-                                                        onWidthChanged: {
-                                                            if (width <= 119) {
-                                                                Layout.leftMargin = 30;
-                                                            } else {
-                                                                Layout.leftMargin = -25
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            Item {
-                                                id: tank2Container
-
-                                                Layout.preferredWidth: parent.width
-                                                Layout.preferredHeight: parent.height / 2.5
-
-                                                RowLayout {
-                                                    spacing: 5
-                                                    anchors.fill: parent
-
-                                                    TankLevel {
-                                                        id: tank2
-
-                                                        name: "Tank 2"
-                                                        maxValue: 5
-                                                        tickInterval: 1
-                                                        minorTickInterval: 0
-                                                        Layout.leftMargin: parent.width * 0.0925
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.preferredHeight: parent.height * 0.8
-                                                        Layout.preferredWidth: Math.min
-                                                                               (67.5, parent.width *
-                                                                                0.3)
-                                                    }
-
-                                                    ApplicationRate {
-                                                        id: rate2
-
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.alignment: Qt.AlignCenter
-
-                                                        onWidthChanged: {
-                                                            if (width <= 119) {
-                                                                Layout.leftMargin = 20;
-                                                            } else {
-                                                                Layout.leftMargin = -35
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } // End of tankContainer
-
-                                    Item {
-                                        id: weatherContainer
-
-                                        Layout.preferredHeight: parent.height * 0.25
-                                        Layout.preferredWidth: parent.width
-
-                                        Weather {
-                                            anchors.fill: parent
-                                        }
-                                    } // End of weatherContainer
-                                }
-                            } // End of sprayerInfoContainer
-
-                            Item {
-                                id: boomContainer
-
-                                Layout.preferredWidth: parent.width * 0.6
-                                Layout.preferredHeight: parent.height
-
-                                ColumnLayout {
-                                    spacing: 0
-                                    anchors.fill: parent
-
-                                    Item {
-                                        id: labelContainer
-
-                                        Layout.preferredWidth: parent.width
-                                        Layout.preferredHeight: parent.height * 0.15
-                                        Layout.topMargin: -7.5
-
-                                        Pane {
-                                            id: container
-
-                                            width: parent.width * 0.25
-                                            height: Math.max(40, width * 0.45)
-
-                                            Material.elevation: 2
-
-                                            anchors {
-                                                verticalCenter: parent.verticalCenter
-                                                horizontalCenter: parent.horizontalCenter
-                                                verticalCenterOffset: 12.5
-                                                horizontalCenterOffset: 7
-                                            }
-
-                                            Text {
-                                                id: valueText
-
-                                                text: boomHeightElement.boomHeightValue.toFixed(0)
-
-                                                font.pixelSize: Math.max(14, parent.width * 0.25)
-                                                font.bold: true
-                                                color: "Black"
-                                                topPadding: 5
-
-                                                anchors {
-                                                    verticalCenter: parent.verticalCenter
-                                                    horizontalCenter: parent.horizontalCenter
-                                                    verticalCenterOffset: -10
-                                                    horizontalCenterOffset: -10
-                                                }
-                                            }
-
-                                            Text {
-                                                id: unitLabel
-
-                                                text: " in"
-
-                                                color: "Black"
-                                                font.weight: Font.DemiBold
-                                                font.pixelSize: Math.max(12, parent.width * 0.2)
-                                                anchors.left: valueText.right
-                                                anchors.bottom: valueText.bottom
-
-                                            }
-
-                                            Text {
-                                                id: label
-
-                                                text: "Boom Height"
-
-                                                color: "black"
-                                                bottomPadding: 3.5
-                                                font.letterSpacing: 1.15
-                                                font.pixelSize: Math.max(8, parent.width * 0.125)
-
-                                                anchors {
-                                                    topMargin: 3.5
-                                                    bottom: parent.bottom
-                                                    top: valueText.bottom
-                                                    horizontalCenter: parent.horizontalCenter
-                                                }
-                                            }
-                                        }
-                                    } // End of labelContainer
-
-                                    BoomHeight {
-                                        id: boomHeightElement
-
-                                        Layout.topMargin: -25
-                                    }
-                                }
-                            } // End of boomContainer
-                        }
-                    } // End of sprayerElements
-
-                    Item {
-                        id: vehicleElements
-
-                        Layout.preferredHeight: parent.height
-                        Layout.preferredWidth: parent.width * 0.3
-
-                        ColumnLayout {
-                            spacing: 0
-                            anchors.fill: parent
-
-                            Item {
-                                id: gauges
-
-                                Layout.preferredWidth: parent.width
-                                Layout.preferredHeight: parent.height * 0.45
-
-                                RowLayout {
-                                    spacing: 5
-                                    anchors.fill: parent
-
-                                    Item {
-                                        id: travelSpeed
-
-                                        Layout.preferredWidth: parent.width * 0.45
-                                        Layout.preferredHeight: parent.height
-
-                                        CircularGauge {
-                                            id: speedometer
-
-                                            readonly property string highSpeedWarning: "The machine is moving too fast!"
-                                            readonly property string lowSpeedWarning: "The machine is moving too slow!"
-
-                                            height: parent.height * 0.90
-                                            width: parent.width
-
-                                            stepSize: 0.1
-                                            maximumValue: 9            // maximum speed
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: parent.width * 0.02
-                                            anchors.verticalCenter: parent.verticalCenter
-
-                                            style: SpeedGaugeStyle {}
-                                        }
-                                    }
-
-                                    Item {
-                                        id: engineSpeed
-
-                                        Layout.preferredWidth: parent.width * 0.45
-                                        Layout.preferredHeight: parent.height
-
-                                        CircularGauge {
-                                            id: tachometer
-
-                                            height: parent.height * 0.90
-                                            width: parent.width
-
-                                            stepSize: 0.1
-                                            maximumValue: 8            // maximum rev per min
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: parent.width * 0.015
-                                            anchors.verticalCenter: parent.verticalCenter
-
-                                            style: TachometerStyle {}
-                                        }
-                                    }
-                                }
-                            }
-
-                            Item {
-                                id: mapArea
-
-                                Layout.preferredHeight: parent.height * 0.55
-                                Layout.preferredWidth: parent.width
-
-                                CoverageMap {
-                                    id: coverageMap
-
-                                    anchors.fill: parent
-                                }
-                            }
-                        }
-                    } // End of vehicleElements
+            GraphicalDisplay{
+                id: graphicalDisplay
+
+                Component.onCompleted: {
+                    speed: sim.speed
+                    rpm: sim.rpm
+                    broomHeight: sim.boomHeight
+                    tankLevel1: sim.tankLevel1
+                    tankLevel2: sim.tankLevel2
+                    appRate1: sim.appRate1
+                    appRate2: sim.appRate2
+                    broomNozzle1: sim.nozzle1Status
+                    broomNozzle2: sim.nozzle2Status
+                    broomNozzle3: sim.nozzle3Status
+                    broomNozzle4: sim.nozzle4Status
+                    broomNozzle5: sim.nozzle5Status
+                    broomNozzle6: sim.nozzle6Status
                 }
-            } // End of graphicalElements
+            }
         }
     } // End of contentItem
 
@@ -653,121 +358,98 @@ ApplicationWindow {
     Simulation {
         id: sim
 
+        readonly property string notification1: "Nozzle 1 is blocked! Please check the sprayer!"
+        readonly property string notification2: "Nozzle 2 is blocked! Please check the sprayer!"
+        readonly property string notification3: "Nozzle 3 is blocked! Please check the sprayer!"
+        readonly property string notification4: "Nozzle 4 is blocked! Please check the sprayer!"
+        readonly property string notification5: "Nozzle 5 is blocked! Please check the sprayer!"
+        readonly property string notification6: "Nozzle 6 is blocked! Please check the sprayer!"
+        readonly property string highHeightWarning: "The boom height is too high!"
+        readonly property string lowHeightWarning: "The boom height is too low!"
+
+        readonly property string highSpeedWarning: "The machine is moving too fast!"
+        readonly property string lowSpeedWarning: "The machine is moving too slow!"
+
         onSpeedChanged: {
-            speedometer.value = speed
+            graphicalDisplay.speed = speed
 
             if (speed > 0 && speed <= 3) {
-                notifications.addWarning(speedometer.lowSpeedWarning)
-                notifications.removeWarning(speedometer.highSpeedWarning)
+                notifications.addWarning(lowSpeedWarning)
+                notifications.removeWarning(highSpeedWarning)
             } else if (speed > 6) {
-                notifications.addWarning(speedometer.highSpeedWarning)
-                notifications.removeWarning(speedometer.lowSpeedWarning)
+                notifications.addWarning(highSpeedWarning)
+                notifications.removeWarning(lowSpeedWarning)
             } else {
-                notifications.removeWarning(speedometer.lowSpeedWarning)
-                notifications.removeWarning(speedometer.highSpeedWarning)
+                notifications.removeWarning(lowSpeedWarning)
+                notifications.removeWarning(highSpeedWarning)
             }
         }
 
         onRpmChanged: {
-            tachometer.value = sim.rpm
+            graphicalDisplay.rpm = rpm
         }
 
         onBoomHeightChanged: {
-            boomHeightElement.val = boomHeight
-
+            graphicalDisplay.broomHeight = boomHeight
             if (boomHeight > 28) {
-                notifications.addWarning(boomHeightElement.highHeightWarning)
-                notifications.removeWarning(boomHeightElement.lowHeightWarning)
+                notifications.addWarning(highHeightWarning)
+                notifications.removeWarning(lowHeightWarning)
             } else if (boomHeight < 22) {
-                notifications.addWarning(boomHeightElement.lowHeightWarning)
-                notifications.removeWarning(boomHeightElement.highHeightWarning)
+                notifications.addWarning(lowHeightWarning)
+                notifications.removeWarning(highHeightWarning)
             } else {
-                notifications.removeWarning(boomHeightElement.highHeightWarning)
-                notifications.removeWarning(boomHeightElement.lowHeightWarning)
+                notifications.removeWarning(highHeightWarning)
+                notifications.removeWarning(lowHeightWarning)
             }
         }
 
         onTankLevel1Changed: {
-            tank1.level = sim.tankLevel1
+            graphicalDisplay.tankLevel1 = sim.tankLevel1
+
         }
 
         onAppRate1Changed: {
-            rate1.value = appRate1
+            graphicalDisplay.appRate1 = appRate1
         }
 
         onTankLevel2Changed: {
-            tank2.level = sim.tankLevel2
+            graphicalDisplay.tankLevel2 = sim.tankLevel2
         }
 
         onAppRate2Changed: {
-            rate2.value = appRate2
+            graphicalDisplay.appRate2 = appRate2
         }
 
         onNozzle1StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle1State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle1State("on")
-            } else {
-                boomHeightElement.changeNozzle1State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle1State(nozzle1Status)
         }
         onNozzle2StatusChanged: {
-            if (nozzle2Status == "blocked") {
-                boomHeightElement.changeNozzle2State("blocked")
-            } else if (nozzle2Status == "on") {
-                boomHeightElement.changeNozzle2State("on")
-            } else {
-                boomHeightElement.changeNozzle2State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle2State(nozzle2Status)
         }
         onNozzle3StatusChanged: {
-            if (nozzle3Status == "blocked") {
-                boomHeightElement.changeNozzle3State("blocked")
-            } else if (nozzle3Status == "on") {
-                boomHeightElement.changeNozzle3State("on")
-            } else {
-                boomHeightElement.changeNozzle3State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle3State(nozzle3Status)
         }
         onNozzle4StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle4State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle4State("on")
-            } else {
-                boomHeightElement.changeNozzle4State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle4State(nozzle4Status)
         }
         onNozzle5StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle5State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle5State("on")
-            } else {
-                boomHeightElement.changeNozzle5State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle5State(nozzle5Status)
         }
         onNozzle6StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle6State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle6State("on")
-            } else {
-                boomHeightElement.changeNozzle6State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle6State(nozzle6Status)
         }
     }
 
     Loader {
         source: "Simulation.qml"
         onLoaded: {
-            tank1.level = sim.tankLevel1
-            tank2.level = sim.tankLevel2
-            rate1.value = sim.appRate1
-            rate2.value = sim.appRate2
-            speedometer.value = sim.speed
-            boomHeightElement.val = sim.boomHeight
+            graphicalDisplay.speed = sim.speed
+            graphicalDisplay.rpm = sim.rpm
+            graphicalDisplay.broomHeight = sim.boomHeight
+            graphicalDisplay.tankLevel1 = sim.tankLevel1
+            graphicalDisplay.tankLevel2 = sim.tankLevel2
+            graphicalDisplay.appRate1 = sim.appRate1
+            graphicalDisplay.appRate2 = sim.appRate2
         }
     }
 
