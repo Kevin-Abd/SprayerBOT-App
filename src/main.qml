@@ -292,9 +292,13 @@ ApplicationWindow {
     QtObject {
         id: notifications
 
-        readonly property string startupInstruction: "To begin, press and hold the START button."
-        readonly property string restarInstruction: "Press and hold the START button to start the machine"
-        readonly property string allClearMessage: "All systems are normal"
+        property var list_instruction: {
+            "start":   { code: "001",  message : "To begin, press and hold the START button."},
+            "restart": { code: "002",  message : "Press and hold the START button to start the machine"},
+            "normal":  { code: "003",  message : "All systems are normal"},
+
+        }
+
 
         property NotificationsList list : NotificationsList {
 
@@ -302,23 +306,26 @@ ApplicationWindow {
 
 
         function setSpecial(mode){
-            if (mode === "start") list.setSingle(startupInstruction, "off")
-            else if (mode === "stopped") list.setSingle(restarInstruction, "off")
-            else if (mode === "clear") list.clear()
+            if (mode === "start")
+                list.setSingle(list_instruction["start"].code ,list_instruction["start"].message, "off")
+            else if (mode === "stopped")
+                list.setSingle(list_instruction["restart"].code, list_instruction["restart"].message, "off")
+            else if (mode === "clear")
+                list.clear()
 
             statusManager.checkForNewStatus()
         }
 
 
-        function addWarning(message) {
-            if (list.index(message) === -1) {
-                list.add(message, "warning")
+        function addWarning(alert) {
+            if (list.index(alert.code) === -1) {
+                list.add(alert.code, alert.message, "warning")
                 statusManager.checkForNewStatus()
             }
         }
 
-        function removeWarning(message) {
-            var res = list.removeIfpresent(message)
+        function removeWarning(alert) {
+            var res = list.removeIfpresent(alert.code)
             if (res === true)
                 statusManager.checkForNewStatus()
         }
@@ -327,8 +334,8 @@ ApplicationWindow {
             return list.getUnprocessed()
         }
 
-        function setProccessed(message){
-            return list.process(message)
+        function setProccessed(code){
+            return list.process(code)
         }
 
     }
@@ -358,30 +365,37 @@ ApplicationWindow {
     Simulation {
         id: sim
 
-        readonly property string notification1: "Nozzle 1 is blocked! Please check the sprayer!"
-        readonly property string notification2: "Nozzle 2 is blocked! Please check the sprayer!"
-        readonly property string notification3: "Nozzle 3 is blocked! Please check the sprayer!"
-        readonly property string notification4: "Nozzle 4 is blocked! Please check the sprayer!"
-        readonly property string notification5: "Nozzle 5 is blocked! Please check the sprayer!"
-        readonly property string notification6: "Nozzle 6 is blocked! Please check the sprayer!"
-        readonly property string highHeightWarning: "The boom height is too high!"
-        readonly property string lowHeightWarning: "The boom height is too low!"
+        property var list_alerts: {
+            "low speed":  { code: "101",  message : "The machine is moving too slow!"},
+            "high speed": { code: "102",  message : "The machine is moving too fast!"},
 
-        readonly property string highSpeedWarning: "The machine is moving too fast!"
-        readonly property string lowSpeedWarning: "The machine is moving too slow!"
+            "high broom": { code: "111",  message : "The broom height is too high!"},
+            "low broom":  { code: "112",  message : "The broom height is too low!"},
+
+            "blocked nozzle 1": { code: "121",  message : "Nozzle 1 is blocked! Please check the sprayer!"},
+            "blocked nozzle 2": { code: "122",  message : "Nozzle 2 is blocked! Please check the sprayer!"},
+            "blocked nozzle 3": { code: "123",  message : "Nozzle 3 is blocked! Please check the sprayer!"},
+            "blocked nozzle 4": { code: "124",  message : "Nozzle 4 is blocked! Please check the sprayer!"},
+            "blocked nozzle 5": { code: "125",  message : "Nozzle 5 is blocked! Please check the sprayer!"},
+            "blocked nozzle 6": { code: "126",  message : "Nozzle 6 is blocked! Please check the sprayer!"},
+
+            "low tank 1": { code: "131",  message : "Tank 1 level is low! Please refill soon."},
+            "low tank 2": { code: "132",  message : "Tank 1 level is low! Please refill soon."},
+
+        }
 
         onSpeedChanged: {
             graphicalDisplay.speed = speed
 
             if (speed > 0 && speed <= 3) {
-                notifications.addWarning(lowSpeedWarning)
-                notifications.removeWarning(highSpeedWarning)
+                notifications.addWarning(list_alerts["low speed"])
+                notifications.removeWarning(list_alerts["high speed"])
             } else if (speed > 6) {
-                notifications.addWarning(highSpeedWarning)
-                notifications.removeWarning(lowSpeedWarning)
+                notifications.addWarning(list_alerts["high speed"])
+                notifications.removeWarning(list_alerts["low speed"])
             } else {
-                notifications.removeWarning(lowSpeedWarning)
-                notifications.removeWarning(highSpeedWarning)
+                notifications.removeWarning(list_alerts["low speed"])
+                notifications.removeWarning(list_alerts["high speed"])
             }
         }
 
@@ -392,20 +406,24 @@ ApplicationWindow {
         onBoomHeightChanged: {
             graphicalDisplay.broomHeight = boomHeight
             if (boomHeight > 28) {
-                notifications.addWarning(highHeightWarning)
-                notifications.removeWarning(lowHeightWarning)
+                notifications.addWarning(list_alerts["high broom"])
+                notifications.removeWarning(list_alerts["low broom"])
             } else if (boomHeight < 22) {
-                notifications.addWarning(lowHeightWarning)
-                notifications.removeWarning(highHeightWarning)
+                notifications.addWarning(list_alerts["low broom"])
+                notifications.removeWarning(list_alerts["high broom"])
             } else {
-                notifications.removeWarning(highHeightWarning)
-                notifications.removeWarning(lowHeightWarning)
+                notifications.removeWarning(list_alerts["high broom"])
+                notifications.removeWarning(list_alerts["low broom"])
             }
         }
 
         onTankLevel1Changed: {
             graphicalDisplay.tankLevel1 = sim.tankLevel1
 
+            if (sim.tankLevel1 < 6.25)
+                notifications.addWarning(list_alerts["low tank 1"])
+            else
+                notifications.removeWarning(list_alerts["low tank 1"])
         }
 
         onAppRate1Changed: {
@@ -414,6 +432,11 @@ ApplicationWindow {
 
         onTankLevel2Changed: {
             graphicalDisplay.tankLevel2 = sim.tankLevel2
+
+            if (sim.tankLevel2 < 1.25)
+                notifications.addWarning(list_alerts["low tank 2"])
+            else
+                notifications.removeWarning(list_alerts["low tank 2"])
         }
 
         onAppRate2Changed: {
@@ -422,21 +445,51 @@ ApplicationWindow {
 
         onNozzle1StatusChanged: {
             graphicalDisplay.broomHeightElement.changeNozzle1State(nozzle1Status)
+
+            if (nozzle1Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 1"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 1"])
         }
         onNozzle2StatusChanged: {
             graphicalDisplay.broomHeightElement.changeNozzle2State(nozzle2Status)
+
+            if (nozzle2Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 2"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 2"])
         }
         onNozzle3StatusChanged: {
             graphicalDisplay.broomHeightElement.changeNozzle3State(nozzle3Status)
+
+            if (nozzle3Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 3"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 3"])
         }
         onNozzle4StatusChanged: {
             graphicalDisplay.broomHeightElement.changeNozzle4State(nozzle4Status)
+
+            if (nozzle4Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 4"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 4"])
         }
         onNozzle5StatusChanged: {
             graphicalDisplay.broomHeightElement.changeNozzle5State(nozzle5Status)
+
+            if (nozzle5Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 5"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 5"])
         }
         onNozzle6StatusChanged: {
             graphicalDisplay.broomHeightElement.changeNozzle6State(nozzle6Status)
+
+            if (nozzle6Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 6"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 6"])
         }
     }
 

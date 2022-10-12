@@ -5,22 +5,23 @@ ListModel{
 
     ListElement {
         message: "To begin, press and hold the START button."
+        code: "001"
         status: "off"
         processed: false
     }
 
-    function setSingle(message, status){
+    function setSingle(code, message, status){
         clear()
-        set(0, {message: message, status: status, processed: false})
+        set(0, {code: code, message: message, status: status, processed: false})
     }
 
-    function add(message, status){
-        append({message: message, status: status, processed: false})
+    function add(code, message, status){
+        append({code: code, message: message, status: status, processed: false})
     }
 
-    function removeIfpresent(message) {
+    function removeIfpresent(code) {
         for (var i = 0; i < count; i++)
-            if (get(i).message === message)
+            if (get(i).code === code)
             {
                 remove(i)
                 return true
@@ -28,9 +29,9 @@ ListModel{
         return false
     }
 
-    function index(message) {
+    function index(code) {
         for (var i = 0; i < count; i++)
-            if (get(i).message === message)
+            if (get(i).code === code)
                 return i
         return -1
     }
@@ -42,10 +43,10 @@ ListModel{
         return null
     }
 
-    function process(message) {
-        var idx = index(message)
+    function process(code) {
+        var idx = index(code)
         if (idx === -1){
-            console.warn(`Attempted process non existingm message: ${message}`)
+            console.warn(`Attempted process non existant alert (code: ${code})`)
             return
         }
         set(idx, {processed: true})

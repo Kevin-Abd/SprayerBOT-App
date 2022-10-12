@@ -9,6 +9,8 @@ QtObject{
 
     property string lastMessage
     property string lastStatus
+    property var lastAlert: { "code": "", "status": "", "messsage":"" }
+
     property string alert
     property string state: stateGroup.state
     property real counter: 0
@@ -39,8 +41,6 @@ QtObject{
 
         property var locale: Qt.locale()
         property date currentDate: new Date()
-//        property string dateString: currentDate.toISOString()
-//        property string dateString: currentDate.toLocaleDateString(locale, "yyyy-MM-ddT-hh-mm")
         property string dateString: Qt.formatDateTime(currentDate ,"yyyy-MM-ddThh-mm")
         property string fileName: dateString + ".log"
     }
@@ -57,120 +57,128 @@ QtObject{
 
     function checkForNewStatus(){
 
-        var status = ""
-        var message = ""
+        var alert
 
         if (notifications.count === 0){
-            status = "nominal"
-            message = notifications.allClearMessage
+            alert = notifications.list_instruction["normal"]
+            alert.status = "nominal"
         } else {
             var object = notifications.getUnprocessed()
             if (object === null){
-                status = "nominal"
-                message = notifications.allClearMessage
+                alert = notifications.list_instruction["normal"]
+                alert.status = "nominal"
             } else {
-                status = object.status
-                message = object.message
-                notifications.setProccessed(message)
+                alert = object
+                alert.status = object.status
+                notifications.setProccessed(alert.code)
             }
         }
 
-        if (status !== lastStatus || message !== lastMessage)
-            processNewStatus(status, message)
+        if (alert.code !== lastAlert.code)
+            processNewStatus(alert)
+
     }
 
-    function processNewStatus(newStatus, newNotification){
+    function processNewStatus(newAlert){
         /**
          * Function to handle new status
          * It is responsible for trigggering warning displays and feedback
          */
-        console.debug(`state: ${state}) status: ${newStatus}, ${newNotification}` + `| ${Date.now()}`)
+        console.debug(`${state}: (${newAlert.status}, ${newAlert.code}) at ${Date.now()}`)
 
-        if (state === "warmup") processForWarmup(newStatus, newNotification)
-        else if (state === "tutorial_clear") processForTutorial(newStatus, newNotification, "clear")
-        else if (state === "tutorial_visual") processForTutorial(newStatus, newNotification, "visual")
-        else if (state === "tutorial_auditory") processForTutorial(newStatus, newNotification, "auditory")
-        else if (state === "tutorial_tactile") processForTutorial(newStatus, newNotification, "tactile")
-        else if (state === "experminets") processForExperiment(newStatus, newNotification)
+        if (state === "warmup") processForWarmup(newAlert)
+        else if (state === "tutorial_clear") processForTutorial(newAlert, "clear")
+        else if (state === "tutorial_visual") processForTutorial(newAlert, "visual")
+        else if (state === "tutorial_auditory") processForTutorial(newAlert, "auditory")
+        else if (state === "tutorial_tactile") processForTutorial(newAlert, "tactile")
+        else if (state === "experminets") processForExperiment(newAlert)
         else console.warn("Got unexpected state: " + state)
 
-        lastStatus = newStatus
-        lastMessage = newNotification
+        lastAlert.code = newAlert.code
+        lastAlert.message = newAlert.message
+        lastAlert.status = newAlert.status
     }
 
-    function processForWarmup(newStatus, newNotification){
+    function processForWarmup(newAlert){
         /**
          * Function to handle state change while in warmup state
          * Only updates for "off" and "nominal states" and stops warning feedbacks
          */
 
-        if (newStatus === "off" || newStatus === "nominal"){
-            notificationsBar.setState(newNotification, newStatus)
+        if (newAlert.status === "off" || newAlert.status === "nominal"){
+            notificationsBar.setState(newAlert.message, newAlert.status)
             buttonAlertPerceived.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
         else
-            console.debug("Got unexpected status in warmup: " + newStatus)
+            console.debug("Got unexpected status in warmup: " + newAlert.status)
     }
 
-    function processForTutorial(newStatus, newNotification, feedback){
+    function processForTutorial(newAlert, feedback){
         /**
          * Function to handle state change while in tutorial state
          * For warning state starts only one feedback based on input
          */
 
-        if (newStatus === "off" || newStatus === "nominal"){
-            notificationsBar.setState(newNotification, newStatus)
+        if (newAlert.status === "off" || newAlert.status === "nominal"){
+            notificationsBar.setState(newAlert.message, newAlert.status)
             buttonAlertPerceived.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
-        else if (newStatus === "warning"){
+        else if (newAlert.status === "warning"){
 
-            if (feedback === "visual") notificationsBar.setState(newNotification, newStatus)
+            if (feedback === "visual") notificationsBar.setState(newAlert.message, newAlert.status)
             else if (feedback === "auditory") alertSoundEffect.play()
             else if (feedback === "tactile") phidgetFeedback.activate()
             // TODO do we need buttonAlertPerceived enabled ?
         }
         else
-            console.debug("Got unexpected status in tutorial: " + newStatus)
+            console.debug("Got unexpected status in tutorial: " + newAlert.status)
     }
 
-    function processForExperiment(newStatus, newNotification, feedback){
+    function processForExperiment(newAlert){
         /**
          * Function to handle state change while in experiment state
-         * For warning state starts visual and one other feedback based on input
+         * For warning state starts visual and one other feedback
+         * Feedback is randomly chosen as auditory or tactile
          * For nominal checks of last state was warning. then records user missed alert
          */
 
-        if (newStatus === "off"){
-            notificationsBar.setState(newNotification, newStatus)
+        if (newAlert.status === "off"){
+            notificationsBar.setState(newAlert.message, newAlert.status)
             buttonAlertPerceived.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
-        else if (newStatus === "nominal"){
-            notificationsBar.setState(newNotification, newStatus)
+        else if (newAlert.status === "nominal"){
+            notificationsBar.setState(newAlert.message, newAlert.status)
             buttonAlertPerceived.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
 
             if (lastStatus === "warning"){
-                // TODO log alert missed
-                fileio.write(`Missed\n`)
+                // log alert missed
+                fileio.write(`${lastAlert.code}, Missed\n`)
             }
         }
-        else if (newStatus === "warning"){
-            notificationsBar.setState(newNotification, newStatus)  // Always update visual feedback
+        else if (newAlert.status === "warning"){
+            notificationsBar.setState(newAlert.message, newAlert.status)  // Always update visual feedback
+
+            // TODO choose feedback
+            var feedback = "NAN"
+
             if (feedback === "auditory") alertSoundEffect.play()
             else if (feedback === "tactile") phidgetFeedback.activate()
+
             buttonAlertPerceived.enabled = true
-            fileio.write(`${Date.now()}, `)
-            // TODO log alert start time + type
+
+            // log alert start time + type
+            fileio.write(`\nNewAlert, ${newAlert.code}, ${Date.now()}, ${feedback}, `)
         }
         else
-            console.debug("Got unexpected status in experiment: " + newStatus)
+            console.debug("Got unexpected status in experiment: " + newAlert.status)
 
     }
 
@@ -179,14 +187,24 @@ QtObject{
         /**
          * Function called by buttonAlertPerceived when user aknowlegdes the alert
          */
+        // log override time and the last alert code
+        fileio.write(`${lastAlert.code}, ${Date.now()}\n`)
+
+        // disable alert percived button
         buttonAlertPerceived.checked = false
         buttonAlertPerceived.enabled = false
 
+        // clear alert feedback
         alertSoundEffect.stop()
         phidgetFeedback.deactivate()
-        notificationsBar.setState(notifications.allClearMessage, "nominal")
-        fileio.write(`${Date.now()}\n`)
-        // TODO log time
+        notificationsBar.setState(notifications.list_instruction["normal"].message, "nominal")
+
+        var newAlert = notifications.list_instruction["normal"]
+
+        lastAlert.code = newAlert.code
+        lastAlert.message = newAlert.message
+        lastAlert.status = "nominal"
+
     }
 
 }
