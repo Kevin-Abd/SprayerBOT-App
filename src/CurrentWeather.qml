@@ -16,15 +16,16 @@ Popup {
     AppModel {
         id: model
 
-        onWeatherChanged: {
-            /* Warn user when wind speed is greater than 12 mph
-                Reference: https://sprayers101.com/five-tips-for-spraying-in-the-wind/ */
-            if (parseInt(model.weather.windSpeed, 10) > 12) {
-                notifications.addWarning(notification)
-            } else {
-                notifications.removeWarning(notification)
-            }
-        }
+        //TODO
+        //onWeatherChanged: {
+        //    /* Warn user when wind speed is greater than 12 mph
+        //        Reference: https://sprayers101.com/five-tips-for-spraying-in-the-wind/ */
+        //    if (parseInt(model.weather.windSpeed, 10) > 12) {
+        //        notifications.addWarning(notification)
+        //    } else {
+        //        notifications.removeWarning(notification)
+        //    }
+        //}
     }
 
     Item {
