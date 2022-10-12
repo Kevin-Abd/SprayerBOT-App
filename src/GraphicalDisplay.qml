@@ -278,9 +278,6 @@ Item {
                             CircularGauge {
                                 id: speedometer
 
-                                readonly property string highSpeedWarning: "The machine is moving too fast!"
-                                readonly property string lowSpeedWarning: "The machine is moving too slow!"
-
                                 height: parent.height * 0.90
                                 width: parent.width
 

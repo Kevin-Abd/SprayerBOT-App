@@ -8,93 +8,31 @@ import QtQuick.Controls.Material 2.3
 Item {
     id: boomHeightElement
 
-    readonly property string notification1: "Nozzle 1 is blocked! Please check the sprayer!"
-    readonly property string notification2: "Nozzle 2 is blocked! Please check the sprayer!"
-    readonly property string notification3: "Nozzle 3 is blocked! Please check the sprayer!"
-    readonly property string notification4: "Nozzle 4 is blocked! Please check the sprayer!"
-    readonly property string notification5: "Nozzle 5 is blocked! Please check the sprayer!"
-    readonly property string notification6: "Nozzle 6 is blocked! Please check the sprayer!"
-    readonly property string highHeightWarning: "The boom height is too high!"
-    readonly property string lowHeightWarning: "The boom height is too low!"
     readonly property real boomHeightValue: verticalGauge.value
     property real val
 
     function changeNozzle1State(value) {
-        if (value === "blocked") {
-            nozzle1Status.state = "blocked"
-            notifications.addWarning(notification1)
-        } else if (value === "on") {
-            nozzle1Status.state = "on"
-            notifications.removeWarning(notification1)
-        } else {
-            nozzle1Status.state = "off"
-            notifications.removeWarning(notification1)
-        }
+        nozzle1Status.state = value
     }
 
     function changeNozzle2State(value) {
-        if (value === "blocked") {
-            nozzle2Status.state = "blocked"
-            notifications.addWarning(notification2)
-        } else if (value === "on") {
-            nozzle2Status.state = "on"
-            notifications.removeWarning(notification2)
-        } else {
-            nozzle2Status.state = "off"
-            notifications.removeWarning(notification2)
-        }
+        nozzle2Status.state = value
     }
 
     function changeNozzle3State(value) {
-        if (value === "blocked") {
-            nozzle3Status.state = "blocked"
-            notifications.addWarning(notification3)
-        } else if (value === "on") {
-            nozzle3Status.state = "on"
-            notifications.removeWarning(notification3)
-        } else {
-            nozzle3Status.state = "off"
-            notifications.removeWarning(notification3)
-        }
+        nozzle3Status.state = value
     }
 
     function changeNozzle4State(value) {
-        if (value === "blocked") {
-            nozzle4Status.state = "blocked"
-            notifications.addWarning(notification4)
-        } else if (value === "on") {
-            nozzle4Status.state = "on"
-            notifications.removeWarning(notification4)
-        } else {
-            nozzle4Status.state = "off"
-            notifications.removeWarning(notification4)
-        }
+        nozzle4Status.state = value
     }
 
     function changeNozzle5State(value) {
-        if (value === "blocked") {
-            nozzle5Status.state = "blocked"
-            notifications.addWarning(notification5)
-        } else if (value === "on") {
-            nozzle5Status.state = "on"
-            notifications.removeWarning(notification5)
-        } else {
-            nozzle5Status.state = "off"
-            notifications.removeWarning(notification5)
-        }
+        nozzle5Status.state = value
     }
 
     function changeNozzle6State(value) {
-        if (value === "blocked") {
-            nozzle6Status.state = "blocked"
-            notifications.addWarning(notification6)
-        } else if (value === "on") {
-            nozzle6Status.state = "on"
-            notifications.removeWarning(notification6)
-        } else {
-            nozzle6Status.state = "off"
-            notifications.removeWarning(notification6)
-        }
+        nozzle6Status.state = value
     }
 
     implicitWidth: parent.width
