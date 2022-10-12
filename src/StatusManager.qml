@@ -7,8 +7,6 @@ import FileIO 1.0
 QtObject{
     id: statusManager
 
-    property string lastMessage
-    property string lastStatus
     property var lastAlert: { "code": "", "status": "", "messsage":"" }
 
     property string alert
@@ -158,7 +156,7 @@ QtObject{
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
 
-            if (lastStatus === "warning"){
+            if (lastAlert.status === "warning"){
                 // log alert missed
                 fileio.write(`${lastAlert.code}, Missed\n`)
             }
