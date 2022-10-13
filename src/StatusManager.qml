@@ -162,14 +162,20 @@ QtObject{
             }
         }
         else if (newAlert.status === "warning"){
-            notificationsBar.setState(newAlert.message, newAlert.status)  // Always update visual feedback
-
-            // TODO choose feedback
+            // choose feedback
+            var rand = Math.floor(Math.random() * 2)
             var feedback = "NAN"
 
-            if (feedback === "auditory") alertSoundEffect.play()
-            else if (feedback === "tactile") phidgetFeedback.activate()
+            if (rand === 0){
+                feedback = "auditory"
+                alertSoundEffect.play()
+            } else if (rand === 1) {
+                feedback = "tactile"
+                phidgetFeedback.activate()
+            }
 
+            // Always update visual feedback
+            notificationsBar.setState(newAlert.message, newAlert.status)
             buttonAlertPerceived.enabled = true
 
             // log alert start time + type
