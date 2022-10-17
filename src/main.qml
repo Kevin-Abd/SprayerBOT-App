@@ -321,7 +321,7 @@ ApplicationWindow {
             "blocked nozzle 6": { code: "126",  message : "Nozzle 6 is blocked! Please check the sprayer!"},
 
             "low tank 1": { code: "131",  message : "Tank 1 level is low! Please refill soon."},
-            "low tank 2": { code: "132",  message : "Tank 1 level is low! Please refill soon."},
+            "low tank 2": { code: "132",  message : "Tank 2 level is low! Please refill soon."},
 
         }
 
