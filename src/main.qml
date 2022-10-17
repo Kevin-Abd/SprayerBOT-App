@@ -66,10 +66,7 @@ ApplicationWindow {
                     startButton.mainColor = "#17a81a";
 
                     // play all the videos
-                    leftPlayer.play();
-                    frontPlayer.play();
-                    rightPlayer.play();
-
+                    videoLayout.play();
                     /* Deactivate emergency stop button by changing the EngineStartStop
                        active and mainColor properties, and the DelayButton checked property.
                        This will be done everytime the stat button is pressed regardless of
@@ -159,9 +156,7 @@ ApplicationWindow {
                     stopButton.active = true;
                     stopButton.mainColor = "#b30000";
 
-                    leftPlayer.pause();
-                    frontPlayer.pause();
-                    rightPlayer.pause();
+                    videoLayout.pause()
 
                     startButton.active = false
                     startButton.checked = false
@@ -201,63 +196,9 @@ ApplicationWindow {
         ColumnLayout {
             anchors.fill: parent
 
-            Item {
-                id: videos
-
-                Layout.preferredWidth: parent.width /3
-                Layout.preferredHeight: parent.height * 0.35
-
-                RowLayout {
-                    spacing: 7
-                    anchors.fill: parent
-
-
-                    VideoPlayer {
-                        id: video1
-
-                        source: leftPlayer          // allows for the creation of multiple videos
-                        view: "Left Boom"           // video label
-
-                        MediaPlayer {
-                            id: leftPlayer
-
-                            source: "../media/left.mp4"
-                            loops: MediaPlayer.Infinite
-                            onPlaybackStateChanged: video1.state = "after"
-                        }
-                    }
-
-                    VideoPlayer {
-                        id: video2
-
-                        source: frontPlayer
-                        view: "Front View"
-
-                        MediaPlayer {
-                            id: frontPlayer
-
-                            source: "../media/front.mp4"
-                            loops: MediaPlayer.Infinite
-                            onPlaybackStateChanged: video2.state = "after"
-                        }
-                    }
-
-                    VideoPlayer {
-                        id: video3
-
-                        source: rightPlayer
-                        view: "Right Boom"
-
-                        MediaPlayer {
-                            id: rightPlayer
-
-                            source: "../media/right.mp4"
-                            loops: MediaPlayer.Infinite
-                            onPlaybackStateChanged: video3.state = "after"
-                        }
-                    }
-                }
-            } // End of videos
+            VideoLayout {
+                id: videoLayout
+            }
             GraphicalDisplay{
                 id: graphicalDisplay
 
@@ -507,9 +448,7 @@ ApplicationWindow {
     }
 
     onClosing: {
-        leftPlayer.stop()
-        frontPlayer.stop()
-        rightPlayer.stop()
+        videoLayout.stop()
         sim.start = false
         // liveValue.stopUpdates()
     }

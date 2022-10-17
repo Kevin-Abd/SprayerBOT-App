@@ -31,5 +31,6 @@
         <file>StatusManager.qml</file>
         <file>NotificationsList.qml</file>
         <file>GraphicalDisplay.qml</file>
+        <file>VideoLayout.qml</file>
     </qresource>
 </RCC>
