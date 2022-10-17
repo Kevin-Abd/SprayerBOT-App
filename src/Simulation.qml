@@ -25,6 +25,60 @@ Item {
     property string nozzle5Status: "off"
     property string nozzle6Status: "off"
 
+    property real timeInState: 120
+
+    state: "warmup"
+    states: [
+        State {
+            name: "warmup"
+            PropertyChanges { target: valueSource; timeInState: 120 }
+        },
+        State {
+            name: "tutorial"
+            PropertyChanges { target: valueSource; timeInState: 60 }
+        },
+
+        // State {
+        //     name: "tutorial_clear"
+        //     PropertyChanges { target: valueSource; timeInState: 120 }
+        // },
+        // State {
+        //     name: "tutorial_visual"
+        //     PropertyChanges { target: valueSource; timeInState: 120 }
+        // },
+        // State {
+        //     name: "tutorial_auditory"
+        //     PropertyChanges { target: valueSource; timeInState: 120 }
+        // },
+        // State {
+        //     name: "tutorial_tactile"
+        //     PropertyChanges { target: valueSource; timeInState: 120 }
+        // },
+        State {
+            name: "experminets"
+            PropertyChanges { target: valueSource; timeInState: 300 }
+        },
+        State {
+            name: "finished"
+            PropertyChanges { target: valueSource; timeInState: 9000 }
+        }
+    ]
+
+    Timer {
+        interval: timeInState * 1000;
+        running: true; repeat: true
+        onTriggered: changeState()
+    }
+
+    function changeState() {
+        if (state === "warmup")
+            state = "tutorial"
+        else if (state === "tutorial")
+            state = "experminets"
+        else if (state === "experminets")
+            state = "finished"
+    }
+
     Component.onCompleted: {
         var endTime = 120
 
