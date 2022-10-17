@@ -290,19 +290,6 @@ ApplicationWindow {
     }
 
 
-    Timer {
-        id: timer
-
-        triggeredOnStart: true
-        interval: 5000
-        running: true
-        repeat: true
-
-        onTriggered: {
-            // statusManager.checkForNewStatus()
-        }
-    }
-
     Simulation {
         id: sim
 
