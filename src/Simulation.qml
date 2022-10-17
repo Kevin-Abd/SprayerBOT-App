@@ -66,9 +66,12 @@ Item {
     }
 
     function valueArrayFromAlert(listAlerts, endTime, wobbleFunction) {
-        var time_per_block = 1.2
+        var trans_time = 1.2
+        var pasue_time = 0.5
+
         var filled_time = 0
         var result = [];
+        var tmp
 
         listAlerts.sort(function(a, b) { return a.time - b.time; })
 
@@ -77,22 +80,24 @@ Item {
 
             // fill with wobble until alert time
             while (filled_time < alert.time){
-                filled_time += time_per_block
-                result.push({ value: wobbleFunction(), duration: time_per_block, pause: false})
+                filled_time += trans_time + pasue_time
+                tmp = wobbleFunction()
+                result.push({ value: tmp, duration: trans_time, pause: false})
+                result.push({ value: tmp, duration: pasue_time, pause: true })
             }
 
-            // tranistion to alert
-            result.push({ value: alert.value, duration: time_per_block, pause: false })
-            // stay on alert for duration
+            // tranistion to alert and stay for duration
+            filled_time += trans_time + alert.duration
+            result.push({ value: alert.value, duration: trans_time, pause: false })
             result.push({ value: alert.value, duration: alert.duration, pause: true })
-
-            filled_time += time_per_block + alert.duration
         }
 
         // fill until endTime with wobble
         while (filled_time < endTime){
-            filled_time += time_per_block
-            result.push({ value: wobbleFunction(), duration: time_per_block, pause: false})
+            filled_time += trans_time + pasue_time
+            tmp = wobbleFunction()
+            result.push({ value: tmp, duration: trans_time, pause: false})
+            result.push({ value: tmp, duration: pasue_time, pause: true })
         }
 
         return result
