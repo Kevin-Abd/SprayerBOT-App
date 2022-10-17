@@ -26,16 +26,104 @@ Item {
     property string nozzle6Status: "off"
 
     Component.onCompleted: {
-        var alerts = [
+        var endTime = 120
+
+        var speedAlerts = [
                     {"value": 1,   "duration": 2,  "time": 7},
                     {"value": 2.4, "duration": 1,  "time": 20},
                     {"value": 7,   "duration": 10, "time": 36},
                 ]
 
-        var values = valueArrayFromAlert(alerts, 60, wobbleSpeed)
-        // print(JSON.stringify(values))
-        var animsSpeed = createListOfAnimation(values, valueSource, "speed")
-        speedAnim.animations = animsSpeed
+
+        var rpmAlerts = [
+                    {"value": 7,   "duration": 3,  "time": 12},
+                    {"value": 10,  "duration": 6,  "time": 27},
+                    {"value": 6.5, "duration": 3,  "time": 40},
+                ]
+
+
+
+        setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime)
+        setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime)
+    }
+
+
+
+
+
+    QtObject {
+        id: dynamicContainer
+        // A dummy object to add new objects to
+    }
+
+    ParallelAnimation {
+        id: parAnim
+
+        SequentialAnimation
+        {
+            id: speedAnim
+        }
+
+        SequentialAnimation
+        {
+            id: rpmAnim
+        }
+
+        running: valueSource.start
+        paused: valueSource.pause
+        loops: Animation.Infinite
+
+        onPausedChanged: {
+            if (valueSource.pause == true) {
+                appRate1 = 0
+                appRate2 = 0
+                speed = 0
+                rpm = 0
+                nozzle1Status = "off"
+                nozzle2Status = "off"
+                nozzle3Status = "off"
+                nozzle4Status = "off"
+                nozzle5Status = "off"
+                nozzle6Status = "off"
+            }
+            else {
+                nozzle1Status = "on"
+                nozzle2Status = "on"
+                nozzle3Status = "on"
+                nozzle4Status = "on"
+                nozzle5Status = "on"
+                nozzle6Status = "on"
+            }
+        }
+    }
+
+    Component
+    {
+        id: compSmoothAnim
+
+        SmoothedAnimation {
+            //target: gauge
+            //property: "value";
+            //to: 0
+            //duration: 0
+            velocity: -1
+            alwaysRunToEnd: true
+        }
+    }
+
+    Component
+    {
+        id: comptPauseAnim
+        PauseAnimation {
+            //duration: 200
+            alwaysRunToEnd: true
+        }
+    }
+
+    function setCompAnimation(alerts, wobbleFunction, propName, animComponent, endTime){
+        var values = valueArrayFromAlert(alerts, endTime, wobbleFunction)
+        var anims= createListOfAnimation(values, valueSource, propName)
+        animComponent.animations = anims
     }
 
     function createListOfAnimation(valueArray, targetObj, targetProp) {
@@ -112,8 +200,8 @@ Item {
 
     function wobbleSpeed(){
         // green zone: 3-6
-        // wobble around 3.4
-        return randomNum(32, 36, 10)
+        // wobble around 3.9
+        return randomNum(32, 46, 10)
     }
 
     function wobbleRpm(){
@@ -136,70 +224,6 @@ Item {
     function wobbleAppRate2(){
         // wobble around 20
         return randomNum(17, 26, 1)
-    }
-
-    QtObject {
-        id: dynamicContainer
-        // A dummy object to add new objects to
-    }
-
-    ParallelAnimation {
-        id: parAnim
-
-        SequentialAnimation
-        {
-            id: speedAnim
-        }
-
-        running: valueSource.start
-        paused: valueSource.pause
-        loops: Animation.Infinite
-
-        onPausedChanged: {
-            if (valueSource.pause == true) {
-                appRate1 = 0
-                appRate2 = 0
-                speed = 0
-                rpm = 0
-                nozzle1Status = "off"
-                nozzle2Status = "off"
-                nozzle3Status = "off"
-                nozzle4Status = "off"
-                nozzle5Status = "off"
-                nozzle6Status = "off"
-            }
-            else {
-                nozzle1Status = "on"
-                nozzle2Status = "on"
-                nozzle3Status = "on"
-                nozzle4Status = "on"
-                nozzle5Status = "on"
-                nozzle6Status = "on"
-            }
-        }
-    }
-
-    Component
-    {
-        id: compSmoothAnim
-
-        SmoothedAnimation {
-            //target: gauge
-            //property: "value";
-            //to: 0
-            //duration: 0
-            velocity: -1
-            alwaysRunToEnd: true
-        }
-    }
-
-    Component
-    {
-        id: comptPauseAnim
-        PauseAnimation {
-            //duration: 200
-            alwaysRunToEnd: true
-        }
     }
 
     //    SequentialAnimation {
