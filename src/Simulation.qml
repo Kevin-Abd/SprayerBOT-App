@@ -99,11 +99,14 @@ Item {
 
         setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime)
         setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime)
+
+        // setCompAnimation(boomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime)
+        // setCompAnimation(appRate1lerts, wobbleAppRate1, "appRate1", appRate1Anim, endTime)
+        // setCompAnimation(appRate2Alerts, wobbleAppRate2, "appRate2", appRate2Anim, endTime)
+
+        //TODO nozzel Animation
+
     }
-
-
-
-
 
     QtObject {
         id: dynamicContainer
@@ -121,6 +124,21 @@ Item {
         SequentialAnimation
         {
             id: rpmAnim
+        }
+
+        SequentialAnimation
+        {
+            id: broomAnim
+        }
+
+        SequentialAnimation
+        {
+            id: appRate1Anim
+        }
+
+        SequentialAnimation
+        {
+            id: appRate2Anim
         }
 
         running: valueSource.start
