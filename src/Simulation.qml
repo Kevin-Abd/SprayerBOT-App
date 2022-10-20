@@ -104,8 +104,32 @@ Item {
         // setCompAnimation(appRate1lerts, wobbleAppRate1, "appRate1", appRate1Anim, endTime)
         // setCompAnimation(appRate2Alerts, wobbleAppRate2, "appRate2", appRate2Anim, endTime)
 
-        //TODO nozzel Animation
+        setNozzelAnimation(endTime)
 
+    }
+
+    function setNozzelAnimation(endTime){
+
+        var nozzel1Alerts = [
+                    {"value": "blocked",  "duration": 5,  "time": 25},
+                    {"value": "blocked",  "duration": 5,  "time": 55},
+                ]
+
+        var nozzel2Alerts = [
+                    {"value": "blocked",  "duration": 5,  "time": 35},
+                ]
+
+        var nozzel3Alerts = []
+        var nozzel4Alerts = []
+        var nozzel5Alerts = []
+        var nozzel6Alerts = []
+
+        nozzelAnim1.animations = makeNozzelAnimation(nozzel1Alerts, endTime, "nozzle1Status")
+        nozzelAnim2.animations = makeNozzelAnimation(nozzel2Alerts, endTime, "nozzle2Status")
+        nozzelAnim3.animations = makeNozzelAnimation(nozzel3Alerts, endTime, "nozzle3Status")
+        nozzelAnim4.animations = makeNozzelAnimation(nozzel4Alerts, endTime, "nozzle4Status")
+        nozzelAnim5.animations = makeNozzelAnimation(nozzel5Alerts, endTime, "nozzle5Status")
+        nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status")
     }
 
     QtObject {
@@ -139,6 +163,36 @@ Item {
         SequentialAnimation
         {
             id: appRate2Anim
+        }
+
+        SequentialAnimation
+        {
+            id: nozzelAnim1
+        }
+
+        SequentialAnimation
+        {
+            id: nozzelAnim2
+        }
+
+        SequentialAnimation
+        {
+            id: nozzelAnim3
+        }
+
+        SequentialAnimation
+        {
+            id: nozzelAnim4
+        }
+
+        SequentialAnimation
+        {
+            id: nozzelAnim5
+        }
+
+        SequentialAnimation
+        {
+            id: nozzelAnim6
         }
 
         running: valueSource.start
@@ -190,6 +244,71 @@ Item {
             //duration: 200
             alwaysRunToEnd: true
         }
+    }
+
+    Component
+    {
+        id: comptPropAnim
+        PropertyAnimation {
+            // target: valueSource
+            // property: "nozzle1Status"
+            // to: "on"
+        }
+    }
+
+
+
+    function makeNozzelAnimation(alerts, endTime, nozzelName){
+        // valueArrayFromAlert
+        var filled_time = 0
+        var values = [];
+
+        alerts.sort(function(a, b) { return a.time - b.time; })
+
+        for (var i = 0; i < alerts.length; i++) {
+            var alert = alerts[i]
+
+            // set to "on" until alert time
+            if (filled_time < alert.time) {
+                values.push({ value: "on", duration: 0, pause: false })
+                values.push({ value: "on", duration: alert.time - filled_time, pause: true})
+                filled_time = alert.time
+            }
+
+            // set to alert value for duration
+            values.push({ value: alert.value, duration: 0, pause: false })
+            values.push({ value: alert.value, duration: alert.duration, pause: true })
+        }
+
+        // fill until endTime with "on"
+        if (filled_time < endTime) {
+            values.push({ value: "on", duration: 0, pause: false })
+            values.push({ value: "on", duration: endTime - filled_time, pause: true })
+            filled_time = endTime
+        }
+
+        //createListOfAnimation(values, valueSource, propName)
+        var listAnim = []
+        for(i = 0; i < values.length; i++) {
+            var item = values[i]
+            var obj
+
+            if (item.pause === true){
+                obj = comptPauseAnim.createObject(dynamicContainer, {
+                                                      "duration": item.duration * 1000
+                                                  })
+            } else {
+                obj = comptPropAnim.createObject(dynamicContainer, {
+                                                      "target": valueSource,
+                                                      "property": nozzelName,
+                                                      "to": item.value,
+                                                  })
+            }
+            print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
+            listAnim.push(obj)
+        }
+
+        return listAnim
     }
 
     function setCompAnimation(alerts, wobbleFunction, propName, animComponent, endTime){
