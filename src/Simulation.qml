@@ -96,11 +96,17 @@ Item {
                 ]
 
 
+        var broomAlerts = [
+                    {"value": 20,  "duration": 2,  "time": 38},
+                    {"value": 28,  "duration": 6,  "time": 45},
+                ]
+
+
 
         setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime)
         setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime)
 
-        // setCompAnimation(boomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime)
+         setCompAnimation(broomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime)
         // setCompAnimation(appRate1lerts, wobbleAppRate1, "appRate1", appRate1Anim, endTime)
         // setCompAnimation(appRate2Alerts, wobbleAppRate2, "appRate2", appRate2Anim, endTime)
 
@@ -404,7 +410,7 @@ Item {
     function wobbleBroom(){
         // green zone: 22-8
         // wobble around 25
-        return randomNum(24, 26, 10)
+        return randomNum(24, 26, 1)
     }
 
     function wobbleAppRate1(){
