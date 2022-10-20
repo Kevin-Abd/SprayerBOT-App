@@ -327,6 +327,11 @@ ApplicationWindow {
             }
         }
 
+        onStateChanged: {
+            statusManager.updateState(state)
+            console.debug(`New state: ${state}`)
+        }
+
         onRpmChanged: {
             graphicalDisplay.rpm = rpm
         }
