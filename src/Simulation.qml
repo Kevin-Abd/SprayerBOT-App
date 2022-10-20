@@ -31,11 +31,11 @@ Item {
     states: [
         State {
             name: "warmup"
-            PropertyChanges { target: valueSource; timeInState: 120 }
+            PropertyChanges { target: valueSource; timeInState: 10 }
         },
         State {
             name: "tutorial"
-            PropertyChanges { target: valueSource; timeInState: 60 }
+            PropertyChanges { target: valueSource; timeInState: 40 }
         },
 
         // State {
@@ -344,7 +344,7 @@ Item {
             }
 
             listAnim.push(obj)
-            print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${targetProp}`)
+            // print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${targetProp}`)
         }
 
         return listAnim
