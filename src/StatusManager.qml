@@ -10,7 +10,7 @@ QtObject{
     property var lastAlert: { "code": "", "status": "", "messsage":"" }
 
     property string alert
-    property string state: stateGroup.state
+    property alias state: myStateGroup.state
     property real counter: 0
 
     property AlertSoundEffect alertSoundEffect
@@ -26,10 +26,10 @@ QtObject{
         state: "warmup"
         states: [
             State { name: "warmup" },
-            State { name: "tutorial_clear" },
             State { name: "tutorial_visual" },
             State { name: "tutorial_auditory" },
             State { name: "tutorial_tactile" },
+            State { name: "tutorial_done" },
             State { name: "experminets" }
         ]
     }
@@ -51,6 +51,17 @@ QtObject{
 
     Component.onDestruction: {
         fileio.close()
+    }
+
+    function updateState(simState){
+        if (simState === "warmup")
+            state = "warmup"
+        else if (simState === "tutorial")
+            state = "tutorial_visual"
+        else if (simState === "experminets")
+            state = "experminets"
+        else
+            console.warn("Got unexpected state: " + state)
     }
 
     function checkForNewStatus(){
@@ -84,13 +95,26 @@ QtObject{
          */
         console.debug(`${state}: (${newAlert.status}, ${newAlert.code}) at ${Date.now()}`)
 
-        if (state === "warmup") processForWarmup(newAlert)
-        else if (state === "tutorial_clear") processForTutorial(newAlert, "clear")
-        else if (state === "tutorial_visual") processForTutorial(newAlert, "visual")
-        else if (state === "tutorial_auditory") processForTutorial(newAlert, "auditory")
-        else if (state === "tutorial_tactile") processForTutorial(newAlert, "tactile")
-        else if (state === "experminets") processForExperiment(newAlert)
-        else console.warn("Got unexpected state: " + state)
+        if (state === "warmup")
+            processForWarmup(newAlert)
+
+        else if (state === "tutorial_visual")
+            processForTutorial(newAlert, "visual")
+
+        else if (state === "tutorial_auditory")
+            processForTutorial(newAlert, "auditory")
+
+        else if (state === "tutorial_tactile")
+            processForTutorial(newAlert, "tactile")
+
+        else if (state === "tutorial_done")
+            processForTutorial(newAlert, "clear")
+
+        else if (state === "experminets")
+            processForExperiment(newAlert)
+
+        else
+            console.warn("Got unexpected state: " + state)
 
         lastAlert.code = newAlert.code
         lastAlert.message = newAlert.message
@@ -127,10 +151,18 @@ QtObject{
         }
         else if (newAlert.status === "warning"){
 
-            if (feedback === "visual") notificationsBar.setState(newAlert.message, newAlert.status)
-            else if (feedback === "auditory") alertSoundEffect.play()
-            else if (feedback === "tactile") phidgetFeedback.activate()
-            // TODO do we need buttonAlertPerceived enabled ?
+            if (feedback === "visual") {
+                notificationsBar.setState(newAlert.message, newAlert.status)
+                state = "tutorial_auditory"
+            }
+            else if (feedback === "auditory") {
+                alertSoundEffect.play()
+                state = "tutorial_tactile"
+            }
+            else if (feedback === "tactile") {
+                phidgetFeedback.activate()
+                state = "tutorial_done"
+            }
         }
         else
             console.debug("Got unexpected status in tutorial: " + newAlert.status)
