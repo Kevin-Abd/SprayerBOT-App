@@ -90,8 +90,8 @@ Item {
         setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime)
 
          setCompAnimation(broomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime)
-        // setCompAnimation(appRate1lerts, wobbleAppRate1, "appRate1", appRate1Anim, endTime)
-        // setCompAnimation(appRate2Alerts, wobbleAppRate2, "appRate2", appRate2Anim, endTime)
+         setCompAnimation([], wobbleAppRate1, "appRate1", appRate1Anim, endTime)
+         setCompAnimation([], wobbleAppRate2, "appRate2", appRate2Anim, endTime)
 
         setNozzelAnimation(endTime)
 
