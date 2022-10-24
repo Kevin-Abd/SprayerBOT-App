@@ -44,9 +44,8 @@ QtObject{
     }
 
     Component.onCompleted: {
-        print(fileio.fileName);
-        var res = fileio.open(fileio.fileName)
-        console.log("[Info]", "FileIO open: " + res)
+        var res = fileio.open()
+        console.log("[Info]", `Logfile '${fileio.fileName}' open: ${res}`)
     }
 
     Component.onDestruction: {
