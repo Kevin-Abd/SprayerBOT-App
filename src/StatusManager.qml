@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.10
 import QtQuick.Controls 2.10
@@ -46,7 +46,7 @@ QtObject{
     Component.onCompleted: {
         print(fileio.fileName);
         var res = fileio.open(fileio.fileName)
-        console.log("FileIO open: " + res)
+        console.log("[Info]", "FileIO open: " + res)
     }
 
     Component.onDestruction: {
@@ -61,7 +61,7 @@ QtObject{
         else if (simState === "experiments")
             state = "experiments"
         else
-            console.warn("Got unexpected state: " + state)
+            console.log("[Warn]", "[updateState] Got unexpected state: " + state)
     }
 
     function checkForNewStatus(){
@@ -93,7 +93,7 @@ QtObject{
          * Function to handle new status
          * It is responsible for trigggering warning displays and feedback
          */
-        console.debug(`${state}: (${newAlert.status}, ${newAlert.code}) at ${Date.now()}`)
+        console.log("[Deubg]", `${state}: (${newAlert.status}, ${newAlert.code}) at ${Date.now()}`)
 
         if (state === "warmup")
             processForWarmup(newAlert)
@@ -114,7 +114,7 @@ QtObject{
             processForExperiment(newAlert)
 
         else
-            console.warn("Got unexpected state: " + state)
+            console.log("[Warn]", "Got unexpected state: " + state)
 
         lastAlert.code = newAlert.code
         lastAlert.message = newAlert.message
@@ -134,7 +134,7 @@ QtObject{
             phidgetFeedback.deactivate()
         }
         else
-            console.debug("Got unexpected status in warmup: " + newAlert.status)
+            console.log("[Debug]", "Got unexpected status in warmup: " + newAlert.status)
     }
 
     function processForTutorial(newAlert, feedback){
@@ -165,7 +165,7 @@ QtObject{
             }
         }
         else
-            console.debug("Got unexpected status in tutorial: " + newAlert.status)
+            console.log("[Debug]", "Got unexpected status in tutorial: " + newAlert.status)
     }
 
     function processForExperiment(newAlert){
@@ -214,7 +214,7 @@ QtObject{
             fileio.write(`\nNewAlert, ${newAlert.code}, ${Date.now()}, ${feedback}, `)
         }
         else
-            console.debug("Got unexpected status in experiment: " + newAlert.status)
+            console.log("[Debug]", "Got unexpected status in experiments: " + newAlert.status)
 
     }
 
