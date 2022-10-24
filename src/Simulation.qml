@@ -54,6 +54,9 @@ Item {
     }
 
     function changeState() {
+
+        console.debug(`[changeState] current state: ${state}`)
+
         if (state === "warmup")
             state = "tutorial"
         else if (state === "tutorial")
@@ -293,7 +296,7 @@ Item {
                                                       "to": item.value,
                                                   })
             }
-            print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
+            // print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
             listAnim.push(obj)
         }
 
