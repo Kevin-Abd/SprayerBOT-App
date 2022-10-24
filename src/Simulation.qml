@@ -25,14 +25,21 @@ Item{
     property string nozzle5Status : "off";
     property string nozzle6Status : "off";
 
+    // special alert for tutorial
+    property string tutorialAlert : "NA";
+
     property real timeInState : 120;
+
+    readonly property real warmupTime: 30;
+    readonly property real tutorialTime: 60;
+    readonly property real experimentTime: 300;
 
     state : "warmup";
     states : [
-        State { name: "warmup";      PropertyChanges { target: valueSource;  timeInState:30; }},
-        State { name: "tutorial";    PropertyChanges { target: valueSource;  timeInState:60; }},
-        State { name: "experiments"; PropertyChanges { target: valueSource;  timeInState:300;}},
-        State { name: "finished";    PropertyChanges { target: valueSource;  timeInState:9000;}}
+        State { name: "warmup";      PropertyChanges { target: valueSource;  timeInState: warmupTime; }},
+        State { name: "tutorial";    PropertyChanges { target: valueSource;  timeInState: tutorialTime; }},
+        State { name: "experiments"; PropertyChanges { target: valueSource;  timeInState: experimentTime; }},
+        State { name: "finished";    PropertyChanges { target: valueSource;  timeInState: 9000; }}
     ]
 
     Timer {
@@ -44,7 +51,7 @@ Item{
 
     function changeState() {
 
-        console.debug(`[changeState] current state : $ { state }`);
+        console.debug(`[changeState] current state : ${state}`);
 
         if (state == "warmup") state = "tutorial";
         else if (state == "tutorial") state = "experiments";
@@ -52,68 +59,29 @@ Item{
     }
 
     Component.onCompleted : {
-        var endTime = 500;
-        var warmupOffsetTime = 30;
+        var endTime = warmupTime + tutorialTime + experimentTime;
 
-        // Speed green zone: 3-6
-        // wobble around 3.9
+        var tutorialAlerts = [
+            {"time" : 2,  "duration" : 10, "value" : "visual"},
+            {"time" : 20, "duration" : 10, "value" : "auditory"},
+            {"time" : 40, "duration" : 10, "value" : "tactile"},
+        ];
 
-        // Rpm green zone: 0-6
-        // wobble around 2.3
-
-        // Broom green zone: 22-28
-        // wobble around 25
-
-        var allAlerts = [
-            {"type" : "speed", "time" : 2, "duration" : 4, "value" : 2.5},
-            {"type" : "speed", "time" : 17, "duration" : 6, "value" : 7},
-            {"type" : "broom", "time" : 25, "duration" : 7, "value" : 29},
-            {"type" : "broom", "time" : 47, "duration" : 5, "value" : 29},
-            {"type" : "speed", "time" : 55, "duration" : 2, "value" : 6.2},
+        // Speed green zone: 3-6 (Wobble 3.9)
+        // Rpm green zone: 0-6 (Wobble 2.3)
+        // Broom green zone: 22-28 (Wobble 25)
+        var experimentAlerts = [
+            {"type" : "speed",   "time" : 2,  "duration" : 4, "value" : 2.5},
+            {"type" : "speed",   "time" : 17, "duration" : 6, "value" : 7},
+            {"type" : "broom",   "time" : 25, "duration" : 7, "value" : 29},
+            {"type" : "broom",   "time" : 47, "duration" : 5, "value" : 29},
+            {"type" : "speed",   "time" : 55, "duration" : 2, "value" : 6.2},
             {"type" : "nozzel1", "time" : 70, "duration" : 7, "value" : "blocked"},
             {"type" : "nozzel4", "time" : 84, "duration" : 9, "value" : "blocked"},
         ];
 
-        var speedAlerts = [];
-        var rpmAlerts = [];
-        var broomAlerts = [];
-
-        var nozzel1Alerts = [];
-        var nozzel2Alerts = [];
-        var nozzel3Alerts = [];
-        var nozzel4Alerts = [];
-        var nozzel5Alerts = [];
-        var nozzel6Alerts = [];
-
-        for (var i = 0; i < allAlerts.length; i++) {
-            var item = allAlerts[i];
-            item.time += warmupOffsetTime;
-
-            if (item.type === "speed") speedAlerts.push(item);
-            else if (item.type === "broom") broomAlerts.push(item);
-            else if (item.type === "rpm") rpmAlerts.push(item);
-            else if (item.type === "nozzel1") nozzel1Alerts.push(item);
-            else if (item.type === "nozzel2") nozzel2Alerts.push(item);
-            else if (item.type === "nozzel3") nozzel3Alerts.push(item);
-            else if (item.type === "nozzel4") nozzel4Alerts.push(item);
-            else if (item.type === "nozzel5") nozzel5Alerts.push(item);
-            else if (item.type === "nozzel6") nozzel6Alerts.push(item);
-        }
-
-        setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime);
-        setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime);
-        setCompAnimation(broomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime);
-
-        nozzelAnim1.animations = makeNozzelAnimation(nozzel1Alerts, endTime, "nozzle1Status");
-        nozzelAnim2.animations = makeNozzelAnimation(nozzel2Alerts, endTime, "nozzle2Status");
-        nozzelAnim3.animations = makeNozzelAnimation(nozzel3Alerts, endTime, "nozzle3Status");
-        nozzelAnim4.animations = makeNozzelAnimation(nozzel4Alerts, endTime, "nozzle4Status");
-        nozzelAnim5.animations = makeNozzelAnimation(nozzel5Alerts, endTime, "nozzle5Status");
-        nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status");
-
-        // no apprate alert for now
-        setCompAnimation([], wobbleAppRate1, "appRate1", appRate1Anim, endTime);
-        setCompAnimation([], wobbleAppRate2, "appRate2", appRate2Anim, endTime);
+        setExperimentAlerts(experimentAlerts, endTime)
+        setTutorialAlerts(tutorialAlerts)
     }
 
     QtObject{
@@ -122,45 +90,46 @@ Item{
     }
 
     ParallelAnimation {
-    id: parAnim;
+        id: parAnim;
 
-    running: valueSource.start;
-    paused: valueSource.pause;
-    loops: Animation.Infinite;
+        running: valueSource.start;
+        paused: valueSource.pause;
+        loops: Animation.Infinite;
 
-    SequentialAnimation{ id : speedAnim }
-    SequentialAnimation{ id : rpmAnim }
-    SequentialAnimation{ id : broomAnim }
-    SequentialAnimation{ id : appRate1Anim }
-    SequentialAnimation{ id : appRate2Anim }
-    SequentialAnimation{ id : nozzelAnim1 }
-    SequentialAnimation{ id : nozzelAnim2 }
-    SequentialAnimation{ id : nozzelAnim3 }
-    SequentialAnimation{ id : nozzelAnim4 }
-    SequentialAnimation{ id : nozzelAnim5 }
-    SequentialAnimation{ id : nozzelAnim6 }
+        SequentialAnimation{ id : speedAnim }
+        SequentialAnimation{ id : rpmAnim }
+        SequentialAnimation{ id : broomAnim }
+        SequentialAnimation{ id : appRate1Anim }
+        SequentialAnimation{ id : appRate2Anim }
+        SequentialAnimation{ id : nozzelAnim1 }
+        SequentialAnimation{ id : nozzelAnim2 }
+        SequentialAnimation{ id : nozzelAnim3 }
+        SequentialAnimation{ id : nozzelAnim4 }
+        SequentialAnimation{ id : nozzelAnim5 }
+        SequentialAnimation{ id : nozzelAnim6 }
+        SequentialAnimation{ id : tutorialAnim }
 
-    onPausedChanged : {
-        if (valueSource.pause == true) {
-            appRate1 = 0;
-            appRate2 = 0;
-            speed = 0;
-            rpm = 0;
-            nozzle1Status = "off";
-            nozzle2Status = "off";
-            nozzle3Status = "off";
-            nozzle4Status = "off";
-            nozzle5Status = "off";
-            nozzle6Status = "off";
-        } else {
-            nozzle1Status = "on";
-            nozzle2Status = "on";
-            nozzle3Status = "on";
-            nozzle4Status = "on";
-            nozzle5Status = "on";
-            nozzle6Status = "on";
+        onPausedChanged : {
+            if (valueSource.pause == true) {
+                appRate1 = 0;
+                appRate2 = 0;
+                speed = 0;
+                rpm = 0;
+                nozzle1Status = "off";
+                nozzle2Status = "off";
+                nozzle3Status = "off";
+                nozzle4Status = "off";
+                nozzle5Status = "off";
+                nozzle6Status = "off";
+            } else {
+                nozzle1Status = "on";
+                nozzle2Status = "on";
+                nozzle3Status = "on";
+                nozzle4Status = "on";
+                nozzle5Status = "on";
+                nozzle6Status = "on";
+            }
         }
-    }
     }
 
     Component {
@@ -195,6 +164,112 @@ Item{
         }
     }
 
+    function setTutorialAlerts(tutorialAlerts, endTime) {
+
+        // valueArrayFromAlert
+        var filled_time = 0;
+        var listAnim = [];
+        var obj1;
+        var obj2;
+
+        tutorialAlerts.sort(function(a, b) { return a.time - b.time; });
+
+        for (var i = 0; i < tutorialAlerts.length; i++) {
+            var alert = tutorialAlerts[i];
+            // offset the start time to after start of tutorial
+            alert.time += warmupTime
+
+            // set to "NA" until alert time
+            if (filled_time < alert.time) {
+
+                obj1 = comptPropAnim.createObject(dynamicContainer, {
+                    "target" : valueSource,
+                    "property" : "tutorialAlert",
+                    "to" : "NA",
+                });
+                obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : (alert.time - filled_time) * 1000});
+
+                listAnim.push(obj1)
+                listAnim.push(obj2)
+
+                filled_time = alert.time;
+            }
+
+            // set to alert value for duration
+            obj1 = comptPropAnim.createObject(dynamicContainer, {
+                "target" : valueSource,
+                "property" : "tutorialAlert",
+                "to" : alert.value,
+            });
+            obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : alert.duration * 1000});
+
+            listAnim.push(obj1)
+            listAnim.push(obj2)
+
+            filled_time += alert.duration;
+        }
+
+        // fill until endTime with "NA"
+        if (filled_time < endTime) {
+            obj1 = comptPropAnim.createObject(dynamicContainer, {
+                "target" : valueSource,
+                "property" : "tutorialAlert",
+                "to" : "NA",
+            });
+            obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : (endTime - filled_time) * 1000});
+
+            listAnim.push(obj1)
+            listAnim.push(obj2)
+            filled_time = endTime;
+        }
+        // print(JSON.stringify(listAnim))
+        tutorialAnim.animations = listAnim
+    }
+
+    function setExperimentAlerts(experimentAlerts, endTime) {
+        var speedAlerts = [];
+        var rpmAlerts = [];
+        var broomAlerts = [];
+
+        var nozzel1Alerts = [];
+        var nozzel2Alerts = [];
+        var nozzel3Alerts = [];
+        var nozzel4Alerts = [];
+        var nozzel5Alerts = [];
+        var nozzel6Alerts = [];
+
+        for (var i = 0; i < experimentAlerts.length; i++) {
+            var item = experimentAlerts[i];
+            // offset the start time to after start of experiment
+            item.time += warmupTime + tutorialTime
+
+            if (item.type === "speed") speedAlerts.push(item);
+            else if (item.type === "broom") broomAlerts.push(item);
+            else if (item.type === "rpm") rpmAlerts.push(item);
+            else if (item.type === "nozzel1") nozzel1Alerts.push(item);
+            else if (item.type === "nozzel2") nozzel2Alerts.push(item);
+            else if (item.type === "nozzel3") nozzel3Alerts.push(item);
+            else if (item.type === "nozzel4") nozzel4Alerts.push(item);
+            else if (item.type === "nozzel5") nozzel5Alerts.push(item);
+            else if (item.type === "nozzel6") nozzel6Alerts.push(item);
+        }
+
+        setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime);
+        setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime);
+        setCompAnimation(broomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime);
+
+        nozzelAnim1.animations = makeNozzelAnimation(nozzel1Alerts, endTime, "nozzle1Status");
+        nozzelAnim2.animations = makeNozzelAnimation(nozzel2Alerts, endTime, "nozzle2Status");
+        nozzelAnim3.animations = makeNozzelAnimation(nozzel3Alerts, endTime, "nozzle3Status");
+        nozzelAnim4.animations = makeNozzelAnimation(nozzel4Alerts, endTime, "nozzle4Status");
+        nozzelAnim5.animations = makeNozzelAnimation(nozzel5Alerts, endTime, "nozzle5Status");
+        nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status");
+
+        // no apprate alert for now
+        setCompAnimation([], wobbleAppRate1, "appRate1", appRate1Anim, endTime);
+        setCompAnimation([], wobbleAppRate2, "appRate2", appRate2Anim, endTime);
+    }
+
     function makeNozzelAnimation(alerts, endTime, nozzelName) {
         /**
          * Fill a list of animation values with "on" value until endTime,
@@ -219,6 +294,8 @@ Item{
             // set to alert value for duration
             values.push({value : alert.value, duration : 0, pause : false});
             values.push({value : alert.value, duration : alert.duration, pause : true});
+
+            filled_time += alert.duration;
         }
 
         // fill until endTime with "on"
