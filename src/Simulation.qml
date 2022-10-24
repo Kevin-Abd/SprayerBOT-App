@@ -65,63 +65,69 @@ Item {
             state = "finished"
     }
 
-    Component.onCompleted: {
-        var endTime = 120
+    Component.onCompleted : {
+        var endTime = 500;
+        var warmupOffsetTime = 30;
 
-        var speedAlerts = [
-                    {"value": 1,   "duration": 2,  "time": 7},
-                    {"value": 2.4, "duration": 1,  "time": 20},
-                    {"value": 7,   "duration": 10, "time": 36},
-                ]
+        // Speed green zone: 3-6
+        // wobble around 3.9
 
+        // Rpm green zone: 0-6
+        // wobble around 2.3
 
-        var rpmAlerts = [
-                    {"value": 7,   "duration": 3,  "time": 12},
-                    {"value": 10,  "duration": 6,  "time": 27},
-                    {"value": 6.5, "duration": 3,  "time": 40},
-                ]
+        // Broom green zone: 22-28
+        // wobble around 25
 
+        var allAlerts = [
+            {"type" : "speed", "time" : 2, "duration" : 4, "value" : 2.5},
+            {"type" : "speed", "time" : 17, "duration" : 6, "value" : 7},
+            {"type" : "broom", "time" : 25, "duration" : 7, "value" : 29},
+            {"type" : "broom", "time" : 47, "duration" : 5, "value" : 29},
+            {"type" : "speed", "time" : 55, "duration" : 2, "value" : 6.2},
+            {"type" : "nozzel1", "time" : 70, "duration" : 7, "value" : "blocked"},
+            {"type" : "nozzel4", "time" : 84, "duration" : 9, "value" : "blocked"},
+        ];
 
-        var broomAlerts = [
-                    {"value": 20,  "duration": 2,  "time": 38},
-                    {"value": 28,  "duration": 6,  "time": 45},
-                ]
+        var speedAlerts = [];
+        var rpmAlerts = [];
+        var broomAlerts = [];
 
+        var nozzel1Alerts = [];
+        var nozzel2Alerts = [];
+        var nozzel3Alerts = [];
+        var nozzel4Alerts = [];
+        var nozzel5Alerts = [];
+        var nozzel6Alerts = [];
 
+        for (var i = 0; i < allAlerts.length; i++) {
+            var item = allAlerts[i];
+            item.time += warmupOffsetTime;
 
-        setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime)
-        setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime)
+            if (item.type === "speed") speedAlerts.push(item);
+            else if (item.type === "broom") broomAlerts.push(item);
+            else if (item.type === "rpm") rpmAlerts.push(item);
+            else if (item.type === "nozzel1") nozzel1Alerts.push(item);
+            else if (item.type === "nozzel2") nozzel2Alerts.push(item);
+            else if (item.type === "nozzel3") nozzel3Alerts.push(item);
+            else if (item.type === "nozzel4") nozzel4Alerts.push(item);
+            else if (item.type === "nozzel5") nozzel5Alerts.push(item);
+            else if (item.type === "nozzel6") nozzel6Alerts.push(item);
+        }
 
-         setCompAnimation(broomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime)
-         setCompAnimation([], wobbleAppRate1, "appRate1", appRate1Anim, endTime)
-         setCompAnimation([], wobbleAppRate2, "appRate2", appRate2Anim, endTime)
+        setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime);
+        setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime);
+        setCompAnimation(broomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime);
 
-        setNozzelAnimation(endTime)
+        nozzelAnim1.animations = makeNozzelAnimation(nozzel1Alerts, endTime, "nozzle1Status");
+        nozzelAnim2.animations = makeNozzelAnimation(nozzel2Alerts, endTime, "nozzle2Status");
+        nozzelAnim3.animations = makeNozzelAnimation(nozzel3Alerts, endTime, "nozzle3Status");
+        nozzelAnim4.animations = makeNozzelAnimation(nozzel4Alerts, endTime, "nozzle4Status");
+        nozzelAnim5.animations = makeNozzelAnimation(nozzel5Alerts, endTime, "nozzle5Status");
+        nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status");
 
-    }
-
-    function setNozzelAnimation(endTime){
-
-        var nozzel1Alerts = [
-                    {"value": "blocked",  "duration": 5,  "time": 25},
-                    {"value": "blocked",  "duration": 5,  "time": 55},
-                ]
-
-        var nozzel2Alerts = [
-                    {"value": "blocked",  "duration": 5,  "time": 35},
-                ]
-
-        var nozzel3Alerts = []
-        var nozzel4Alerts = []
-        var nozzel5Alerts = []
-        var nozzel6Alerts = []
-
-        nozzelAnim1.animations = makeNozzelAnimation(nozzel1Alerts, endTime, "nozzle1Status")
-        nozzelAnim2.animations = makeNozzelAnimation(nozzel2Alerts, endTime, "nozzle2Status")
-        nozzelAnim3.animations = makeNozzelAnimation(nozzel3Alerts, endTime, "nozzle3Status")
-        nozzelAnim4.animations = makeNozzelAnimation(nozzel4Alerts, endTime, "nozzle4Status")
-        nozzelAnim5.animations = makeNozzelAnimation(nozzel5Alerts, endTime, "nozzle5Status")
-        nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status")
+        // no apprate alert for now
+        setCompAnimation([], wobbleAppRate1, "appRate1", appRate1Anim, endTime);
+        setCompAnimation([], wobbleAppRate2, "appRate2", appRate2Anim, endTime);
     }
 
     QtObject {
