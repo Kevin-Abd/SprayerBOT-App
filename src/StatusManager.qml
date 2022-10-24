@@ -30,7 +30,7 @@ QtObject{
             State { name: "tutorial_auditory" },
             State { name: "tutorial_tactile" },
             State { name: "tutorial_done" },
-            State { name: "experminets" }
+            State { name: "experiments" }
         ]
     }
 
@@ -58,8 +58,8 @@ QtObject{
             state = "warmup"
         else if (simState === "tutorial")
             state = "tutorial_visual"
-        else if (simState === "experminets")
-            state = "experminets"
+        else if (simState === "experiments")
+            state = "experiments"
         else
             console.warn("Got unexpected state: " + state)
     }
@@ -110,7 +110,7 @@ QtObject{
         else if (state === "tutorial_done")
             processForTutorial(newAlert, "clear")
 
-        else if (state === "experminets")
+        else if (state === "experiments")
             processForExperiment(newAlert)
 
         else
