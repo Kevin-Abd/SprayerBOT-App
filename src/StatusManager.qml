@@ -93,7 +93,7 @@ QtObject{
          * Function to handle new status
          * It is responsible for trigggering warning displays and feedback
          */
-        console.log("[Deubg]", `${state}: (${newAlert.status}, ${newAlert.code}) at ${Date.now()}`)
+        console.log("[Info]", `${state}: (${newAlert.status}, ${newAlert.code}) at ${Date.now()}`)
 
         if (state === "warmup")
             processForWarmup(newAlert)
@@ -134,7 +134,7 @@ QtObject{
             phidgetFeedback.deactivate()
         }
         else
-            console.log("[Debug]", "Got unexpected status in warmup: " + newAlert.status)
+            console.log("[Debug]", `Unexpected alert in warmup: (Code: ${newAlert.code}, Status: ${newAlert.status}) `)
     }
 
     function processForTutorial(newAlert, feedback){
