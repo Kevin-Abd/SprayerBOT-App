@@ -31,31 +31,14 @@ Item {
     states: [
         State {
             name: "warmup"
-            PropertyChanges { target: valueSource; timeInState: 10 }
+            PropertyChanges { target: valueSource; timeInState: 30 }
         },
         State {
             name: "tutorial"
-            PropertyChanges { target: valueSource; timeInState: 40 }
+            PropertyChanges { target: valueSource; timeInState: 60 }
         },
-
-        // State {
-        //     name: "tutorial_clear"
-        //     PropertyChanges { target: valueSource; timeInState: 120 }
-        // },
-        // State {
-        //     name: "tutorial_visual"
-        //     PropertyChanges { target: valueSource; timeInState: 120 }
-        // },
-        // State {
-        //     name: "tutorial_auditory"
-        //     PropertyChanges { target: valueSource; timeInState: 120 }
-        // },
-        // State {
-        //     name: "tutorial_tactile"
-        //     PropertyChanges { target: valueSource; timeInState: 120 }
-        // },
         State {
-            name: "experminets"
+            name: "experiments"
             PropertyChanges { target: valueSource; timeInState: 300 }
         },
         State {
@@ -74,8 +57,8 @@ Item {
         if (state === "warmup")
             state = "tutorial"
         else if (state === "tutorial")
-            state = "experminets"
-        else if (state === "experminets")
+            state = "experiments"
+        else if (state === "experiments")
             state = "finished"
     }
 
