@@ -94,6 +94,7 @@ ApplicationWindow {
                 }
             }
 
+
             EngineStartStop {
                 id: stopButton
 
@@ -180,7 +181,6 @@ ApplicationWindow {
 
             ButtonAlertPerceived{
                 id: buttonAlertPerceived
-
                 Component.onCompleted: {
                     buttonAlertPerceived.activated.connect(statusManager.userOverride)
                 }
@@ -294,6 +294,10 @@ ApplicationWindow {
         id: sim
 
         property var list_alerts: {
+            "tutorial visual" :   { code: "021",  message : "Example Visual Alert"},
+            "tutorial auditory" : { code: "022",  message : "Example Auditory Alert"},
+            "tutorial tactile" :  { code: "023",  message : "Example Tactile Alert"},
+
             "low speed":  { code: "101",  message : "The machine is moving too slow!"},
             "high speed": { code: "102",  message : "The machine is moving too fast!"},
 
@@ -309,7 +313,6 @@ ApplicationWindow {
 
             "low tank 1": { code: "131",  message : "Tank 1 level is low! Please refill soon."},
             "low tank 2": { code: "132",  message : "Tank 2 level is low! Please refill soon."},
-
         }
 
         onSpeedChanged: {
@@ -329,6 +332,35 @@ ApplicationWindow {
 
         onStateChanged: {
             statusManager.updateState(state)
+        }
+
+        onTutorialAlertChanged: {
+            // console.log("[Debug]", `[onTutorialAlertChanged] ${tutorialAlert}`)
+
+            if (tutorialAlert === "NA") {
+
+                notifications.removeWarning(list_alerts["tutorial visual"])
+                notifications.removeWarning(list_alerts["tutorial auditory"])
+                notifications.removeWarning(list_alerts["tutorial tactile"])
+            } else if (tutorialAlert === "visual") {
+
+                notifications.addWarning(list_alerts["tutorial visual"])
+
+                notifications.removeWarning(list_alerts["tutorial auditory"])
+                notifications.removeWarning(list_alerts["tutorial tactile"])
+            } else if (tutorialAlert === "auditory") {
+
+                notifications.addWarning(list_alerts["tutorial auditory"])
+
+                notifications.removeWarning(list_alerts["tutorial visual"])
+                notifications.removeWarning(list_alerts["tutorial tactile"])
+            } else if (tutorialAlert === "tactile") {
+
+                notifications.addWarning(list_alerts["tutorial tactile"])
+
+                notifications.removeWarning(list_alerts["tutorial visual"])
+                notifications.removeWarning(list_alerts["tutorial auditory"])
+            }
         }
 
         onRpmChanged: {
