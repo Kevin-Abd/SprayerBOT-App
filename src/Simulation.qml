@@ -43,10 +43,18 @@ Item{
     ]
 
     Timer {
+        id: stateTimer
+
         interval: timeInState * 1000;
-        running: true;
-        repeat: true;
+        running: false;
+        repeat: false;
+        triggeredOnStart: false;
         onTriggered : changeState()
+    }
+
+    onStartChanged: {
+        if (start === true)
+            stateTimer.start()
     }
 
     function changeState() {
@@ -56,6 +64,8 @@ Item{
         if (state == "warmup") state = "tutorial";
         else if (state == "tutorial") state = "experiments";
         else if (state == "experiments") state = "finished"
+
+        stateTimer.start()
     }
 
     Component.onCompleted : {
