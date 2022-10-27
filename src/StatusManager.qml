@@ -44,7 +44,7 @@ QtObject{
     }
 
     Component.onCompleted: {
-        var res = fileio.open()
+        var res = fileio.open(fileio.fileName)
         console.log("[Info]", `Logfile '${fileio.fileName}' open: ${res}`)
     }
 
