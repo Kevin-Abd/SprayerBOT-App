@@ -278,6 +278,49 @@ Item{
         appRate1Anim.animations = makeValueAnimation([], wobbleAppRate1, "appRate1", endTime);
         appRate2Anim.animations = makeValueAnimation([], wobbleAppRate2, "appRate2", endTime);
     }
+
+    function makeTankAnimation(alerts, endTime, fillValue, tankName) {
+        /**
+         * Fill a list of animation values for tank level,
+         */
+
+        // valueArrayFromAlert
+        var tank_refill_time = 3;
+        var filled_time = 0;
+        var values = [];
+        alerts.sort(function(a, b) { return a.time - b.time; });
+
+        for (var i = 0; i < alerts.length; i++) {
+            var alert = alerts[i];
+            // add decreasing animatoin to reach alert value at alert.time
+            // then pause for duration, then fill tank
+            values.push({value : alert.value, duration : alert.time - filled_time, pause : false});
+            values.push({value : alert.value, duration : alert.duration, pause : true});
+            values.push({value : fillValue, duration : tank_refill_time, pause : false});
+            filled_time = alert.time + alert.duration + tank_refill_time;
+        }
+
+        // refill and pause animation for the remaining time
+        if (filled_time < endTime) {
+            values.push({value : fillValue, duration : tank_refill_time, pause : false});
+            values.push({value : fillValue, duration : endTime-filled_time, pause : true});
+            filled_time = endTime;
+        }
+
+        // createListOfAnimation(values, valueSource, propName)
+        var listAnim = [];
+        for (i = 0; i < values.length; i++) {
+            var item = values[i];
+            var obj;
+            if (item.pause === true) {
+                obj = createPauseAnimation(item.duration);
+            } else {
+                obj = createSmoothAnimation(valueSource, tankName, item.value, item.duration);
+            }
+            // print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
+            listAnim.push(obj)
+        }
+        return listAnim
     }
 
     function makeNozzelAnimation(alerts, endTime, nozzelName) {
@@ -336,6 +379,7 @@ Item{
         var anims = createListOfAnimation(values, valueSource, propName);
         return anims;
     }
+
 
     function createListOfAnimation(valueArray, targetObj, targetProp) {
         /**
@@ -399,7 +443,6 @@ Item{
             result.push({value : tmp, duration : trans_time, pause : false});
             result.push({value : tmp, duration : pasue_time, pause : true});
         }
-
         return result
     }
 
