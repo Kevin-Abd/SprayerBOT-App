@@ -410,8 +410,9 @@ Item{
          * with alerts at specified times with specidifed values/durations
          */
 
-        var trans_time = 1.2;
-        var pasue_time = 0.5;
+        var trans_time = 2.2;
+        var pause_time = 0.8;
+        var last_value = -1;
 
         var filled_time = 0;
         var result = [];
@@ -424,10 +425,15 @@ Item{
 
             // fill with wobble until alert time
             while (filled_time < alert.time) {
-                filled_time += trans_time + pasue_time;
                 tmp = wobbleFunction();
-                result.push({value : tmp, duration : trans_time, pause : false});
-                result.push({value : tmp, duration : pasue_time, pause : true});
+                if (tmp === last_value) {
+                    result.push({value : tmp, duration : trans_time + pause_time, pause : true});
+                } else {
+                    result.push({value : tmp, duration : trans_time, pause : false});
+                    result.push({value : tmp, duration : pause_time, pause : true});
+                }
+                last_value = tmp
+                filled_time += trans_time + pause_time;
             }
             // transition to alert and stay for duration
             filled_time += trans_time + alert.duration;
@@ -437,10 +443,15 @@ Item{
 
         // fill until endTime with wobble
         while (filled_time < endTime) {
-            filled_time += trans_time + pasue_time;
-            tmp = wobbleFunction();
-            result.push({value : tmp, duration : trans_time, pause : false});
-            result.push({value : tmp, duration : pasue_time, pause : true});
+            tmp = wobbleFunction()
+            if (tmp === last_value) {
+                result.push({value : tmp, duration : trans_time + pause_time, pause : true});
+            } else {
+                result.push({value : tmp, duration : trans_time, pause : false});
+                result.push({value : tmp, duration : pause_time, pause : true});
+            }
+            last_value = tmp
+            filled_time += trans_time + pause_time;
         }
         return result
     }
