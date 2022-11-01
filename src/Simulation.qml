@@ -83,13 +83,15 @@ Item{
         // Rpm green zone: 0-6 (Wobble 2.3)
         // Broom green zone: 22-28 (Wobble 25)
         var experimentAlerts = [
-                    {"type" : "speed",   "time" : 2,  "duration" : 4, "value" : 2.5},
-                    {"type" : "speed",   "time" : 15, "duration" : 5, "value" : 7},
-                    {"type" : "broom",   "time" : 25, "duration" : 3, "value" : 29},
-                    {"type" : "broom",   "time" : 40, "duration" : 5, "value" : 29},
-                    {"type" : "speed",   "time" : 55, "duration" : 2, "value" : 6.2},
-                    {"type" : "nozzel1", "time" : 70, "duration" : 7, "value" : "blocked"},
-                    {"type" : "nozzel4", "time" : 84, "duration" : 9, "value" : "blocked"},
+                    {"type" : "speed",   "time" : 2,   "duration" : 4, "value" : 2.5},
+                    {"type" : "tank1",   "time" : 10,   "duration" : 5, "value" : 0.5},
+                    {"type" : "speed",   "time" : 15,  "duration" : 5, "value" : 7},
+                    {"type" : "broom",   "time" : 25,  "duration" : 3, "value" : 29},
+                    {"type" : "broom",   "time" : 40,  "duration" : 5, "value" : 29},
+                    {"type" : "speed",   "time" : 55,  "duration" : 2, "value" : 6.2},
+                    {"type" : "nozzel1", "time" : 70,  "duration" : 7, "value" : "blocked"},
+                    {"type" : "nozzel4", "time" : 84,  "duration" : 9, "value" : "blocked"},
+                    {"type" : "rpm",     "time" : 100, "duration" : 5, "value" : 7},
                 ];
 
         setExperimentAlerts(experimentAlerts, endTime)
