@@ -264,6 +264,8 @@ ApplicationWindow {
 
             "low tank 1": { code: "131",  message : "Tank 1 level is low! Please refill soon."},
             "low tank 2": { code: "132",  message : "Tank 2 level is low! Please refill soon."},
+
+            "high rpm": { code: "142",  message : "The engine rpm is too high!"},
         }
 
         onSpeedChanged: {
@@ -300,6 +302,11 @@ ApplicationWindow {
 
         onRpmChanged: {
             graphicalDisplay.rpm = rpm
+            if (rpm > 6) {
+                notifications.addWarning(list_alerts["high rpm"])
+            } else {
+                notifications.removeWarning(list_alerts["high rpm"])
+            }
         }
 
         onBoomHeightChanged: {
