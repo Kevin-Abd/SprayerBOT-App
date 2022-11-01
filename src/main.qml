@@ -97,16 +97,10 @@ ApplicationWindow {
 
             EngineStartStop {
                 id: stopButton
-
-                //                Layout.topMargin: 5
-                //                Layout.leftMargin: -5
-                //                Layout.rightMargin: 15
-                //                Layout.bottomMargin: 5
-                //                Layout.alignment: Qt.AlignRight
-
                 text: ""
                 mainColor: "Red"
                 activeColor: "#b30000"
+                enabled: false
 
                 Text {
                     id: buttonLabel1
