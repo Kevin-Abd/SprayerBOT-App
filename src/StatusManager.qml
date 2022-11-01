@@ -8,7 +8,6 @@ QtObject{
     id: statusManager
 
     property var lastAlert: { "code": "", "status": "", "messsage":"" }
-
     property string alert
     property alias state: myStateGroup.state
     property real counter: 0
@@ -26,10 +25,7 @@ QtObject{
         state: "warmup"
         states: [
             State { name: "warmup" },
-            State { name: "tutorial_visual" },
-            State { name: "tutorial_auditory" },
-            State { name: "tutorial_tactile" },
-            State { name: "tutorial_done" },
+            State { name: "tutorial" },
             State { name: "experiments" }
         ]
     }
@@ -56,7 +52,7 @@ QtObject{
         if (simState === "warmup")
             state = "warmup"
         else if (simState === "tutorial")
-            state = "tutorial_visual"
+            state = "tutorial"
         else if (simState === "experiments")
             state = "experiments"
         else
@@ -97,17 +93,8 @@ QtObject{
         if (state === "warmup")
             processForWarmup(newAlert)
 
-        else if (state === "tutorial_visual")
-            processForTutorial(newAlert, "visual")
-
-        else if (state === "tutorial_auditory")
-            processForTutorial(newAlert, "auditory")
-
-        else if (state === "tutorial_tactile")
-            processForTutorial(newAlert, "tactile")
-
-        else if (state === "tutorial_done")
-            processForTutorial(newAlert, "clear")
+        else if (state === "tutorial")
+            processForTutorial(newAlert)
 
         else if (state === "experiments")
             processForExperiment(newAlert)
@@ -136,10 +123,10 @@ QtObject{
             console.log("[Debug]", `Unexpected alert in warmup: (Code: ${newAlert.code}, Status: ${newAlert.status}) `)
     }
 
-    function processForTutorial(newAlert, feedback){
+    function processForTutorial(newAlert){
         /**
          * Function to handle state change while in tutorial state
-         * For warning state starts only one feedback based on input
+         * Type of feedback is decided from alert code
          */
 
         if (newAlert.status === "off" || newAlert.status === "nominal"){
@@ -148,19 +135,17 @@ QtObject{
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
-        else if (newAlert.status === "warning"){
+        else if (newAlert.status === "warning" || newAlert.status === "blank"){
 
-            if (feedback === "visual") {
-                notificationsBar.setState(newAlert.message, newAlert.status)
-                state = "tutorial_auditory"
-            }
-            else if (feedback === "auditory") {
+            notificationsBar.setState(newAlert.message, newAlert.status)
+
+            if (newAlert.code === "022" || newAlert.code === "024") {
+                // Auditory or Visual_Auditory
                 alertSoundEffect.play()
-                state = "tutorial_tactile"
             }
-            else if (feedback === "tactile") {
+            if (newAlert.code === "023" || newAlert.code === "025") {
+                // Tactile or Visual_Tactile
                 phidgetFeedback.activate()
-                state = "tutorial_done"
             }
         }
         else
