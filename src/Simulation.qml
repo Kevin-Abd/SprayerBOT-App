@@ -69,8 +69,6 @@ Item{
     }
 
     Component.onCompleted : {
-        console.debug("[Debug]", `Internal Simulation completed`)
-
         var endTime = warmupTime + tutorialTime + experimentTime;
 
         var tutorialAlerts = [
