@@ -399,7 +399,6 @@ ApplicationWindow {
         }
 
         Component.onCompleted: {
-            console.debug("[Debug]", `Main simulation completed`)
             graphicalDisplay.speed = sim.speed
             graphicalDisplay.rpm = sim.rpm
             graphicalDisplay.broomHeight = sim.boomHeight
