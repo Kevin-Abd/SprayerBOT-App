@@ -28,9 +28,9 @@ Item{
     // special alert for tutorial
     property string tutorialAlert : "NA";
 
-    property real timeInState : 120;
+    property real timeInState;
 
-    readonly property real warmupTime: 30;
+    readonly property real warmupTime: 10;
     readonly property real tutorialTime: 60;
     readonly property real experimentTime: 300;
 
@@ -69,13 +69,17 @@ Item{
     }
 
     Component.onCompleted : {
+        console.debug("[Debug]", `Internal Simulation completed`)
+
         var endTime = warmupTime + tutorialTime + experimentTime;
 
         var tutorialAlerts = [
-            {"time" : 2,  "duration" : 10, "value" : "visual"},
-            {"time" : 20, "duration" : 10, "value" : "auditory"},
-            {"time" : 40, "duration" : 10, "value" : "tactile"},
-        ];
+                    {"time" : 5,  "duration" : 5, "value" : "visual"},
+                    {"time" : 15, "duration" : 5, "value" : "auditory"},
+                    {"time" : 25, "duration" : 5, "value" : "tactile"},
+                    {"time" : 35, "duration" : 5, "value" : "visual_auditory"},
+                    {"time" : 45, "duration" : 5, "value" : "visual_tactile"},
+                ];
 
         // Speed green zone: 3-6 (Wobble 3.9)
         // Rpm green zone: 0-6 (Wobble 2.3)
@@ -91,7 +95,7 @@ Item{
         ];
 
         setExperimentAlerts(experimentAlerts, endTime)
-        setTutorialAlerts(tutorialAlerts)
+        setTutorialAlerts(tutorialAlerts, endTime)
     }
 
     QtObject{
