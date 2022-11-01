@@ -34,7 +34,7 @@ DelayButton {
             radius: size / 2
             border.color: "#606060"
             anchors.centerIn: parent
-            opacity: enabled ? 1 : 0.3
+            // opacity: enabled ? 1 : 0.3
             color: control.down ? control.activeColor : control.mainColor
         }
     }
