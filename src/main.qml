@@ -240,11 +240,15 @@ ApplicationWindow {
     Simulation {
         id: sim
 
-        property var list_alerts: {
-            "tutorial visual" :   { code: "021",  message : "Example Visual Alert"},
-            "tutorial auditory" : { code: "022",  message : "Example Auditory Alert"},
-            "tutorial tactile" :  { code: "023",  message : "Example Tactile Alert"},
+        property var list_tutorial_alerts: {
+            "visual" :          { code: "021",  message : "Example Visual Alert"},
+            "auditory" :        { code: "022",  message : "Example Auditory Alert"},
+            "tactile" :         { code: "023",  message : "Example Tactile Alert"},
+            "visual_auditory" : { code: "024",  message : "Example Visual+Auditory Alert"},
+            "visual_tactile" :  { code: "025",  message : "Example Visual+Tactile Alert"},
+        }
 
+        property var list_alerts: {
             "low speed":  { code: "101",  message : "The machine is moving too slow!"},
             "high speed": { code: "102",  message : "The machine is moving too fast!"},
 
@@ -282,31 +286,15 @@ ApplicationWindow {
         }
 
         onTutorialAlertChanged: {
-            // console.log("[Debug]", `[onTutorialAlertChanged] ${tutorialAlert}`)
-
             if (tutorialAlert === "NA") {
-
-                notifications.removeWarning(list_alerts["tutorial visual"])
-                notifications.removeWarning(list_alerts["tutorial auditory"])
-                notifications.removeWarning(list_alerts["tutorial tactile"])
-            } else if (tutorialAlert === "visual") {
-
-                notifications.addWarning(list_alerts["tutorial visual"])
-
-                notifications.removeWarning(list_alerts["tutorial auditory"])
-                notifications.removeWarning(list_alerts["tutorial tactile"])
-            } else if (tutorialAlert === "auditory") {
-
-                notifications.addWarning(list_alerts["tutorial auditory"])
-
-                notifications.removeWarning(list_alerts["tutorial visual"])
-                notifications.removeWarning(list_alerts["tutorial tactile"])
-            } else if (tutorialAlert === "tactile") {
-
-                notifications.addWarning(list_alerts["tutorial tactile"])
-
-                notifications.removeWarning(list_alerts["tutorial visual"])
-                notifications.removeWarning(list_alerts["tutorial auditory"])
+                notifications.removeWarning(list_tutorial_alerts["visual"])
+                notifications.removeWarning(list_tutorial_alerts["auditory"])
+                notifications.removeWarning(list_tutorial_alerts["tactile"])
+                notifications.removeWarning(list_tutorial_alerts["visual_auditory"])
+                notifications.removeWarning(list_tutorial_alerts["visual_tactile"])
+            } else {
+                console.debug("[Debug]", `Tutorial alert: ${tutorialAlert}`)
+                notifications.setTutorial(tutorialAlert, list_tutorial_alerts[tutorialAlert])
             }
         }
 
