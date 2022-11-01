@@ -111,6 +111,8 @@ Item{
         SequentialAnimation{ id : speedAnim }
         SequentialAnimation{ id : rpmAnim }
         SequentialAnimation{ id : broomAnim }
+        SequentialAnimation{ id : tank1Anim }
+        SequentialAnimation{ id : tank2Anim }
         SequentialAnimation{ id : appRate1Anim }
         SequentialAnimation{ id : appRate2Anim }
         SequentialAnimation{ id : nozzelAnim1 }
@@ -242,6 +244,8 @@ Item{
         var speedAlerts = [];
         var rpmAlerts = [];
         var broomAlerts = [];
+        var tank1Alerts = [];
+        var tank2Alerts = [];
 
         var nozzel1Alerts = [];
         var nozzel2Alerts = [];
@@ -258,6 +262,8 @@ Item{
             if (item.type === "speed") speedAlerts.push(item);
             else if (item.type === "broom") broomAlerts.push(item);
             else if (item.type === "rpm") rpmAlerts.push(item);
+            else if (item.type === "tank1") tank1Alerts.push(item);
+            else if (item.type === "tank2") tank2Alerts.push(item);
             else if (item.type === "nozzel1") nozzel1Alerts.push(item);
             else if (item.type === "nozzel2") nozzel2Alerts.push(item);
             else if (item.type === "nozzel3") nozzel3Alerts.push(item);
@@ -266,9 +272,12 @@ Item{
             else if (item.type === "nozzel6") nozzel6Alerts.push(item);
         }
 
-        setCompAnimation(speedAlerts, wobbleSpeed, "speed", speedAnim, endTime);
-        setCompAnimation(rpmAlerts, wobbleRpm, "rpm", rpmAnim, endTime);
-        setCompAnimation(broomAlerts, wobbleBroom, "boomHeight", broomAnim, endTime);
+        speedAnim.animations = makeValueAnimation(speedAlerts, wobbleSpeed, "speed", endTime);
+        rpmAnim.animations = makeValueAnimation(rpmAlerts, wobbleRpm, "rpm", endTime);
+        broomAnim.animations = makeValueAnimation(broomAlerts, wobbleBroom, "boomHeight", endTime);
+
+        tank1Anim.animations = makeTankAnimation(tank1Alerts, endTime, 25, "tankLevel1")
+        tank2Anim.animations = makeTankAnimation(tank2Alerts, endTime, 5, "tankLevel2")
 
         nozzelAnim1.animations = makeNozzelAnimation(nozzel1Alerts, endTime, "nozzle1Status");
         nozzelAnim2.animations = makeNozzelAnimation(nozzel2Alerts, endTime, "nozzle2Status");
@@ -278,8 +287,9 @@ Item{
         nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status");
 
         // no apprate alert for now
-        setCompAnimation([], wobbleAppRate1, "appRate1", appRate1Anim, endTime);
-        setCompAnimation([], wobbleAppRate2, "appRate2", appRate2Anim, endTime);
+        appRate1Anim.animations = makeValueAnimation([], wobbleAppRate1, "appRate1", endTime);
+        appRate2Anim.animations = makeValueAnimation([], wobbleAppRate2, "appRate2", endTime);
+    }
     }
 
     function makeNozzelAnimation(alerts, endTime, nozzelName) {
@@ -338,10 +348,10 @@ Item{
         return listAnim
     }
 
-    function setCompAnimation(alerts, wobbleFunction, propName, animComponent, endTime) {
+    function makeValueAnimation(alerts, wobbleFunction, propName, endTime) {
         var values = valueArrayFromAlert(alerts, endTime, wobbleFunction);
         var anims = createListOfAnimation(values, valueSource, propName);
-        animComponent.animations = anims;
+        return anims;
     }
 
     function createListOfAnimation(valueArray, targetObj, targetProp) {
