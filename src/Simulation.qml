@@ -85,14 +85,14 @@ Item{
         // Rpm green zone: 0-6 (Wobble 2.3)
         // Broom green zone: 22-28 (Wobble 25)
         var experimentAlerts = [
-            {"type" : "speed",   "time" : 2,  "duration" : 4, "value" : 2.5},
-            {"type" : "speed",   "time" : 17, "duration" : 6, "value" : 7},
-            {"type" : "broom",   "time" : 25, "duration" : 7, "value" : 29},
-            {"type" : "broom",   "time" : 47, "duration" : 5, "value" : 29},
-            {"type" : "speed",   "time" : 55, "duration" : 2, "value" : 6.2},
-            {"type" : "nozzel1", "time" : 70, "duration" : 7, "value" : "blocked"},
-            {"type" : "nozzel4", "time" : 84, "duration" : 9, "value" : "blocked"},
-        ];
+                    {"type" : "speed",   "time" : 2,  "duration" : 4, "value" : 2.5},
+                    {"type" : "speed",   "time" : 15, "duration" : 5, "value" : 7},
+                    {"type" : "broom",   "time" : 25, "duration" : 3, "value" : 29},
+                    {"type" : "broom",   "time" : 40, "duration" : 5, "value" : 29},
+                    {"type" : "speed",   "time" : 55, "duration" : 2, "value" : 6.2},
+                    {"type" : "nozzel1", "time" : 70, "duration" : 7, "value" : "blocked"},
+                    {"type" : "nozzel4", "time" : 84, "duration" : 9, "value" : "blocked"},
+                ];
 
         setExperimentAlerts(experimentAlerts, endTime)
         setTutorialAlerts(tutorialAlerts, endTime)
@@ -108,7 +108,7 @@ Item{
 
         running: valueSource.start;
         paused: valueSource.pause;
-        loops: Animation.Infinite;
+        loops: 1;
 
         SequentialAnimation{ id : speedAnim }
         SequentialAnimation{ id : rpmAnim }
@@ -169,8 +169,8 @@ Item{
     }
 
     Component {
-    id:
-        comptPropAnim;
+        id:
+            comptPropAnim;
         PropertyAnimation {
             // target: valueSource
             // property: "nozzle1Status"
@@ -197,10 +197,10 @@ Item{
             if (filled_time < alert.time) {
 
                 obj1 = comptPropAnim.createObject(dynamicContainer, {
-                    "target" : valueSource,
-                    "property" : "tutorialAlert",
-                    "to" : "NA",
-                });
+                                                      "target" : valueSource,
+                                                      "property" : "tutorialAlert",
+                                                      "to" : "NA",
+                                                  });
                 obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : (alert.time - filled_time) * 1000});
 
                 listAnim.push(obj1)
@@ -211,10 +211,10 @@ Item{
 
             // set to alert value for duration
             obj1 = comptPropAnim.createObject(dynamicContainer, {
-                "target" : valueSource,
-                "property" : "tutorialAlert",
-                "to" : alert.value,
-            });
+                                                  "target" : valueSource,
+                                                  "property" : "tutorialAlert",
+                                                  "to" : alert.value,
+                                              });
             obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : alert.duration * 1000});
 
             listAnim.push(obj1)
@@ -226,10 +226,10 @@ Item{
         // fill until endTime with "NA"
         if (filled_time < endTime) {
             obj1 = comptPropAnim.createObject(dynamicContainer, {
-                "target" : valueSource,
-                "property" : "tutorialAlert",
-                "to" : "NA",
-            });
+                                                  "target" : valueSource,
+                                                  "property" : "tutorialAlert",
+                                                  "to" : "NA",
+                                              });
             obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : (endTime - filled_time) * 1000});
 
             listAnim.push(obj1)
@@ -328,10 +328,10 @@ Item{
                 obj = comptPauseAnim.createObject(dynamicContainer, {"duration" : item.duration * 1000});
             } else {
                 obj = comptPropAnim.createObject(dynamicContainer, {
-                    "target" : valueSource,
-                    "property" : nozzelName,
-                    "to" : item.value,
-                });
+                                                     "target" : valueSource,
+                                                     "property" : nozzelName,
+                                                     "to" : item.value,
+                                                 });
             }
             // print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
             listAnim.push(obj)
@@ -342,7 +342,6 @@ Item{
 
     function setCompAnimation(alerts, wobbleFunction, propName, animComponent, endTime) {
         var values = valueArrayFromAlert(alerts, endTime, wobbleFunction);
-
         var anims = createListOfAnimation(values, valueSource, propName);
         animComponent.animations = anims;
     }
@@ -354,7 +353,7 @@ Item{
          */
         var listAnim = []
 
-            for (var i = 0; i < valueArray.length; i++) {
+        for (var i = 0; i < valueArray.length; i++) {
             var item = valueArray[i];
             var obj;
 
@@ -362,11 +361,11 @@ Item{
                 obj = comptPauseAnim.createObject(dynamicContainer, {"duration" : item.duration * 1000});
             } else {
                 obj = compSmoothAnim.createObject(dynamicContainer, {
-                      "target" : targetObj,
-                      "property" : targetProp,
-                      "to" : item.value,
-                      "duration" : item.duration * 1000
-                  });
+                                                      "target" : targetObj,
+                                                      "property" : targetProp,
+                                                      "to" : item.value,
+                                                      "duration" : item.duration * 1000
+                                                  });
             }
 
             listAnim.push(obj)
@@ -388,20 +387,21 @@ Item{
 
         var filled_time = 0;
         var result = [];
-        var tmp
+        var tmp;
 
-            listAlerts.sort(function(a, b) { return a.time - b.time; })
+        listAlerts.sort(function(a, b) { return a.time - b.time; })
 
-                for (var i = 0; i < listAlerts.length; i++) {
+        for (var i = 0; i < listAlerts.length; i++) {
             var alert = listAlerts[i]
 
-                // fill with wobble until alert time
-                while (filled_time < alert.time) {
+            // fill with wobble until alert time
+            while (filled_time < alert.time) {
                 filled_time += trans_time + pasue_time;
                 tmp = wobbleFunction();
                 result.push({value : tmp, duration : trans_time, pause : false});
                 result.push({value : tmp, duration : pasue_time, pause : true});
             }
+            // print(`Expected alert time: ${alert.time}, Actual: ${filled_time}`)
 
             // tranistion to alert and stay for duration
             filled_time += trans_time + alert.duration;
