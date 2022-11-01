@@ -21,6 +21,15 @@ QtObject{
         statusManager.checkForNewStatus()
     }
 
+    function setTutorial(type, alert){
+        // set status message with visual blanked out
+        if(type === "tactile" || type === "auditory")
+            list.setSingle(alert.code, alert.message, "blank");
+        else
+            list.setSingle(alert.code, alert.message, "warning");
+
+        statusManager.checkForNewStatus()
+    }
 
     function addWarning(alert) {
         if (list.index(alert.code) === -1) {
