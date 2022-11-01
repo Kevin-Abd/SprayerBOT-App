@@ -82,6 +82,9 @@ Item{
         // Speed green zone: 3-6 (Wobble 3.9)
         // Rpm green zone: 0-6 (Wobble 2.3)
         // Broom green zone: 22-28 (Wobble 25)
+
+        // Tank 1 alert zone: 0-6.25 (6.25-11.25 yellow)
+        // Tank 2 alert zone: 0-1.25 (1.25-2.25 yellow)
         var experimentAlerts = [
                     {"type" : "speed",   "time" : 2,   "duration" : 4, "value" : 2.5},
                     {"type" : "tank1",   "time" : 10,   "duration" : 5, "value" : 0.5},
@@ -226,7 +229,6 @@ Item{
             listAnim.push(obj2)
             filled_time = endTime;
         }
-        // print(JSON.stringify(listAnim))
         tutorialAnim.animations = listAnim
     }
 
@@ -319,7 +321,6 @@ Item{
             } else {
                 obj = createSmoothAnimation(valueSource, tankName, item.value, item.duration);
             }
-            // print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
             listAnim.push(obj)
         }
         return listAnim
@@ -370,7 +371,6 @@ Item{
             } else {
                 obj = createPropAnimation(valueSource, nozzelName, item.value)
             }
-            // print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
             listAnim.push(obj)
         }
         return listAnim
@@ -397,11 +397,9 @@ Item{
             if (item.pause === true) {
                 obj = createPauseAnimation(item.duration);
             } else {
-                obj =createSmoothAnimation(targetObj, targetProp, item.value, item.duration);
+                obj = createSmoothAnimation(targetObj, targetProp, item.value, item.duration);
             }
             listAnim.push(obj)
-            // print(`${item.value} in ${item.duration * 1000} | ${item.pause}
-            // ${targetProp}`)
         }
         return listAnim
     }
@@ -431,7 +429,6 @@ Item{
                 result.push({value : tmp, duration : trans_time, pause : false});
                 result.push({value : tmp, duration : pasue_time, pause : true});
             }
-            // print(`Expected alert time: ${alert.time}, Actual: ${filled_time}`)
             // transition to alert and stay for duration
             filled_time += trans_time + alert.duration;
             result.push({value : alert.value, duration : trans_time, pause : false});
