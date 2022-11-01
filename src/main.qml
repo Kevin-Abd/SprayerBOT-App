@@ -390,11 +390,9 @@ ApplicationWindow {
             else
                 notifications.removeWarning(list_alerts["blocked nozzle 6"])
         }
-    }
 
-    Loader {
-        source: "Simulation.qml"
-        onLoaded: {
+        Component.onCompleted: {
+            console.debug("[Debug]", `Main simulation completed`)
             graphicalDisplay.speed = sim.speed
             graphicalDisplay.rpm = sim.rpm
             graphicalDisplay.broomHeight = sim.boomHeight
