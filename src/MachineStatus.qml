@@ -34,6 +34,12 @@ Control {
             PropertyChanges {target: status; textColor: "Blue"}
         },
         State {
+            name: "blank"
+            PropertyChanges {target: status; text: " "}
+            PropertyChanges {target: status; color: "Yellow"}
+            PropertyChanges {target: status; textColor: "Blue"}
+        },
+        State {
             name: "error"
             PropertyChanges {target: status; color: "firebrick"}
             PropertyChanges {target: status; text: "ERROR"}
