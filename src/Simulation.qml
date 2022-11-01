@@ -196,12 +196,8 @@ Item{
             // set to "NA" until alert time
             if (filled_time < alert.time) {
 
-                obj1 = comptPropAnim.createObject(dynamicContainer, {
-                                                      "target" : valueSource,
-                                                      "property" : "tutorialAlert",
-                                                      "to" : "NA",
-                                                  });
-                obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : (alert.time - filled_time) * 1000});
+                obj1 = createPropAnimation(valueSource, "tutorialAlert", "NA");
+                obj2 = createPauseAnimation(alert.time - filled_time);
 
                 listAnim.push(obj1)
                 listAnim.push(obj2)
@@ -210,12 +206,8 @@ Item{
             }
 
             // set to alert value for duration
-            obj1 = comptPropAnim.createObject(dynamicContainer, {
-                                                  "target" : valueSource,
-                                                  "property" : "tutorialAlert",
-                                                  "to" : alert.value,
-                                              });
-            obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : alert.duration * 1000});
+            obj1 = createPropAnimation(valueSource, "tutorialAlert", alert.value);
+            obj2 = createPauseAnimation(alert.duration);
 
             listAnim.push(obj1)
             listAnim.push(obj2)
@@ -225,12 +217,8 @@ Item{
 
         // fill until endTime with "NA"
         if (filled_time < endTime) {
-            obj1 = comptPropAnim.createObject(dynamicContainer, {
-                                                  "target" : valueSource,
-                                                  "property" : "tutorialAlert",
-                                                  "to" : "NA",
-                                              });
-            obj2 = comptPauseAnim.createObject(dynamicContainer, {"duration" : (endTime - filled_time) * 1000});
+            obj1 = createPropAnimation(valueSource, "tutorialAlert", "NA");
+            obj2 = createPauseAnimation(endTime - filled_time);
 
             listAnim.push(obj1)
             listAnim.push(obj2)
@@ -333,18 +321,13 @@ Item{
             var item = values[i];
             var obj;
             if (item.pause === true) {
-                obj = comptPauseAnim.createObject(dynamicContainer, {"duration" : item.duration * 1000});
+                obj = createPauseAnimation(item.duration);
             } else {
-                obj = comptPropAnim.createObject(dynamicContainer, {
-                                                     "target" : valueSource,
-                                                     "property" : nozzelName,
-                                                     "to" : item.value,
-                                                 });
+                obj = createPropAnimation(valueSource, nozzelName, item.value)
             }
             // print(`${item.value} in ${item.duration * 1000} | ${item.pause} ${nozzelName}`)
             listAnim.push(obj)
         }
-
         return listAnim
     }
 
@@ -366,21 +349,14 @@ Item{
             var obj;
 
             if (item.pause === true) {
-                obj = comptPauseAnim.createObject(dynamicContainer, {"duration" : item.duration * 1000});
+                obj = createPauseAnimation(item.duration);
             } else {
-                obj = compSmoothAnim.createObject(dynamicContainer, {
-                                                      "target" : targetObj,
-                                                      "property" : targetProp,
-                                                      "to" : item.value,
-                                                      "duration" : item.duration * 1000
-                                                  });
+                obj =createSmoothAnimation(targetObj, targetProp, item.value, item.duration);
             }
-
             listAnim.push(obj)
             // print(`${item.value} in ${item.duration * 1000} | ${item.pause}
             // ${targetProp}`)
         }
-
         return listAnim
     }
 
@@ -410,8 +386,7 @@ Item{
                 result.push({value : tmp, duration : pasue_time, pause : true});
             }
             // print(`Expected alert time: ${alert.time}, Actual: ${filled_time}`)
-
-            // tranistion to alert and stay for duration
+            // transition to alert and stay for duration
             filled_time += trans_time + alert.duration;
             result.push({value : alert.value, duration : trans_time, pause : false});
             result.push({value : alert.value, duration : alert.duration, pause : true});
@@ -426,6 +401,36 @@ Item{
         }
 
         return result
+    }
+
+
+    function createPropAnimation(target, propName, to) {
+        return comptPropAnim.createObject(
+                    dynamicContainer,
+                    {
+                        "target" : target,
+                        "property" : propName,
+                        "to" : to,
+                    });
+    }
+
+    function createPauseAnimation(durationSec) {
+        return comptPauseAnim.createObject(
+                    dynamicContainer,
+                    {
+                        "duration" : durationSec * 1000
+                    });
+    }
+
+    function createSmoothAnimation(target, propName, to, durationSec) {
+        return compSmoothAnim.createObject(
+                    dynamicContainer,
+                    {
+                        "target" : target,
+                        "property" : propName,
+                        "to" : to,
+                        "duration" : durationSec * 1000
+                    });
     }
 
     function randomNum(min, max, div) {
