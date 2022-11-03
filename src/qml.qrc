@@ -22,8 +22,15 @@
         <file>CurrentWeather.qml</file>
         <file>RectangularButton.qml</file>
         <file>XButton.qml</file>
-        <file>NotificationsManager.js</file>
         <file>Simulation.qml</file>
         <file>TachometerStyle.qml</file>
+        <file>ButtonAlertPerceived.qml</file>
+        <file>AlertSoundEffect.qml</file>
+        <file>PhidgetFeedback.qml</file>
+        <file>NotificationsBar.qml</file>
+        <file>StatusManager.qml</file>
+        <file>NotificationsList.qml</file>
+        <file>GraphicalDisplay.qml</file>
+        <file>VideoLayout.qml</file>
     </qresource>
 </RCC>

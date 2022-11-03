@@ -16,8 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        fileio.cpp \
+        phidgetInterface.cpp \
         livedata.cpp \
         main.cpp \
+        phidgetqml.cpp \
         weatherdata.cpp
 
 RESOURCES += qml.qrc \
@@ -40,7 +43,17 @@ DISTFILES += \
     qtquickcontrols2.conf \
 
 HEADERS += \
+    fileio.h \
+    phidgetInterface.h \
     livedata.h \
+    phidgetqml.h \
     weatherdata.h
 
 INCLUDEPATH += C:/OpenSSL-Win32/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/phidget22-windevel/lib/c/x64/ -lphidget22
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/phidget22-windevel/lib/c/x64/ -lphidget22
+
+INCLUDEPATH += $$PWD/../lib/phidget22-windevel/lib/c/
+INCLUDEPATH += $$PWD/../lib/phidget22-windevel/lib/c/x64
+DEPENDPATH += $$PWD/../lib/phidget22-windevel/lib/c/x64

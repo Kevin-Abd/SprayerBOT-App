@@ -2,7 +2,6 @@ import Weather 1.0
 import QtQuick 2.10
 import QtQuick.Layouts 1.10
 import QtQuick.Controls 2.10
-import "NotificationsManager.js" as NotificationsManager
 
 Popup {
     id: current
@@ -17,18 +16,16 @@ Popup {
     AppModel {
         id: model
 
-        onWeatherChanged: {
-            /* Warn user when wind speed is greater than 12 mph
-                Reference: https://sprayers101.com/five-tips-for-spraying-in-the-wind/ */
-            if (parseInt(model.weather.windSpeed, 10) > 12) {
-                if (NotificationsManager.numberOfEntries(notificationsList, notification) === 0) {
-                    notificationsList.append({message: notification, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-                }
-            } else {
-                NotificationsManager.removeNotification(notificationsList, notification)
-            }
-        }
+        //TODO
+        //onWeatherChanged: {
+        //    /* Warn user when wind speed is greater than 12 mph
+        //        Reference: https://sprayers101.com/five-tips-for-spraying-in-the-wind/ */
+        //    if (parseInt(model.weather.windSpeed, 10) > 12) {
+        //        notifications.addWarning(notification)
+        //    } else {
+        //        notifications.removeWarning(notification)
+        //    }
+        //}
     }
 
     Item {

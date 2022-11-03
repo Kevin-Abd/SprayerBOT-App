@@ -7,7 +7,6 @@ import QtQuick.Window 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.3
-import "NotificationsManager.js" as NotificationsManager
 
 ApplicationWindow {
     id: root
@@ -22,12 +21,11 @@ ApplicationWindow {
     title: qsTr("SprayerBOT")
 
     header: ToolBar {
+
         background: Item {
             id: toolbar
-
             /* This background item helps keep the ToolBar the same "Whitesmoke"
               color specified for the ApplicationWindow */
-
             anchors.fill: parent
         }
 
@@ -67,10 +65,7 @@ ApplicationWindow {
                     startButton.mainColor = "#17a81a";
 
                     // play all the videos
-                    //leftPlayer.play();
-                    frontPlayer.play();
-                    //rightPlayer.play();
-
+                    videoLayout.play();
                     /* Deactivate emergency stop button by changing the EngineStartStop
                        active and mainColor properties, and the DelayButton checked property.
                        This will be done everytime the stat button is pressed regardless of
@@ -79,8 +74,8 @@ ApplicationWindow {
                     stopButton.checked = false;
                     stopButton.mainColor = "Red";
 
-                    coverageMap.active = true           // Activate the map's "navigating" state
-                    coverageMap.state = "navigating"
+                    graphicalDisplay.coverageMap.active = true           // Activate the map's "navigating" state
+                    graphicalDisplay.coverageMap.state = "navigating"
 
                     //liveValue.startUpdates()          // Start receiving updates from agbotwebserver
                     if (sim.start == false) {
@@ -88,90 +83,23 @@ ApplicationWindow {
                     }
                     else {
                         sim.pause = false
-                        rate1.value = sim.appRate1
-                        rate2.value = sim.appRate2
-                        speedometer.value = sim.speed
+                        graphicalDisplay.appRate1.value = sim.appRate1
+                        graphicalDisplay.appRate2.value = sim.appRate2
+                        graphicalDisplay.speed.value = sim.speed
                     }
 
-                    /* Replace the notifications bar with an empty string while removing
-                      removing instructional and nominal messages from the notifications list. */
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.startupInstruction)
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.allClear)
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.emergency)
-
-                    notificationsBar.alert = ""
-                    statusIndicator.state = "off"
+                    /* Start the mahine with nominal status */
+                    notifications.setSpecial("clear")
                 }
             }
 
-            Rectangle {
-                id: notificationsBar
-
-                /* This element displays notifications about the different elements
-                   presented on the UI, using both text and */
-
-                property string alert          // holds the current notification message on display
-
-                radius: parent.width * 0.25
-
-                border.width: 1
-                border.color: "gray"
-
-                Layout.topMargin: 5
-                Layout.bottomMargin: 5
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: root.width * 0.475
-                Layout.preferredHeight: parent.height * 0.475
-
-                MachineStatus {
-                    id: statusIndicator
-
-                    /* Uses the StatusIndicator element to display the state of the machine
-                       and the severity of the notification. */
-                    height: notificationsBar.height
-                    width: height
-                    Layout.leftMargin: 10
-                    Layout.alignment: Qt.AlignLeft
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Item {
-                    id: notificationsContainer
-
-                    height: parent.height * 0.8
-                    width: parent.width * 0.85
-                    anchors.left: statusIndicator.right
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    Text {
-                        id: alertMessage
-
-                        text: qsTr(notificationsBar.alert)
-                        font.pixelSize: Math.max(12, parent.width * 0.0425)
-                        horizontalAlignment: Text.AlignVCenter
-                        wrapMode: Text.Wrap
-                        anchors.centerIn: parent
-                        anchors.leftMargin: 7.5
-                        width: parent.width
-                    }
-                }
-            }
 
             EngineStartStop {
                 id: stopButton
-
-                Layout.topMargin: 5
-                Layout.leftMargin: -5
-                Layout.rightMargin: 15
-                Layout.bottomMargin: 5
-                Layout.alignment: Qt.AlignRight
-
-                text: ""                            // Clears the default text
+                text: ""
                 mainColor: "Red"
                 activeColor: "#b30000"
+                enabled: false
 
                 Text {
                     id: buttonLabel1
@@ -222,29 +150,47 @@ ApplicationWindow {
                     stopButton.active = true;
                     stopButton.mainColor = "#b30000";
 
-                    //leftPlayer.pause();
-                    frontPlayer.pause();
-                    //rightPlayer.pause();
+                    videoLayout.pause()
 
                     startButton.active = false
                     startButton.checked = false
                     startButton.mainColor = "Green";
 
-                    coverageMap.active = false
+                    graphicalDisplay.coverageMap.active = false
                     // liveValue.stopUpdates()
                     if (sim.start == true) {
                         sim.pause = true                // pause simulation
                     }
 
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.startupInstruction)
-                    NotificationsManager.removeNotification(notificationsList,
-                                                            notificationsList.allClear)
+                    notifications.setSpecial("stopped")
+                }
+            }
 
-                    statusIndicator.state = "error"
-                    notificationsBar.alert = "The machine has been stopped!"
-                    notificationsList.append({message: notificationsList.emergency,
-                                                 status: "error"})
+            NotificationsBar {
+                id: notificationsBar
+                anchors.centerIn: parent
+                // Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Text {
+                id: debugText
+
+                text: sim.state
+                color: "Black"
+
+                font.pixelSize: 12
+                font.weight: Font.Bold
+                font.letterSpacing: 1.5
+                font.capitalization: Font.AllUppercase
+
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            ButtonAlertPerceived{
+                id: buttonAlertPerceived
+                Component.onCompleted: {
+                    buttonAlertPerceived.activated.connect(statusManager.userOverride)
                 }
             }
         }
@@ -258,562 +204,227 @@ ApplicationWindow {
         ColumnLayout {
             anchors.fill: parent
 
-            Item {
-                id: videos
+            VideoLayout {
+                id: videoLayout
+            }
+            GraphicalDisplay{
+                id: graphicalDisplay
 
-                Layout.preferredWidth: parent.width
-                Layout.preferredHeight: parent.height * 0.35
-
-                RowLayout {
-                    spacing: 7
-                    anchors.fill: parent
-
-
-                    /**VideoPlayer {
-                        id: video1
-
-                        source: leftPlayer          // allows for the creation of multiple videos
-                        view: "Left Boom"           // video label
-
-                        MediaPlayer {
-                            id: leftPlayer
-
-                            source: "../media/left.mp4"
-                            loops: MediaPlayer.Infinite
-                            onPlaybackStateChanged: video1.state = "after"
-                        }
-                    }**/
-
-                    VideoPlayer {
-                        id: video2
-
-                        source: frontPlayer
-                        view: "Front View"
-
-                        MediaPlayer {
-                            id: frontPlayer
-
-                            source: "../media/front.mp4"
-                            loops: MediaPlayer.Infinite
-                            onPlaybackStateChanged: video2.state = "after"
-                        }
-                    }
-
-                    /**VideoPlayer {
-                        id: video3
-
-                        source: rightPlayer
-                        view: "Right Boom"
-
-                        MediaPlayer {
-                            id: rightPlayer
-
-                            source: "../media/right.mp4"
-                            loops: MediaPlayer.Infinite
-                            onPlaybackStateChanged: video3.state = "after"
-                        }
-                    }**/
+                Component.onCompleted: {
+                    speed: sim.speed
+                    rpm: sim.rpm
+                    broomHeight: sim.boomHeight
+                    tankLevel1: sim.tankLevel1
+                    tankLevel2: sim.tankLevel2
+                    appRate1: sim.appRate1
+                    appRate2: sim.appRate2
+                    broomNozzle1: sim.nozzle1Status
+                    broomNozzle2: sim.nozzle2Status
+                    broomNozzle3: sim.nozzle3Status
+                    broomNozzle4: sim.nozzle4Status
+                    broomNozzle5: sim.nozzle5Status
+                    broomNozzle6: sim.nozzle6Status
                 }
-            } // End of videos
-
-            Item {
-                id: graphicalElements
-
-                Layout.preferredWidth: parent.width
-                Layout.preferredHeight: parent.height * 0.65
-
-                RowLayout {
-                    anchors.fill: parent
-
-                    Item {
-                        id: sprayerElements
-
-                        Layout.preferredHeight: parent.height
-                        Layout.preferredWidth: parent.width * 0.7
-
-                        RowLayout {
-                            anchors.fill: parent
-
-                            Item {
-                                id: sprayerInfoContainer
-
-                                Layout.preferredHeight: parent.height
-                                Layout.preferredWidth: parent.width * 0.4
-
-                                ColumnLayout {
-                                    anchors.fill: parent
-
-                                    Item {
-                                        id: tankContainer
-
-                                        Layout.preferredHeight: parent.height * 0.75
-                                        Layout.preferredWidth: parent.width
-
-                                        ColumnLayout {
-                                            anchors.fill: parent
-
-                                            Item {
-                                                id: tank1Container
-
-                                                Layout.preferredWidth: parent.width
-                                                Layout.preferredHeight: parent.height / 2.5
-
-                                                RowLayout {
-                                                    spacing: 5
-                                                    anchors.fill: parent
-
-                                                    TankLevel {
-                                                        id: tank1
-
-                                                        name: "Tank 1"
-                                                        maxValue: 25
-                                                        tickInterval: 5
-                                                        minorTickInterval: 0
-                                                        Layout.leftMargin: parent.width * 0.0725
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.preferredHeight: parent.height * 0.8
-                                                        Layout.preferredWidth: Math.min
-                                                                               (67.5, parent.width *
-                                                                                0.3)
-                                                    }
-
-                                                    ApplicationRate {
-                                                        id: rate1
-
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.alignment: Qt.AlignCenter
-
-                                                        onWidthChanged: {
-                                                            if (width <= 119) {
-                                                                Layout.leftMargin = 30;
-                                                            } else {
-                                                                Layout.leftMargin = -25
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            Item {
-                                                id: tank2Container
-
-                                                Layout.preferredWidth: parent.width
-                                                Layout.preferredHeight: parent.height / 2.5
-
-                                                RowLayout {
-                                                    spacing: 5
-                                                    anchors.fill: parent
-
-                                                    TankLevel {
-                                                        id: tank2
-
-                                                        name: "Tank 2"
-                                                        maxValue: 5
-                                                        tickInterval: 1
-                                                        minorTickInterval: 0
-                                                        Layout.leftMargin: parent.width * 0.0925
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.preferredHeight: parent.height * 0.8
-                                                        Layout.preferredWidth: Math.min
-                                                                               (67.5, parent.width *
-                                                                                0.3)
-                                                    }
-
-                                                    ApplicationRate {
-                                                        id: rate2
-
-                                                        Layout.topMargin: parent.height * 0.25
-                                                        Layout.alignment: Qt.AlignCenter
-
-                                                        onWidthChanged: {
-                                                            if (width <= 119) {
-                                                                Layout.leftMargin = 20;
-                                                            } else {
-                                                                Layout.leftMargin = -35
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } // End of tankContainer
-
-                                    Item {
-                                        id: weatherContainer
-
-                                        Layout.preferredHeight: parent.height * 0.25
-                                        Layout.preferredWidth: parent.width
-
-                                        Weather {
-                                            anchors.fill: parent
-                                        }
-                                    } // End of weatherContainer
-                                }
-                            } // End of sprayerInfoContainer
-
-                            Item {
-                                id: boomContainer
-
-                                Layout.preferredWidth: parent.width * 0.6
-                                Layout.preferredHeight: parent.height
-
-                                ColumnLayout {
-                                    spacing: 0
-                                    anchors.fill: parent
-
-                                    Item {
-                                        id: labelContainer
-
-                                        Layout.preferredWidth: parent.width
-                                        Layout.preferredHeight: parent.height * 0.15
-                                        Layout.topMargin: -7.5
-
-                                        Pane {
-                                            id: container
-
-                                            width: parent.width * 0.25
-                                            height: Math.max(40, width * 0.45)
-
-                                            Material.elevation: 2
-
-                                            anchors {
-                                                verticalCenter: parent.verticalCenter
-                                                horizontalCenter: parent.horizontalCenter
-                                                verticalCenterOffset: 12.5
-                                                horizontalCenterOffset: 7
-                                            }
-
-                                            Text {
-                                                id: valueText
-
-                                                text: boomHeightElement.boomHeightValue.toFixed(0)
-
-                                                font.pixelSize: Math.max(14, parent.width * 0.25)
-                                                font.bold: true
-                                                color: "Black"
-                                                topPadding: 5
-
-                                                anchors {
-                                                    verticalCenter: parent.verticalCenter
-                                                    horizontalCenter: parent.horizontalCenter
-                                                    verticalCenterOffset: -10
-                                                    horizontalCenterOffset: -10
-                                                }
-                                            }
-
-                                            Text {
-                                                id: unitLabel
-
-                                                text: " in"
-
-                                                color: "Black"
-                                                font.weight: Font.DemiBold
-                                                font.pixelSize: Math.max(12, parent.width * 0.2)
-                                                anchors.left: valueText.right
-                                                anchors.bottom: valueText.bottom
-
-                                            }
-
-                                            Text {
-                                                id: label
-
-                                                text: "Boom Height"
-
-                                                color: "black"
-                                                bottomPadding: 3.5
-                                                font.letterSpacing: 1.15
-                                                font.pixelSize: Math.max(8, parent.width * 0.125)
-
-                                                anchors {
-                                                    topMargin: 3.5
-                                                    bottom: parent.bottom
-                                                    top: valueText.bottom
-                                                    horizontalCenter: parent.horizontalCenter
-                                                }
-                                            }
-                                        }
-                                    } // End of labelContainer
-
-                                    BoomHeight {
-                                        id: boomHeightElement
-
-                                        Layout.topMargin: -25
-                                    }
-                                }
-                            } // End of boomContainer
-                        }
-                    } // End of sprayerElements
-
-                    Item {
-                        id: vehicleElements
-
-                        Layout.preferredHeight: parent.height
-                        Layout.preferredWidth: parent.width * 0.3
-
-                        ColumnLayout {
-                            spacing: 0
-                            anchors.fill: parent
-
-                            Item {
-                                id: gauges
-
-                                Layout.preferredWidth: parent.width
-                                Layout.preferredHeight: parent.height * 0.45
-
-                                RowLayout {
-                                    spacing: 5
-                                    anchors.fill: parent
-
-                                    Item {
-                                        id: travelSpeed
-
-                                        Layout.preferredWidth: parent.width * 0.45
-                                        Layout.preferredHeight: parent.height
-
-                                        CircularGauge {
-                                            id: speedometer
-
-                                            readonly property string highSpeedWarning: "The machine is moving too fast!"
-                                            readonly property string lowSpeedWarning: "The machine is moving too slow!"
-
-                                            height: parent.height * 0.90
-                                            width: parent.width
-
-                                            stepSize: 0.1
-                                            maximumValue: 9            // maximum speed
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: parent.width * 0.02
-                                            anchors.verticalCenter: parent.verticalCenter
-
-                                            style: SpeedGaugeStyle {}
-                                        }
-                                    }
-
-                                    Item {
-                                        id: engineSpeed
-
-                                        Layout.preferredWidth: parent.width * 0.45
-                                        Layout.preferredHeight: parent.height
-
-                                        CircularGauge {
-                                            id: tachometer
-
-                                            height: parent.height * 0.90
-                                            width: parent.width
-
-                                            stepSize: 0.1
-                                            maximumValue: 8            // maximum rev per min
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: parent.width * 0.015
-                                            anchors.verticalCenter: parent.verticalCenter
-
-                                            style: TachometerStyle {}
-                                        }
-                                    }
-                                }
-                            }
-
-                            Item {
-                                id: mapArea
-
-                                Layout.preferredHeight: parent.height * 0.55
-                                Layout.preferredWidth: parent.width
-
-                                CoverageMap {
-                                    id: coverageMap
-
-                                    anchors.fill: parent
-                                }
-                            }
-                        }
-                    } // End of vehicleElements
-                }
-            } // End of graphicalElements
+            }
         }
     } // End of contentItem
 
-    ListModel {
-        id: notificationsList
-
-        readonly property string startupInstruction: "To begin, press and hold the START button."
-        readonly property string emergency: "The machine has been stopped!"
-        readonly property string allClear: "All systems are normal"
-
-        ListElement {
-            message: "To begin, press and hold the START button."
-            status: "off"
-        }
+    AlertSoundEffect {
+        id: alertSoundEffect
     }
 
-    Timer {
-        id: timer
-
-        property real counter: 0
-
-        function setAlertMessage() {
-            notificationsBar.alert = notificationsList.get(counter).message;
-            statusIndicator.state = notificationsList.get(counter).status;
-        }
-
-        triggeredOnStart: true
-        interval: 5000
-        running: true
-        repeat: true
-
-        onTriggered: {
-            if (notificationsList.count === 0) {
-                notificationsList.set(0, {message: notificationsList.allClear, status: "nominal"})
-                counter = 0
-                setAlertMessage()
-            }
-
-            if (counter < notificationsList.count) {
-                setAlertMessage()
-                counter++
-            } else {
-                counter = 0
-                setAlertMessage()
-            }
-        }
+    PhidgetFeedback {
+        id: phidgetFeedback
     }
+
+
+    NotificationsList {
+        id: notifications
+    }
+
+    StatusManager{
+        id: statusManager
+        alertSoundEffect: alertSoundEffect
+        phidgetFeedback: phidgetFeedback
+        notificationsBar: notificationsBar
+        buttonAlertPerceived: buttonAlertPerceived
+    }
+
 
     Simulation {
         id: sim
 
+        property var list_tutorial_alerts: {
+            "visual" :          { code: "021",  message : "Example Visual Alert"},
+            "auditory" :        { code: "022",  message : "Example Auditory Alert"},
+            "tactile" :         { code: "023",  message : "Example Tactile Alert"},
+            "visual_auditory" : { code: "024",  message : "Example Visual+Auditory Alert"},
+            "visual_tactile" :  { code: "025",  message : "Example Visual+Tactile Alert"},
+        }
+
+        property var list_alerts: {
+            "low speed":  { code: "101",  message : "The machine is moving too slow!"},
+            "high speed": { code: "102",  message : "The machine is moving too fast!"},
+
+            "high broom": { code: "111",  message : "The broom height is too high!"},
+            "low broom":  { code: "112",  message : "The broom height is too low!"},
+
+            "blocked nozzle 1": { code: "121",  message : "Nozzle 1 is blocked! Please check the sprayer!"},
+            "blocked nozzle 2": { code: "122",  message : "Nozzle 2 is blocked! Please check the sprayer!"},
+            "blocked nozzle 3": { code: "123",  message : "Nozzle 3 is blocked! Please check the sprayer!"},
+            "blocked nozzle 4": { code: "124",  message : "Nozzle 4 is blocked! Please check the sprayer!"},
+            "blocked nozzle 5": { code: "125",  message : "Nozzle 5 is blocked! Please check the sprayer!"},
+            "blocked nozzle 6": { code: "126",  message : "Nozzle 6 is blocked! Please check the sprayer!"},
+
+            "low tank 1": { code: "131",  message : "Tank 1 level is low! Please refill soon."},
+            "low tank 2": { code: "132",  message : "Tank 2 level is low! Please refill soon."},
+
+            "high rpm": { code: "142",  message : "The engine rpm is too high!"},
+        }
+
         onSpeedChanged: {
-            speedometer.value = speed
+            graphicalDisplay.speed = speed
 
             if (speed > 0 && speed <= 3) {
-                if (NotificationsManager.numberOfEntries(notificationsList, speedometer.lowSpeedWarning) === 0) {
-                    notificationsList.append({message: speedometer.lowSpeedWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-                }
-                NotificationsManager.removeNotification(notificationsList, speedometer.highSpeedWarning)
+                notifications.addWarning(list_alerts["low speed"])
+                notifications.removeWarning(list_alerts["high speed"])
             } else if (speed > 6) {
-                if (NotificationsManager.numberOfEntries(notificationsList, speedometer.highSpeedWarning) === 0) {
-                    notificationsList.append({message: speedometer.highSpeedWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-                }
-                NotificationsManager.removeNotification(notificationsList, speedometer.lowSpeedWarning)
+                notifications.addWarning(list_alerts["high speed"])
+                notifications.removeWarning(list_alerts["low speed"])
             } else {
-                NotificationsManager.removeNotification(notificationsList, speedometer.lowSpeedWarning)
-                NotificationsManager.removeNotification(notificationsList, speedometer.highSpeedWarning)
+                notifications.removeWarning(list_alerts["low speed"])
+                notifications.removeWarning(list_alerts["high speed"])
+            }
+        }
+
+        onStateChanged: {
+            statusManager.updateState(state)
+        }
+
+        onTutorialAlertChanged: {
+            if (tutorialAlert === "NA") {
+                notifications.removeWarning(list_tutorial_alerts["visual"])
+                notifications.removeWarning(list_tutorial_alerts["auditory"])
+                notifications.removeWarning(list_tutorial_alerts["tactile"])
+                notifications.removeWarning(list_tutorial_alerts["visual_auditory"])
+                notifications.removeWarning(list_tutorial_alerts["visual_tactile"])
+            } else {
+                console.debug("[Debug]", `Tutorial alert: ${tutorialAlert}`)
+                notifications.setTutorial(tutorialAlert, list_tutorial_alerts[tutorialAlert])
             }
         }
 
         onRpmChanged: {
-            tachometer.value = sim.rpm
+            graphicalDisplay.rpm = rpm
+            if (rpm > 6) {
+                notifications.addWarning(list_alerts["high rpm"])
+            } else {
+                notifications.removeWarning(list_alerts["high rpm"])
+            }
         }
 
         onBoomHeightChanged: {
-            boomHeightElement.val = boomHeight
-
+            graphicalDisplay.broomHeight = boomHeight
             if (boomHeight > 28) {
-                if (NotificationsManager.numberOfEntries(notificationsList, boomHeightElement.highHeightWarning) === 0) {
-                    notificationsList.append({message: boomHeightElement.highHeightWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-                }
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.lowHeightWarning)
+                notifications.addWarning(list_alerts["high broom"])
+                notifications.removeWarning(list_alerts["low broom"])
             } else if (boomHeight < 22) {
-                if (NotificationsManager.numberOfEntries(notificationsList, boomHeightElement.lowHeightWarning) === 0) {
-                    notificationsList.append({message: boomHeightElement.lowHeightWarning, status: "warning"})
-                    NotificationsManager.removeNotification(notificationsList, notificationsList.allClear)
-                }
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.highHeightWarning)
+                notifications.addWarning(list_alerts["low broom"])
+                notifications.removeWarning(list_alerts["high broom"])
             } else {
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.highHeightWarning)
-                NotificationsManager.removeNotification(notificationsList, boomHeightElement.lowHeightWarning)
+                notifications.removeWarning(list_alerts["high broom"])
+                notifications.removeWarning(list_alerts["low broom"])
             }
         }
 
         onTankLevel1Changed: {
-            tank1.level = sim.tankLevel1
+            graphicalDisplay.tankLevel1 = sim.tankLevel1
+
+            if (sim.tankLevel1 < 6.25)
+                notifications.addWarning(list_alerts["low tank 1"])
+            else
+                notifications.removeWarning(list_alerts["low tank 1"])
         }
 
         onAppRate1Changed: {
-            rate1.value = appRate1
+            graphicalDisplay.appRate1 = appRate1
         }
 
         onTankLevel2Changed: {
-            tank2.level = sim.tankLevel2
+            graphicalDisplay.tankLevel2 = sim.tankLevel2
+
+            if (sim.tankLevel2 < 1.25)
+                notifications.addWarning(list_alerts["low tank 2"])
+            else
+                notifications.removeWarning(list_alerts["low tank 2"])
         }
 
         onAppRate2Changed: {
-            rate2.value = appRate2
+            graphicalDisplay.appRate2 = appRate2
         }
 
         onNozzle1StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle1State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle1State("on")
-            } else {
-                boomHeightElement.changeNozzle1State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle1State(nozzle1Status)
+
+            if (nozzle1Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 1"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 1"])
         }
         onNozzle2StatusChanged: {
-            if (nozzle2Status == "blocked") {
-                boomHeightElement.changeNozzle2State("blocked")
-            } else if (nozzle2Status == "on") {
-                boomHeightElement.changeNozzle2State("on")
-            } else {
-                boomHeightElement.changeNozzle2State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle2State(nozzle2Status)
+
+            if (nozzle2Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 2"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 2"])
         }
         onNozzle3StatusChanged: {
-            if (nozzle3Status == "blocked") {
-                boomHeightElement.changeNozzle3State("blocked")
-            } else if (nozzle3Status == "on") {
-                boomHeightElement.changeNozzle3State("on")
-            } else {
-                boomHeightElement.changeNozzle3State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle3State(nozzle3Status)
+
+            if (nozzle3Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 3"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 3"])
         }
         onNozzle4StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle4State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle4State("on")
-            } else {
-                boomHeightElement.changeNozzle4State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle4State(nozzle4Status)
+
+            if (nozzle4Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 4"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 4"])
         }
         onNozzle5StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle5State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle5State("on")
-            } else {
-                boomHeightElement.changeNozzle5State("off")
-            }
+            graphicalDisplay.broomHeightElement.changeNozzle5State(nozzle5Status)
+
+            if (nozzle5Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 5"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 5"])
         }
         onNozzle6StatusChanged: {
-            if (nozzle1Status == "blocked") {
-                boomHeightElement.changeNozzle6State("blocked")
-            } else if (nozzle1Status == "on") {
-                boomHeightElement.changeNozzle6State("on")
-            } else {
-                boomHeightElement.changeNozzle6State("off")
-            }
-        }
-    }
+            graphicalDisplay.broomHeightElement.changeNozzle6State(nozzle6Status)
 
-    Loader {
-        source: "Simulation.qml"
-        onLoaded: {
-            tank1.level = sim.tankLevel1
-            tank2.level = sim.tankLevel2
-            rate1.value = sim.appRate1
-            rate2.value = sim.appRate2
-            speedometer.value = sim.speed
-            boomHeightElement.val = sim.boomHeight
+            if (nozzle6Status === "blocked")
+                notifications.addWarning(list_alerts["blocked nozzle 6"])
+            else
+                notifications.removeWarning(list_alerts["blocked nozzle 6"])
+        }
+
+        Component.onCompleted: {
+            graphicalDisplay.speed = sim.speed
+            graphicalDisplay.rpm = sim.rpm
+            graphicalDisplay.broomHeight = sim.boomHeight
+            graphicalDisplay.tankLevel1 = sim.tankLevel1
+            graphicalDisplay.tankLevel2 = sim.tankLevel2
+            graphicalDisplay.appRate1 = sim.appRate1
+            graphicalDisplay.appRate2 = sim.appRate2
         }
     }
 
     onClosing: {
-        leftPlayer.stop()
-        frontPlayer.stop()
-        rightPlayer.stop()
+        videoLayout.stop()
         sim.start = false
         // liveValue.stopUpdates()
     }
