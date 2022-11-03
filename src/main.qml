@@ -21,12 +21,11 @@ ApplicationWindow {
     title: qsTr("SprayerBOT")
 
     header: ToolBar {
+
         background: Item {
             id: toolbar
-
             /* This background item helps keep the ToolBar the same "Whitesmoke"
               color specified for the ApplicationWindow */
-
             anchors.fill: parent
         }
 
@@ -171,6 +170,21 @@ ApplicationWindow {
                 id: notificationsBar
                 anchors.centerIn: parent
                 // Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Text {
+                id: debugText
+
+                text: sim.state
+                color: "Black"
+
+                font.pixelSize: 12
+                font.weight: Font.Bold
+                font.letterSpacing: 1.5
+                font.capitalization: Font.AllUppercase
+
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
             }
 
             ButtonAlertPerceived{
