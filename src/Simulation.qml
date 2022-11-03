@@ -85,20 +85,46 @@ Item{
 
         // Tank 1 alert zone: 0-6.25 (6.25-11.25 yellow)
         // Tank 2 alert zone: 0-1.25 (1.25-2.25 yellow)
+
+        var syncTime = - (warmupTime + tutorialTime + 1)
         var experimentAlerts = [
+                    // Value overrides in the begginings to sync values with the video
+                    {"type" : "speed",   "time" : syncTime, "duration" : 10, "value" : 0},
+                    {"type" : "rpm",     "time" : syncTime, "duration" : 10, "value" : 0},
+                    {"type" : "broom",   "time" : syncTime, "duration" : 15, "value" : 20},
+                    {"type" : "app1",    "time" : syncTime, "duration" : 15, "value" : 0},
+                    {"type" : "app2",    "time" : syncTime, "duration" : 15, "value" : 0},
+                    {"type" : "tank1",   "time" : syncTime + 1.1, "duration" : 180, "value" : 25},
+                    {"type" : "tank2",   "time" : syncTime + 1.1, "duration" : 180, "value" : 5},
+                    {"type" : "nozzel1", "time" : syncTime, "duration" : 15, "value" : "off"},
+                    {"type" : "nozzel2", "time" : syncTime, "duration" : 15, "value" : "off"},
+                    {"type" : "nozzel3", "time" : syncTime, "duration" : 15, "value" : "off"},
+                    {"type" : "nozzel4", "time" : syncTime, "duration" : 15, "value" : "off"},
+                    {"type" : "nozzel5", "time" : syncTime, "duration" : 15, "value" : "off"},
+                    {"type" : "nozzel6", "time" : syncTime, "duration" : 15, "value" : "off"},
+
+                    // Values to cause alerts in the experiment phase
+                    // type: which value to change
+                    //          speed, rpm, broom, app1, app2, tank1, tank2, nozzel1 - nozzel6
+                    // time: the time for the value to take effect in the experiment phase (in seconds)
+                    // duration: the duration time when the value stays the same
+                    // value: the new value
                     {"type" : "speed",   "time" : 2,   "duration" : 4, "value" : 2.5},
-                    {"type" : "tank1",   "time" : 10,   "duration" : 5, "value" : 0.5},
                     {"type" : "speed",   "time" : 15,  "duration" : 5, "value" : 7},
                     {"type" : "broom",   "time" : 25,  "duration" : 3, "value" : 29},
-                    {"type" : "broom",   "time" : 40,  "duration" : 5, "value" : 29},
+                    {"type" : "broom",   "time" : 40,  "duration" : 5, "value" : 21},
                     {"type" : "speed",   "time" : 55,  "duration" : 2, "value" : 6.2},
-                    {"type" : "nozzel1", "time" : 70,  "duration" : 7, "value" : "blocked"},
-                    {"type" : "nozzel4", "time" : 84,  "duration" : 9, "value" : "blocked"},
-                    {"type" : "rpm",     "time" : 100, "duration" : 5, "value" : 7},
+                    {"type" : "tank2",   "time" : 70,  "duration" : 5, "value" : 0.5},
+                    {"type" : "nozzel1", "time" : 80,  "duration" : 7, "value" : "blocked"},
+                    {"type" : "nozzel4", "time" : 114, "duration" : 9, "value" : "blocked"},
+                    {"type" : "rpm",     "time" : 130, "duration" : 5, "value" : 7},
+                    {"type" : "tank1",   "time" : 150, "duration" : 5, "value" : 0.5},
                 ];
 
-        setExperimentAlerts(experimentAlerts, endTime)
+
         setTutorialAlerts(tutorialAlerts, endTime)
+        setExperimentAlerts(experimentAlerts, endTime)
+
     }
 
     QtObject{
@@ -236,6 +262,8 @@ Item{
         var speedAlerts = [];
         var rpmAlerts = [];
         var broomAlerts = [];
+        var apprate1Alerts = [];
+        var apprate2Alerts = [];
         var tank1Alerts = [];
         var tank2Alerts = [];
 
@@ -253,6 +281,8 @@ Item{
 
             if (item.type === "speed") speedAlerts.push(item);
             else if (item.type === "broom") broomAlerts.push(item);
+            else if (item.type === "app1") apprate1Alerts.push(item);
+            else if (item.type === "app2") apprate2Alerts.push(item);
             else if (item.type === "rpm") rpmAlerts.push(item);
             else if (item.type === "tank1") tank1Alerts.push(item);
             else if (item.type === "tank2") tank2Alerts.push(item);
@@ -278,9 +308,8 @@ Item{
         nozzelAnim5.animations = makeNozzelAnimation(nozzel5Alerts, endTime, "nozzle5Status");
         nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status");
 
-        // no apprate alert for now
-        appRate1Anim.animations = makeValueAnimation([], wobbleAppRate1, "appRate1", endTime);
-        appRate2Anim.animations = makeValueAnimation([], wobbleAppRate2, "appRate2", endTime);
+        appRate1Anim.animations = makeValueAnimation(apprate1Alerts, wobbleAppRate1, "appRate1", endTime);
+        appRate2Anim.animations = makeValueAnimation(apprate2Alerts, wobbleAppRate2, "appRate2", endTime);
     }
 
     function makeTankAnimation(alerts, endTime, fillValue, tankName) {
@@ -300,7 +329,7 @@ Item{
             // then pause for duration, then fill tank
             values.push({value : alert.value, duration : alert.time - filled_time, pause : false});
             values.push({value : alert.value, duration : alert.duration, pause : true});
-            values.push({value : fillValue, duration : tank_refill_time, pause : false});
+            values.push({value : fillValue,   duration : tank_refill_time, pause : false});
             filled_time = alert.time + alert.duration + tank_refill_time;
         }
 
@@ -311,7 +340,7 @@ Item{
             filled_time = endTime;
         }
 
-        // createListOfAnimation(values, valueSource, propName)
+        // createListOfAnimation
         var listAnim = [];
         for (i = 0; i < values.length; i++) {
             var item = values[i];
