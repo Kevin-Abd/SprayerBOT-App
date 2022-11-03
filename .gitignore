@@ -71,3 +71,11 @@ Thumbs.db
 *.dll
 *.exe
 
+# Build Files
+# --------
+build-SprayerBOT-Desktop_Qt_*/
+
+
+# Libraries
+# --------
+lib/
