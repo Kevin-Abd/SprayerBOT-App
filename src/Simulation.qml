@@ -14,8 +14,8 @@ Item{
     property int appRate2 : 0;
 
     // tank level control
-    property real tankLevel2 : 5;
     property real tankLevel1 : 25;
+    property real tankLevel2 : 5;
 
     // nozzle state control
     property string nozzle1Status : "off";
@@ -30,7 +30,7 @@ Item{
 
     property real timeInState;
 
-    readonly property real warmupTime: 10;
+    readonly property real warmupTime: 120;
     readonly property real tutorialTime: 60;
     readonly property real experimentTime: 300;
 
@@ -58,9 +58,6 @@ Item{
     }
 
     function changeState() {
-
-        console.debug(`[changeState] current state : ${state}`);
-
         if (state == "warmup") state = "tutorial";
         else if (state == "tutorial") state = "experiments";
         else if (state == "experiments") state = "finished"
@@ -113,18 +110,16 @@ Item{
                     {"type" : "speed",   "time" : 15,  "duration" : 5, "value" : 7},
                     {"type" : "broom",   "time" : 25,  "duration" : 3, "value" : 29},
                     {"type" : "broom",   "time" : 40,  "duration" : 5, "value" : 21},
-                    {"type" : "speed",   "time" : 55,  "duration" : 2, "value" : 6.2},
-                    {"type" : "tank2",   "time" : 70,  "duration" : 5, "value" : 0.5},
-                    {"type" : "nozzel1", "time" : 80,  "duration" : 7, "value" : "blocked"},
+                    {"type" : "speed",   "time" : 60,  "duration" : 2, "value" : 6.2},
+                    {"type" : "tank2",   "time" : 75,  "duration" : 5, "value" : 1},
+                    {"type" : "nozzel1", "time" : 90,  "duration" : 7, "value" : "blocked"},
                     {"type" : "nozzel4", "time" : 114, "duration" : 9, "value" : "blocked"},
                     {"type" : "rpm",     "time" : 130, "duration" : 5, "value" : 7},
-                    {"type" : "tank1",   "time" : 150, "duration" : 5, "value" : 0.5},
+                    {"type" : "tank1",   "time" : 150, "duration" : 5, "value" : 6},
                 ];
-
 
         setTutorialAlerts(tutorialAlerts, endTime)
         setExperimentAlerts(experimentAlerts, endTime)
-
     }
 
     QtObject{
@@ -438,7 +433,6 @@ Item{
          * Fill a list of animation values with wobbleFunction until endTime,
          * with alerts at specified times with specidifed values/durations
          */
-
         var trans_time = 2.2;
         var pause_time = 0.8;
         var last_value = -1;
