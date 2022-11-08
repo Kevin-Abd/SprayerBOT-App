@@ -385,7 +385,7 @@ Item{
             filled_time = endTime;
         }
 
-        // createListOfAnimation(values, valueSource, propName)
+        // create list of animation
         var listAnim = [];
         for (i = 0; i < values.length; i++) {
             var item = values[i];
