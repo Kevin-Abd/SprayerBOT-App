@@ -48,8 +48,8 @@ bool PhidgetInterface::setHandlers(Phidget_OnAttachCallback handlerAttach, Phidg
 bool PhidgetInterface::open(){
     //Open your Phidgets and wait for attachment
     PhidgetReturnCode code = Phidget_openWaitForAttachment((PhidgetHandle)*pPhidget, 5000);
-    // qDebug("openAttached Result: ");
-    // qDebug(std::to_string(int(code)).c_str());
+    qDebug("openAttached Result: ");
+    qDebug(std::to_string(int(code)).c_str());
     return true;
 }
 
