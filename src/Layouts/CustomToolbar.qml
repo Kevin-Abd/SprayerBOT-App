@@ -26,7 +26,7 @@ Item {
 
         ButtonStart {
             id: startButton
-            Layout.leftMargin: 10
+            Layout.leftMargin: 60
         }
 
         Item {
@@ -84,11 +84,8 @@ Item {
 
         ButtonStop {
             id: stopButton
-            Layout.rightMargin: 10
+            Layout.rightMargin: 60
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-
-            onActivated: {
-            }
         }
 
 
