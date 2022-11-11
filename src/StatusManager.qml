@@ -3,6 +3,7 @@ import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.10
 import QtQuick.Controls 2.10
 import FileIO 1.0
+import "UI"
 
 QtObject{
     id: statusManager
@@ -15,7 +16,8 @@ QtObject{
     property AlertSoundEffect alertSoundEffect
     property PhidgetFeedback phidgetFeedback
     property NotificationsBar notificationsBar
-    property ButtonAlertPerceived buttonAlertPerceived
+    property ButtonAlertPerceived buttonAlertPerceived1
+    property ButtonAlertPerceived buttonAlertPerceived2
 
     property bool warningFeedback
     property bool logWarningTimes
@@ -115,7 +117,8 @@ QtObject{
 
         if (newAlert.status === "off" || newAlert.status === "nominal"){
             notificationsBar.setState(newAlert.message, newAlert.status)
-            buttonAlertPerceived.enabled = false
+            buttonAlertPerceived1.enabled = false
+            buttonAlertPerceived2.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
@@ -131,7 +134,8 @@ QtObject{
 
         if (newAlert.status === "off" || newAlert.status === "nominal"){
             notificationsBar.setState(newAlert.message, newAlert.status)
-            buttonAlertPerceived.enabled = false
+            buttonAlertPerceived1.enabled = false
+            buttonAlertPerceived2.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
@@ -162,13 +166,15 @@ QtObject{
 
         if (newAlert.status === "off"){
             notificationsBar.setState(newAlert.message, newAlert.status)
-            buttonAlertPerceived.enabled = false
+            buttonAlertPerceived1.enabled = false
+            buttonAlertPerceived2.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
         }
         else if (newAlert.status === "nominal"){
             notificationsBar.setState(newAlert.message, newAlert.status)
-            buttonAlertPerceived.enabled = false
+            buttonAlertPerceived1.enabled = false
+            buttonAlertPerceived2.enabled = false
             alertSoundEffect.stop()
             phidgetFeedback.deactivate()
 
@@ -192,7 +198,8 @@ QtObject{
 
             // Always update visual feedback
             notificationsBar.setState(newAlert.message, newAlert.status)
-            buttonAlertPerceived.enabled = true
+            buttonAlertPerceived1.enabled = true
+            buttonAlertPerceived2.enabled = true
 
             // log alert start time + type
             fileio.write(`\nNewAlert, ${newAlert.code}, ${Date.now()}, ${feedback}, `)
@@ -211,8 +218,10 @@ QtObject{
         fileio.write(`${lastAlert.code}, ${Date.now()}\n`)
 
         // disable alert percived button
-        buttonAlertPerceived.checked = false
-        buttonAlertPerceived.enabled = false
+        buttonAlertPerceived1.checked = false
+        buttonAlertPerceived1.enabled = false
+        buttonAlertPerceived2.checked = false
+        buttonAlertPerceived2.enabled = false
 
         // clear alert feedback
         alertSoundEffect.stop()
