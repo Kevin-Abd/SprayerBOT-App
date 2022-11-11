@@ -24,7 +24,7 @@ Control {
         State {
             name: "nominal"
             PropertyChanges {target: status; text: "OK"}
-            PropertyChanges {target: status; color: "Yellow"}
+            PropertyChanges {target: status; color: "White"}
             PropertyChanges {target: status; textColor: "Green"}
         },
         State {
