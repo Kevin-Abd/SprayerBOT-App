@@ -121,7 +121,7 @@ ApplicationWindow {
                 }
             }
         }
-    } // End of contentItem
+    }
 
     AlertSoundEffect {
         id: alertSoundEffect
@@ -323,4 +323,4 @@ ApplicationWindow {
         sim.start = false
         // liveValue.stopUpdates()
     }
-} // End of ApplicationWindow
+}

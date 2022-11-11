@@ -9,7 +9,6 @@
         <file>NotificationsList.qml</file>
         <file>Layouts/GraphicalDisplay.qml</file>
         <file>Layouts/VideoLayout.qml</file>
-        <file>Layouts/WindowLayout.qml</file>
         <file>Layouts/CustomToolbar.qml</file>
         <file>UI/ButtonAlertPerceived.qml</file>
         <file>UI/EngineStartStop.qml</file>

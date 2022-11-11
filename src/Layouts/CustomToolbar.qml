@@ -37,11 +37,6 @@ Item {
 
             RowLayout {
                 anchors.fill: parent
-                // anchors.top: parent.top
-                // anchors.bottom: parent.bottom
-                // anchors.bottomMargin: 0
-                // anchors.horizontalCenter: parent.horizontalCenter
-                // anchors.topMargin: 0
 
                 ButtonAlertPerceived{
                     id: buttonAlertPerceived1
@@ -53,7 +48,6 @@ Item {
                     Layout.topMargin: 5
                     Layout.bottomMargin: 5
                     Layout.alignment: Qt.AlignCenter
-                    // Layout.preferredWidth: parent.width * 0.8
                     Layout.preferredHeight: parent.height * 0.8
                 }
 
