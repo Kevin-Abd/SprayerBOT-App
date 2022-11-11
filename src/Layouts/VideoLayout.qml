@@ -7,6 +7,7 @@ import QtQuick.Window 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.3
+import "../UI"
 
 Item {
     id: videos
@@ -82,4 +83,4 @@ Item {
             }
         }
     }
-} // End of videos
+}

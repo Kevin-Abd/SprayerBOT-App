@@ -16,12 +16,13 @@ Rectangle {
     border.width: 1
     border.color: "black"
 
-    Layout.topMargin: 5
-    Layout.bottomMargin: 5
-    Layout.alignment: Qt.AlignCenter
-    Layout.preferredWidth: parent.width * 0.5
-    Layout.preferredHeight: parent.height * 0.8
-
+//    Layout.topMargin: 5
+//    Layout.bottomMargin: 5
+//    Layout.alignment: Qt.AlignCenter
+//    Layout.preferredWidth: parent.width * 0.5
+//    Layout.preferredHeight: parent.height * 0.8
+    implicitHeight: 84
+    implicitWidth: 300
     function setState(message, state){
         alert = message
         statusIndicator1.state = state
@@ -32,7 +33,7 @@ Rectangle {
         id: statusIndicator1
         height: parent.height
         width: parent.width * 0.15
-        Layout.alignment: Qt.AlignLeft
+        // Layout.alignment: Qt.AlignLeft
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 0
@@ -42,7 +43,7 @@ Rectangle {
         id: statusIndicator2
         height: parent.height
         width: parent.width * 0.15
-        Layout.alignment: Qt.AlignRight
+        // Layout.alignment: Qt.AlignRight
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: notificationsContainer.right
         anchors.leftMargin: 0
