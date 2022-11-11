@@ -14,7 +14,7 @@ Item {
         id: positionSource
 
         active: mapRoot.active
-        nmeaSource: 'nmea_log.txt'
+        nmeaSource: '../nmea_log.txt'
 
         onPositionChanged: {
             travelledPath.addCoordinate(currentPosition)
