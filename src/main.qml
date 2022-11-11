@@ -35,8 +35,6 @@ ApplicationWindow {
             id: toolbar
             anchors.fill: parent
             startButton.onActivated: {
-                // play all the videos
-                videoLayout.play();
                 /* Deactivate emergency stop button by changing the EngineStartStop
                    active and mainColor properties, and the DelayButton checked property.
                    This will be done everytime the stat button is pressed regardless of
@@ -49,25 +47,14 @@ ApplicationWindow {
                 graphicalDisplay.coverageMap.state = "navigating"
 
                 //liveValue.startUpdates()          // Start receiving updates from agbotwebserver
-                if (sim.start == false) {
-                    sim.start = true                // start simulation
-                }
-                else {
-                    sim.pause = false
-                    graphicalDisplay.appRate1.value = sim.appRate1
-                    graphicalDisplay.appRate2.value = sim.appRate2
-                    graphicalDisplay.speed.value = sim.speed
-                }
-
-                /* Start the mahine with nominal status */
-                notifications.setSpecial("clear")
+                videoLayout.play();
+                sim.start()
+                notifications.setSpecial("clear") // Start the mahine with nominal status
             }
 
             stopButton.onActivated: {
                 toolbar.stopButton.active = true;
                 toolbar.stopButton.mainColor = "#b30000";
-
-                videoLayout.pause()
 
                 startButton.active = false
                 startButton.checked = false
@@ -75,9 +62,8 @@ ApplicationWindow {
 
                 graphicalDisplay.coverageMap.active = false
                 // liveValue.stopUpdates()
-                if (sim.start == true) {
-                    sim.pause = true                // pause simulation
-                }
+                sim.pause()
+                videoLayout.pause()
                 notifications.setSpecial("stopped")
             }
 
@@ -320,7 +306,7 @@ ApplicationWindow {
 
     onClosing: {
         videoLayout.stop()
-        sim.start = false
+        sim.stop()
         // liveValue.stopUpdates()
     }
 }
