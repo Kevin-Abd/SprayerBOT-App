@@ -26,7 +26,7 @@ Item {
 
         ButtonStart {
             id: startButton
-            Layout.leftMargin: 60
+            Layout.leftMargin: 80
         }
 
         Item {
