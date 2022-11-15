@@ -117,6 +117,7 @@ Item {
 
                 Forecast {
                     id: weatherForecast
+                    model: model
 
                     x: parent.width
                     y: -height
