@@ -156,12 +156,16 @@ Item{
         SequentialAnimation{ id : nozzelAnim6 }
         SequentialAnimation{ id : tutorialAnim }
 
-        onPausedChanged : {
-            if (paused == true) {
+
+        onRunningChanged: {
+            if (running == false) {
                 appRate1 = 0;
                 appRate2 = 0;
                 speed = 0;
                 rpm = 0;
+                boomHeight = 0;
+                tankLevel1 = 0;
+                tankLevel2 = 0;
                 nozzle1Status = "off";
                 nozzle2Status = "off";
                 nozzle3Status = "off";

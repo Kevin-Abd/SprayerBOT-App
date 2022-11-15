@@ -180,6 +180,12 @@ ApplicationWindow {
 
         onStateChanged: {
             statusManager.updateState(state)
+
+            if(state === "finished")
+            {
+                videoLayout.stop()
+                sim.stop()
+            }
         }
 
         onTutorialAlertChanged: {
