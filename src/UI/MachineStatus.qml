@@ -36,7 +36,7 @@ Control {
         State {
             name: "blank"
             PropertyChanges {target: status; text: " "}
-            PropertyChanges {target: status; color: "Yellow"}
+            PropertyChanges {target: status; color: "White"}
             PropertyChanges {target: status; textColor: "Blue"}
         },
         State {
