@@ -1,3 +1,4 @@
+#include <QDir>
 #include "fileio.h"
 
 FileIO::FileIO(QObject *parent) : QObject(parent)
@@ -10,16 +11,21 @@ FileIO::~FileIO()
     close();
 }
 
-bool FileIO::open(const QString& fileName)
+bool FileIO::open(const QString& dir, const QString& fileName)
 {
-//    qDebug("FileIO open");
-//    qDebug(fileName.toStdString().c_str());
-    if (fileName.isEmpty())
+    if (fileName.isEmpty() || dir.isEmpty())
         return false;
 
-    file = new QFile(fileName);
+    QDir mDir;
+    if (!mDir.exists(dir))
+        mDir.mkpath(dir);
+
+    QString finalPath = QDir(dir).filePath(fileName);
+
+    file = new QFile(finalPath);
+
     isOpen = file->open(QFile::Append);
-//    qDebug(isOpen ? "Open" : "NotOpen");
+
     if(isOpen)
         fout = new QTextStream(file);
     else

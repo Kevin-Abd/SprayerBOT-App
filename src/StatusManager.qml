@@ -39,11 +39,12 @@ QtObject{
         property date currentDate: new Date()
         property string dateString: Qt.formatDateTime(currentDate ,"yyyy-MM-ddThh-mm")
         property string fileName: dateString + ".log"
-    }
+        property string logDir: "C:\\_TMP\\spray-bot\\logs"
 
-    Component.onCompleted: {
-        var res = fileio.open(fileio.fileName)
-        console.log("[Info]", `Logfile '${fileio.fileName}' open: ${res}`)
+        Component.onCompleted: {
+            var res = fileio.open(logDir, fileName)
+            console.log("[Info]", `Logfile '${fileName}' open: ${res} in ${logDir}`)
+        }
     }
 
     Component.onDestruction: {

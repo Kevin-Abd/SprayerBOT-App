@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTextStream>
 
+
 class FileIO : public QObject
 {
     Q_OBJECT
@@ -13,10 +14,10 @@ public:
     ~FileIO();
 
 public slots:
-    bool write(const QString& data);
-//    bool write(const QString& source, const QString& data);
-    bool open(const QString& fileName);
+    bool open(const QString& dir, const QString& fileName);
     bool close();
+
+    bool write(const QString& data);
 
 private:
     QFile* file;
