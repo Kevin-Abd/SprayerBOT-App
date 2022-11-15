@@ -1,8 +1,9 @@
-import QtQuick 2.10
+import QtQuick 2.12
 import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.10
 import QtQuick.Controls 2.4
-import QtQuick.Controls.Material 2.10
+import QtQuick.Controls.Material 2.12
+import QtQuick.Controls.Styles 1.4
 
 Item {
     id: base
@@ -17,20 +18,26 @@ Item {
     Gauge {
         id: verticalGauge
 
-        value: level
         anchors.fill: parent
+        value: level
         minimumValue: minValue
         maximumValue: maxValue
         tickmarkStepSize: tickInterval
         minorTickmarkCount: minorTickInterval
 
-        style: VerticalGaugeStyle {
+        style: GaugeStyle {
             id: gaugeStyle
 
-            property real value: control.value
-            readonly property string notification: base.name + " level is low! Please refill soon."
+            property real value: verticalGauge.value
 
-            gaugeWidth: base.width
+            property real gaugeHeight
+            property real gaugeWidth: base.width
+            property string mainColor: "blue"
+            property string lightColor: "lightblue"
+
+            readonly property string notification: base.name + " level is low! Please refill soon."
+            readonly property real needleOffset: ((1.435 * control.height) /
+                                                  (control.maximumValue - control.minimumValue))
 
             onValueChanged: {
                 if (value >= (0.45 * control.maximumValue)) {
@@ -47,6 +54,80 @@ Item {
                     lightColor = "#edb1b1"
                 }
             }
+
+            background: Rectangle {
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop {
+                        position: 0.00;
+                        color: "#919db2";
+                    }
+                    GradientStop {
+                        position: 0.48;
+                        color: "#ffffff";
+                    }
+                    GradientStop {
+                        position: 1.00;
+                        color: "#919db2";
+                    }
+                }
+            }
+
+            valueBar: Rectangle {
+                id: valuebar
+                implicitWidth: gaugeWidth - 30
+
+
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop {
+                        position: 0.00;
+                        color: mainColor;
+                    }
+                    GradientStop {
+                        position: 0.5;
+                        color: lightColor;
+                    }
+                    GradientStop {
+                        position: 1.00;
+                        color: mainColor;
+                    }
+                }
+            }
+
+            tickmark: Item {
+                implicitWidth: 15
+                implicitHeight: 1
+
+                Rectangle {
+                    color: "Black"
+                    anchors.fill: parent
+                    anchors.leftMargin: 3
+                    anchors.rightMargin: 3
+                }
+            }
+
+            minorTickmark: Item {
+                implicitWidth: 10
+                implicitHeight: 1
+
+                Rectangle {
+                    color: "Black"
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    anchors.rightMargin: 4
+                }
+            }
+
+            tickmarkLabel: Text {
+                id: ticktext
+                text: styleData.value
+                font.pixelSize: 11
+                antialiasing: true
+                color: "black"
+            }
+
+
         }
     }
 
@@ -60,7 +141,7 @@ Item {
         anchors {
             bottomMargin: -10
             bottom: verticalGauge.top
-            horizontalCenterOffset: 22.5
+            horizontalCenterOffset: 11
             horizontalCenter: parent.horizontalCenter
         }
 
@@ -115,3 +196,11 @@ Item {
         }
     }
 }
+
+
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;formeditorZoom:2;height:90;width:80}
+}
+##^##*/
