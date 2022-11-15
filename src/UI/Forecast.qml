@@ -1,3 +1,4 @@
+import Weather 1.0
 import QtQuick 2.10
 import QtQuick.Layouts 1.10
 import QtQuick.Controls 2.10
@@ -7,6 +8,7 @@ Popup {
 
     modal: false
     focus: true
+    property AppModel model
 
     RowLayout {
         id: iconRow
