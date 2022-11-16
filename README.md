@@ -11,6 +11,6 @@ Contains the code for the user interface designed for the purpose of remotely mo
 
 * Make sure git is intalled on your system, then run the following command on the Windows Command Prompt:
 
-    `git clone https://github.com/Chianugoogidi/SprayerBOT-App.git`
+    `git clone https://github.com/habedi77/SprayerBOT-App.git`
 
 * Alternatively, clone the repository from the GitHub Destop application
