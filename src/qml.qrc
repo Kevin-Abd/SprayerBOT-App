@@ -1,36 +1,39 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>VideoPlayer.qml</file>
-        <file>MachineStatus.qml</file>
-        <file>SpeedGaugeStyle.qml</file>
-        <file>TankLevel.qml</file>
-        <file>VerticalGaugeStyle.qml</file>
-        <file>ApplicationRate.qml</file>
-        <file>BoomHeight.qml</file>
-        <file>Triangle.qml</file>
-        <file>NozzleStatus.qml</file>
-        <file>Nozzle.qml</file>
-        <file>CoverageMap.qml</file>
-        <file>Weather.qml</file>
-        <file>ForecastIcon.qml</file>
-        <file>WeatherIcon.qml</file>
-        <file>BigForecastIcon.qml</file>
-        <file>Forecast.qml</file>
-        <file>EngineStartStop.qml</file>
         <file>ValueSource.qml</file>
-        <file>CurrentWeather.qml</file>
-        <file>RectangularButton.qml</file>
-        <file>XButton.qml</file>
         <file>Simulation.qml</file>
-        <file>TachometerStyle.qml</file>
-        <file>ButtonAlertPerceived.qml</file>
         <file>AlertSoundEffect.qml</file>
         <file>PhidgetFeedback.qml</file>
-        <file>NotificationsBar.qml</file>
         <file>StatusManager.qml</file>
         <file>NotificationsList.qml</file>
-        <file>GraphicalDisplay.qml</file>
-        <file>VideoLayout.qml</file>
+        <file>Layouts/GraphicalDisplay.qml</file>
+        <file>Layouts/VideoLayout.qml</file>
+        <file>Layouts/CustomToolbar.qml</file>
+        <file>UI/ButtonAlertPerceived.qml</file>
+        <file>UI/EngineStartStop.qml</file>
+        <file>UI/NotificationsBar.qml</file>
+        <file>UI/MachineStatus.qml</file>
+        <file>UI/VideoPlayer.qml</file>
+        <file>UI/SpeedGaugeStyle.qml</file>
+        <file>UI/TankLevel.qml</file>
+        <file>UI/VerticalGaugeStyle.qml</file>
+        <file>UI/ApplicationRate.qml</file>
+        <file>UI/TachometerStyle.qml</file>
+        <file>UI/CurrentWeather.qml</file>
+        <file>UI/RectangularButton.qml</file>
+        <file>UI/XButton.qml</file>
+        <file>UI/BoomHeight.qml</file>
+        <file>UI/Triangle.qml</file>
+        <file>UI/NozzleStatus.qml</file>
+        <file>UI/Nozzle.qml</file>
+        <file>UI/CoverageMap.qml</file>
+        <file>UI/Weather.qml</file>
+        <file>UI/ForecastIcon.qml</file>
+        <file>UI/WeatherIcon.qml</file>
+        <file>UI/BigForecastIcon.qml</file>
+        <file>UI/Forecast.qml</file>
+        <file>UI/ButtonStart.qml</file>
+        <file>UI/ButtonStop.qml</file>
     </qresource>
 </RCC>

@@ -1,5 +1,4 @@
 import QtQuick 2.10
-import QtMultimedia 5.10
 import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.2
 import LiveVehicleData 1.0
@@ -7,7 +6,7 @@ import QtQuick.Window 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.3
-
+import "../UI"
 
 Item {
     id: graphicalElements
@@ -55,6 +54,7 @@ Item {
                             Layout.preferredWidth: parent.width
 
                             ColumnLayout {
+                                id: columnLayout
                                 anchors.fill: parent
 
                                 Item {
@@ -62,39 +62,31 @@ Item {
 
                                     Layout.preferredWidth: parent.width
                                     Layout.preferredHeight: parent.height / 2.5
+                                    Layout.topMargin: 20
 
                                     RowLayout {
-                                        spacing: 5
+                                        spacing: 0
                                         anchors.fill: parent
 
                                         TankLevel {
                                             id: tank1
 
                                             name: "Tank 1"
+
                                             maxValue: 25
                                             tickInterval: 5
                                             minorTickInterval: 0
-                                            Layout.leftMargin: parent.width * 0.0725
-                                            Layout.topMargin: parent.height * 0.25
+
+                                            Layout.leftMargin: 0
                                             Layout.preferredHeight: parent.height * 0.8
-                                            Layout.preferredWidth: Math.min
-                                                                   (67.5, parent.width *
-                                                                    0.3)
+                                            Layout.preferredWidth: 90
+                                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+
                                         }
 
                                         ApplicationRate {
-                                            id: rate1
-
-                                            Layout.topMargin: parent.height * 0.25
-                                            Layout.alignment: Qt.AlignCenter
-
-                                            onWidthChanged: {
-                                                if (width <= 119) {
-                                                    Layout.leftMargin = 30;
-                                                } else {
-                                                    Layout.leftMargin = -25
-                                                }
-                                            }
+                                            Layout.leftMargin: 15
+                                            id: rate1    
                                         }
                                     }
                                 }
@@ -106,7 +98,7 @@ Item {
                                     Layout.preferredHeight: parent.height / 2.5
 
                                     RowLayout {
-                                        spacing: 5
+                                        spacing: 0
                                         anchors.fill: parent
 
                                         TankLevel {
@@ -116,27 +108,16 @@ Item {
                                             maxValue: 5
                                             tickInterval: 1
                                             minorTickInterval: 0
-                                            Layout.leftMargin: parent.width * 0.0925
-                                            Layout.topMargin: parent.height * 0.25
+
+                                            Layout.leftMargin: 0
                                             Layout.preferredHeight: parent.height * 0.8
-                                            Layout.preferredWidth: Math.min
-                                                                   (67.5, parent.width *
-                                                                    0.3)
+                                            Layout.preferredWidth: 90
+                                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                                         }
 
                                         ApplicationRate {
                                             id: rate2
-
-                                            Layout.topMargin: parent.height * 0.25
-                                            Layout.alignment: Qt.AlignCenter
-
-                                            onWidthChanged: {
-                                                if (width <= 119) {
-                                                    Layout.leftMargin = 20;
-                                                } else {
-                                                    Layout.leftMargin = -35
-                                                }
-                                            }
+                                            Layout.leftMargin: 8
                                         }
                                     }
                                 }
@@ -330,4 +311,10 @@ Item {
             }
         } // End of vehicleElements
     }
+
 } // End of graphicalElements
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:800}
+}
+##^##*/

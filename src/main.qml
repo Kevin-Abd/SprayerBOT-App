@@ -7,6 +7,8 @@ import QtQuick.Window 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.3
+import "UI"
+import "Layouts"
 
 ApplicationWindow {
     id: root
@@ -21,180 +23,58 @@ ApplicationWindow {
     title: qsTr("SprayerBOT")
 
     header: ToolBar {
-
+        height: 90
         background: Item {
-            id: toolbar
+            id: toolbarBg
             /* This background item helps keep the ToolBar the same "Whitesmoke"
               color specified for the ApplicationWindow */
             anchors.fill: parent
         }
 
-        RowLayout {
+        CustomToolbar {
+            id: toolbar
             anchors.fill: parent
+            startButton.onActivated: {
+                /* Deactivate emergency stop button by changing the EngineStartStop
+                   active and mainColor properties, and the DelayButton checked property.
+                   This will be done everytime the stat button is pressed regardless of
+                   whether or not the stop button was active prior */
+                // stopButton.active = false;
+                // stopButton.checked = false;
+                // stopButton.mainColor = "Red";
 
-            EngineStartStop {
-                id: startButton
+                graphicalDisplay.coverageMap.active = true           // Activate the map's "navigating" state
+                graphicalDisplay.coverageMap.state = "navigating"
 
-                Text {
-                    id: startText
-
-                    text: qsTr("Start")
-                    color: "White"
-
-                    font.pixelSize: 12
-                    font.weight: Font.Bold
-                    font.letterSpacing: 1.5
-                    font.capitalization: Font.AllUppercase
-
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-                onClicked: {
-                    if (startButton.active) {
-                        startButton.checked = true;
-                    }
-                }
-
-                onActivated: {
-                    /* Change the active property of the EngineStartStop element
-                      to true and the main color property to indicate that the
-                      start button is active */
-                    startButton.active = true;
-                    startButton.mainColor = "#17a81a";
-
-                    // play all the videos
-                    videoLayout.play();
-                    /* Deactivate emergency stop button by changing the EngineStartStop
-                       active and mainColor properties, and the DelayButton checked property.
-                       This will be done everytime the stat button is pressed regardless of
-                       whether or not the stop button was active prior */
-                    stopButton.active = false;
-                    stopButton.checked = false;
-                    stopButton.mainColor = "Red";
-
-                    graphicalDisplay.coverageMap.active = true           // Activate the map's "navigating" state
-                    graphicalDisplay.coverageMap.state = "navigating"
-
-                    //liveValue.startUpdates()          // Start receiving updates from agbotwebserver
-                    if (sim.start == false) {
-                        sim.start = true                // start simulation
-                    }
-                    else {
-                        sim.pause = false
-                        graphicalDisplay.appRate1.value = sim.appRate1
-                        graphicalDisplay.appRate2.value = sim.appRate2
-                        graphicalDisplay.speed.value = sim.speed
-                    }
-
-                    /* Start the mahine with nominal status */
-                    notifications.setSpecial("clear")
-                }
+                //liveValue.startUpdates()          // Start receiving updates from agbotwebserver
+                videoLayout.play();
+                sim.start()
+                notifications.setSpecial("clear") // Start the mahine with nominal status
             }
 
+            stopButton.onActivated: {
+                toolbar.stopButton.active = true;
+                toolbar.stopButton.mainColor = "#b30000";
 
-            EngineStartStop {
-                id: stopButton
-                text: ""
-                mainColor: "Red"
-                activeColor: "#b30000"
-                enabled: false
+                startButton.active = false
+                startButton.checked = false
+                startButton.mainColor = "Green";
 
-                Text {
-                    id: buttonLabel1
-
-                    text: qsTr("Emergency")
-
-                    width: parent.width
-                    color: "White"
-                    font.pixelSize: Math.min(8,  Math.ceil(width / 9.5))
-                    font.capitalization: Font.AllUppercase
-                    fontSizeMode: Text.HorizontalFit
-                    font.weight: Font.Bold
-                    anchors.left: parent.left
-                    anchors.bottomMargin: 70
-                    anchors.right: parent.right
-                    anchors.top: buttonLabel2.bottom
-                    anchors.bottom: parent.bottom
-                    style: Text.Normal
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-                Text {
-                    id: buttonLabel2
-
-                    text: qsTr("Stop")
-
-                    color: "#ffffff"
-                    font.pixelSize: 12
-                    font.weight: Font.Bold
-                    font.letterSpacing: 1.5
-                    font.capitalization: Font.AllUppercase
-                    anchors.bottomMargin: 27
-                    anchors.leftMargin: 2
-                    anchors.topMargin: -5
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignBottom
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-                onClicked: {
-                    if (stopButton.active) {
-                        stopButton.checked = true;
-                    }
-                }
-
-                onActivated: {
-                    stopButton.active = true;
-                    stopButton.mainColor = "#b30000";
-
-                    videoLayout.pause()
-
-                    startButton.active = false
-                    startButton.checked = false
-                    startButton.mainColor = "Green";
-
-                    graphicalDisplay.coverageMap.active = false
-                    // liveValue.stopUpdates()
-                    if (sim.start == true) {
-                        sim.pause = true                // pause simulation
-                    }
-
-                    notifications.setSpecial("stopped")
-                }
+                graphicalDisplay.coverageMap.active = false
+                // liveValue.stopUpdates()
+                sim.pause()
+                videoLayout.pause()
+                notifications.setSpecial("stopped")
             }
 
-            NotificationsBar {
-                id: notificationsBar
-                anchors.centerIn: parent
-                // Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Component.onCompleted: {
+                buttonAlertPerceived1.activated.connect(statusManager.userOverride)
+                buttonAlertPerceived2.activated.connect(statusManager.userOverride)
             }
 
-            Text {
-                id: debugText
-
-                text: sim.state
-                color: "Black"
-
-                font.pixelSize: 12
-                font.weight: Font.Bold
-                font.letterSpacing: 1.5
-                font.capitalization: Font.AllUppercase
-
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            ButtonAlertPerceived{
-                id: buttonAlertPerceived
-                Component.onCompleted: {
-                    buttonAlertPerceived.activated.connect(statusManager.userOverride)
-                }
-            }
         }
-    } // End of ToolBar
+
+    }
 
     Item {
         id: contentItem
@@ -227,7 +107,7 @@ ApplicationWindow {
                 }
             }
         }
-    } // End of contentItem
+    }
 
     AlertSoundEffect {
         id: alertSoundEffect
@@ -246,8 +126,9 @@ ApplicationWindow {
         id: statusManager
         alertSoundEffect: alertSoundEffect
         phidgetFeedback: phidgetFeedback
-        notificationsBar: notificationsBar
-        buttonAlertPerceived: buttonAlertPerceived
+        notificationsBar: toolbar.notificationsBar
+        buttonAlertPerceived1: toolbar.buttonAlertPerceived1
+        buttonAlertPerceived2: toolbar.buttonAlertPerceived2
     }
 
 
@@ -299,6 +180,12 @@ ApplicationWindow {
 
         onStateChanged: {
             statusManager.updateState(state)
+
+            if(state === "finished")
+            {
+                videoLayout.stop()
+                sim.stop()
+            }
         }
 
         onTutorialAlertChanged: {
@@ -425,7 +312,7 @@ ApplicationWindow {
 
     onClosing: {
         videoLayout.stop()
-        sim.start = false
+        sim.stop()
         // liveValue.stopUpdates()
     }
-} // End of ApplicationWindow
+}

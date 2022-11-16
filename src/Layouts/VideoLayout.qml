@@ -7,6 +7,7 @@ import QtQuick.Window 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.3
+import "../UI"
 
 Item {
     id: videos
@@ -48,7 +49,9 @@ Item {
 
                 source: "../media/left.mp4"
                 loops: MediaPlayer.Infinite
-                onPlaybackStateChanged: video1.state = "after"
+
+                onPlaying: video1.state = "after"
+                onStopped: video1.state = "before"
             }
         }
 
@@ -63,7 +66,9 @@ Item {
 
                 source: "../media/front.mp4"
                 loops: MediaPlayer.Infinite
-                onPlaybackStateChanged: video2.state = "after"
+
+                onPlaying: video2.state = "after"
+                onStopped: video2.state = "before"
             }
         }
 
@@ -78,8 +83,10 @@ Item {
 
                 source: "../media/right.mp4"
                 loops: MediaPlayer.Infinite
-                onPlaybackStateChanged: video3.state = "after"
+
+                onPlaying: video3.state = "after"
+                onStopped: video3.state = "before"
             }
         }
     }
-} // End of videos
+}

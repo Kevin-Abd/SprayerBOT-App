@@ -5,8 +5,6 @@ Item{
 
     property real rpm : 0;
     property real speed : 0;
-    property bool start : false; // starts the animation, if true
-    property bool pause : false; // pauses the animation, if true
     property real boomHeight : 20;
 
     // application rate control
@@ -52,10 +50,21 @@ Item{
         onTriggered : changeState()
     }
 
-    onStartChanged: {
-        if (start === true)
-            stateTimer.start()
+    function start() {
+        stateTimer.start()
+        parAnim.start()
     }
+
+    function pause() {
+        stateTimer.pause()
+        parAnim.pause()
+    }
+
+    function stop() {
+        stateTimer.stop()
+        parAnim.stop()
+    }
+
 
     function changeState() {
         if (state == "warmup") state = "tutorial";
@@ -130,8 +139,6 @@ Item{
     ParallelAnimation {
         id: parAnim;
 
-        running: valueSource.start;
-        paused: valueSource.pause;
         loops: 1;
 
         SequentialAnimation{ id : speedAnim }
@@ -149,12 +156,16 @@ Item{
         SequentialAnimation{ id : nozzelAnim6 }
         SequentialAnimation{ id : tutorialAnim }
 
-        onPausedChanged : {
-            if (valueSource.pause == true) {
+
+        onRunningChanged: {
+            if (running == false) {
                 appRate1 = 0;
                 appRate2 = 0;
                 speed = 0;
                 rpm = 0;
+                boomHeight = 0;
+                tankLevel1 = 0;
+                tankLevel2 = 0;
                 nozzle1Status = "off";
                 nozzle2Status = "off";
                 nozzle3Status = "off";
