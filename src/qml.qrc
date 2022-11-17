@@ -23,7 +23,7 @@
         <file>UI/CurrentWeather.qml</file>
         <file>UI/RectangularButton.qml</file>
         <file>UI/XButton.qml</file>
-        <file>UI/BoomHeight.qml</file>
+        <file>UI/BroomHeight.qml</file>
         <file>UI/Triangle.qml</file>
         <file>UI/NozzleStatus.qml</file>
         <file>UI/Nozzle.qml</file>

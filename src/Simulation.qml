@@ -5,7 +5,7 @@ Item{
 
     property real rpm : 0;
     property real speed : 0;
-    property real boomHeight : 20;
+    property real broomHeight : 20;
 
     // application rate control
     property int appRate1 : 0;
@@ -163,7 +163,7 @@ Item{
                 appRate2 = 0;
                 speed = 0;
                 rpm = 0;
-                boomHeight = 0;
+                broomHeight = 0;
                 tankLevel1 = 0;
                 tankLevel2 = 0;
                 nozzle1Status = "off";
@@ -302,7 +302,7 @@ Item{
 
         speedAnim.animations = makeValueAnimation(speedAlerts, wobbleSpeed, "speed", endTime);
         rpmAnim.animations = makeValueAnimation(rpmAlerts, wobbleRpm, "rpm", endTime);
-        broomAnim.animations = makeValueAnimation(broomAlerts, wobbleBroom, "boomHeight", endTime);
+        broomAnim.animations = makeValueAnimation(broomAlerts, wobbleBroom, "broomHeight", endTime);
 
         tank1Anim.animations = makeTankAnimation(tank1Alerts, endTime, 25, "tankLevel1")
         tank2Anim.animations = makeTankAnimation(tank2Alerts, endTime, 5, "tankLevel2")

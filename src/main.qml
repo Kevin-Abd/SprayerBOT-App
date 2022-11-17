@@ -93,7 +93,7 @@ ApplicationWindow {
                 Component.onCompleted: {
                     speed: sim.speed
                     rpm: sim.rpm
-                    broomHeight: sim.boomHeight
+                    broomHeight: sim.broomHeight
                     tankLevel1: sim.tankLevel1
                     tankLevel2: sim.tankLevel2
                     appRate1: sim.appRate1
@@ -210,12 +210,12 @@ ApplicationWindow {
             }
         }
 
-        onBoomHeightChanged: {
-            graphicalDisplay.broomHeight = boomHeight
-            if (boomHeight > 28) {
+        onBroomHeightChanged: {
+            graphicalDisplay.broomHeight = broomHeight
+            if (broomHeight > 28) {
                 notifications.addWarning(list_alerts["high broom"])
                 notifications.removeWarning(list_alerts["low broom"])
-            } else if (boomHeight < 22) {
+            } else if (broomHeight < 22) {
                 notifications.addWarning(list_alerts["low broom"])
                 notifications.removeWarning(list_alerts["high broom"])
             } else {
@@ -302,7 +302,7 @@ ApplicationWindow {
         Component.onCompleted: {
             graphicalDisplay.speed = sim.speed
             graphicalDisplay.rpm = sim.rpm
-            graphicalDisplay.broomHeight = sim.boomHeight
+            graphicalDisplay.broomHeight = sim.broomHeight
             graphicalDisplay.tankLevel1 = sim.tankLevel1
             graphicalDisplay.tankLevel2 = sim.tankLevel2
             graphicalDisplay.appRate1 = sim.appRate1
