@@ -104,7 +104,7 @@ Item {
         MapPolyline {
             id: travelledPath
 
-            line.width: 3.5                     // TO-DO: make proportional to boom length
+            line.width: 3.5                     // TO-DO: make proportional to broom length
             line.color: 'orange'
             path: []
         }

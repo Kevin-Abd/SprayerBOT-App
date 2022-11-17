@@ -13,13 +13,13 @@ Item {
 
     property alias speed : speedometer.value
     property alias rpm : tachometer.value
-    property alias broomHeight : boomHeightElement.val
+    property alias broomHeight : broomHeightElement.val
     property alias tankLevel1 : tank1.level
     property alias tankLevel2 : tank2.level
     property alias appRate1 : rate1.value
     property alias appRate2 : rate2.value
 
-    property BoomHeight broomHeightElement: boomHeightElement
+    property BroomHeight broomHeightElement: broomHeightElement
     property CoverageMap coverageMap: coverageMap
 
 
@@ -138,7 +138,7 @@ Item {
                 } // End of sprayerInfoContainer
 
                 Item {
-                    id: boomContainer
+                    id: broomContainer
 
                     Layout.preferredWidth: parent.width * 0.6
                     Layout.preferredHeight: parent.height
@@ -172,7 +172,7 @@ Item {
                                 Text {
                                     id: valueText
 
-                                    text: boomHeightElement.boomHeightValue.toFixed(0)
+                                    text: broomHeightElement.broomHeightValue.toFixed(0)
 
                                     font.pixelSize: Math.max(14, parent.width * 0.25)
                                     font.bold: true
@@ -203,7 +203,7 @@ Item {
                                 Text {
                                     id: label
 
-                                    text: "Boom Height"
+                                    text: "Broom Height"
 
                                     color: "black"
                                     bottomPadding: 3.5
@@ -220,13 +220,13 @@ Item {
                             }
                         } // End of labelContainer
 
-                        BoomHeight {
-                            id: boomHeightElement
+                        BroomHeight {
+                            id: broomHeightElement
 
                             Layout.topMargin: -25
                         }
                     }
-                } // End of boomContainer
+                } // End of broomContainer
             }
         } // End of sprayerElements
 
