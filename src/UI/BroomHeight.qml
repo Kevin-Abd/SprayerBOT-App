@@ -6,9 +6,9 @@ import QtQuick.Controls 2.12
 import QtQuick.Controls.Material 2.3
 
 Item {
-    id: boomHeightElement
+    id: broomHeightElement
 
-    readonly property real boomHeightValue: verticalGauge.value
+    readonly property real broomHeightValue: verticalGauge.value
     property real val
 
     function changeNozzle1State(value) {
@@ -45,7 +45,7 @@ Item {
         maximumValue: 30
         tickmarkStepSize: 5
         minorTickmarkCount: 4
-        value: boomHeightElement.val
+        value: broomHeightElement.val
 
         style: VerticalGaugeStyle {}
 
@@ -56,7 +56,7 @@ Item {
     }
 
     Rectangle {
-        id: leftBoom
+        id: leftBroom
 
         height: 10
         width: parent.width * 0.375
@@ -84,10 +84,10 @@ Item {
     }
 
     Rectangle {
-        id: rightBoom
+        id: rightBroom
 
-        width: leftBoom.width
-        height: leftBoom.height
+        width: leftBroom.width
+        height: leftBroom.height
         border.width: 1
 
         gradient: Gradient {
@@ -105,19 +105,19 @@ Item {
         anchors {
             leftMargin: 5
             left: verticalGauge.right
-            verticalCenter: leftBoom.verticalCenter
+            verticalCenter: leftBroom.verticalCenter
         }
     }
 
     Item {
-        id: rightBoomNozzles
+        id: rightBroomNozzles
 
-        height: rightBoom.height
-        width: rightBoom.width
+        height: rightBroom.height
+        width: rightBroom.width
 
         anchors {
-            top: rightBoom.bottom
-            horizontalCenter: rightBoom.horizontalCenter
+            top: rightBroom.bottom
+            horizontalCenter: rightBroom.horizontalCenter
         }
 
         RowLayout {
@@ -134,7 +134,7 @@ Item {
                 NozzleStatus {
                     id: nozzle1Status
 
-                    width: rightBoom.width * 0.15
+                    width: rightBroom.width * 0.15
                     height: width
                 }
             }
@@ -150,7 +150,7 @@ Item {
                 NozzleStatus {
                     id: nozzle2Status
 
-                    width: rightBoom.width * 0.15
+                    width: rightBroom.width * 0.15
                     height: width
                 }
             }
@@ -166,7 +166,7 @@ Item {
                 NozzleStatus {
                     id: nozzle3Status
 
-                    width: rightBoom.width * 0.15
+                    width: rightBroom.width * 0.15
                     height: width
                 }
             }
@@ -174,12 +174,12 @@ Item {
     }
 
     Item {
-        id: leftBoomNozzles
+        id: leftBroomNozzles
 
-        height: leftBoom.height
-        width: leftBoom.width
-        anchors.top: leftBoom.bottom
-        anchors.horizontalCenter: leftBoom.horizontalCenter
+        height: leftBroom.height
+        width: leftBroom.width
+        anchors.top: leftBroom.bottom
+        anchors.horizontalCenter: leftBroom.horizontalCenter
 
         RowLayout {
             spacing: 15
@@ -195,7 +195,7 @@ Item {
                 NozzleStatus {
                     id: nozzle4Status
 
-                    width: leftBoom.width * 0.15
+                    width: leftBroom.width * 0.15
                     height: width
                 }
             }
@@ -211,7 +211,7 @@ Item {
                 NozzleStatus {
                     id: nozzle5Status
 
-                    width: leftBoom.width * 0.15
+                    width: leftBroom.width * 0.15
                     height: width
                 }
             }
@@ -227,7 +227,7 @@ Item {
                 NozzleStatus {
                     id: nozzle6Status
 
-                    width: leftBoom.width * 0.15
+                    width: leftBroom.width * 0.15
                     height: width
                 }
             }

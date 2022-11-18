@@ -42,7 +42,7 @@ Item {
             id: video1
 
             source: leftPlayer          // allows for the creation of multiple videos
-            view: "Left Boom"           // video label
+            view: "Left Broom"           // video label
 
             MediaPlayer {
                 id: leftPlayer
@@ -76,7 +76,7 @@ Item {
             id: video3
 
             source: rightPlayer
-            view: "Right Boom"
+            view: "Right Broom"
 
             MediaPlayer {
                 id: rightPlayer

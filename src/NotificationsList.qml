@@ -2,11 +2,11 @@ import QtQuick 2.0
 
 
 QtObject{
-
     property var list_instruction: {
         "start":   { code: "001",  message : "To begin, press and hold the START button."},
         "restart": { code: "002",  message : "Press and hold the START button to start the machine"},
         "normal":  { code: "003",  message : "All systems are normal"},
+        "end":     { code: "004",  message : "The simulation has finished"},
 
     }
 
@@ -17,6 +17,9 @@ QtObject{
             list.setSingle(list_instruction["restart"].code, list_instruction["restart"].message, "off");
         else if (mode === "clear")
             list.clear();
+        else if (mode === "end") {
+            list.setSingle(list_instruction["end"].code, list_instruction["end"].message, "off");
+        }
 
         statusManager.checkForNewStatus()
     }
