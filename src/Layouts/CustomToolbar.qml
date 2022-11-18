@@ -1,11 +1,5 @@
 import QtQuick 2.10
-import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.2
-import LiveVehicleData 1.0
-import QtQuick.Window 2.10
-import QtQuick.Controls 2.3
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Controls.Material 2.3
 import "../UI"
 
 
@@ -19,7 +13,6 @@ Item {
     property alias buttonAlertPerceived2: buttonAlertPerceived2
     property alias debugText: debugText
 
-
     RowLayout {
         anchors.fill: parent
         spacing: 5
@@ -27,35 +20,29 @@ Item {
         ButtonStart {
             id: startButton
             Layout.leftMargin: 80
+
         }
 
-        Item {
-            id: item1
-            Layout.preferredWidth: 0.65 * parent.width
-            Layout.preferredHeight: parent.height
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            RowLayout {
-                anchors.fill: parent
-
-                ButtonAlertPerceived{
-                    id: buttonAlertPerceived1
-                }
-
-                NotificationsBar {
-                    id: notificationsBar
-                    Layout.fillWidth: true
-                    Layout.topMargin: 5
-                    Layout.bottomMargin: 5
-                    Layout.alignment: Qt.AlignCenter
-                    Layout.preferredHeight: parent.height * 0.8
-                }
-
-                ButtonAlertPerceived{
-                    id: buttonAlertPerceived2
-                }
-            }
+        ButtonAlertPerceived{
+            id: buttonAlertPerceived1
+            Layout.fillWidth: true
         }
+
+        NotificationsBar {
+            id: notificationsBar
+            Layout.topMargin: 5
+            Layout.bottomMargin: 5
+            Layout.alignment: Qt.AlignCenter
+            Layout.preferredHeight: parent.height * 0.8
+            Layout.preferredWidth: parent.width * 0.4
+
+        }
+
+        ButtonAlertPerceived{
+            id: buttonAlertPerceived2
+            Layout.fillWidth: true
+        }
+
 
         Text {
             id: debugText
@@ -79,16 +66,14 @@ Item {
         ButtonStop {
             id: stopButton
             Layout.rightMargin: 60
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignRight
         }
-
-
     }
 
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:90;width:1000}
+    D{i:0;autoSize:true;formeditorZoom:0.5;height:100;width:1920}
 }
 ##^##*/

@@ -22,11 +22,11 @@ DelayButton {
         wrapMode: Text.WordWrap
 
         style: Text.Normal
-        anchors.fill: parent
+        anchors.centerIn: parent
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
 
-        width: parent.width
+        width: button.width
         color: "White"
         font.pixelSize: 11
         font.capitalization: Font.AllUppercase
@@ -85,3 +85,9 @@ DelayButton {
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;width:150}
+}
+##^##*/
