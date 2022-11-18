@@ -185,6 +185,7 @@ ApplicationWindow {
             {
                 videoLayout.stop()
                 sim.stop()
+                notifications.setSpecial("end")
             }
         }
 

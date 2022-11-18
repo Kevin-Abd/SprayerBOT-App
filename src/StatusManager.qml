@@ -28,7 +28,8 @@ QtObject{
         states: [
             State { name: "warmup" },
             State { name: "tutorial" },
-            State { name: "experiments" }
+            State { name: "experiments" },
+            State { name: "finished" }
         ]
     }
 
@@ -58,8 +59,10 @@ QtObject{
             state = "tutorial"
         else if (simState === "experiments")
             state = "experiments"
+        else if (simState === "finished")
+            state = "finished"
         else
-            console.log("[Warn]", "[updateState] Got unexpected state: " + state)
+            console.log("[Warn]", "[updateState] Got unexpected state: " + simState)
     }
 
     function checkForNewStatus(){
@@ -101,6 +104,20 @@ QtObject{
 
         else if (state === "experiments")
             processForExperiment(newAlert)
+
+        else if (state === "finished"){
+            buttonAlertPerceived1.checked = false
+            buttonAlertPerceived1.enabled = false
+            buttonAlertPerceived2.checked = false
+            buttonAlertPerceived2.enabled = false
+            alertSoundEffect.stop()
+            phidgetFeedback.deactivate()
+            newAlert = notifications.list_instruction["end"]
+            newAlert.status = "off"
+            notificationsBar.setState(newAlert.message, newAlert.status)
+            return
+        }
+
 
         else
             console.log("[Warn]", "Got unexpected state: " + state)
