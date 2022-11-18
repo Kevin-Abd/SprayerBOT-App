@@ -22,11 +22,16 @@ Item {
             Layout.leftMargin: 80
 
         }
-
-        ButtonAlertPerceived{
-            id: buttonAlertPerceived1
+        Item{
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            ButtonAlertPerceived{
+                id: buttonAlertPerceived1
+                anchors.centerIn: parent
+            }
         }
+
+
 
         NotificationsBar {
             id: notificationsBar
@@ -38,9 +43,13 @@ Item {
 
         }
 
-        ButtonAlertPerceived{
-            id: buttonAlertPerceived2
+        Item{
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            ButtonAlertPerceived{
+                id: buttonAlertPerceived2
+                anchors.centerIn: parent
+            }
         }
 
 
