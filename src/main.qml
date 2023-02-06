@@ -147,8 +147,8 @@ ApplicationWindow {
             "low speed":  { code: "101",  message : "The machine is moving too slow!"},
             "high speed": { code: "102",  message : "The machine is moving too fast!"},
 
-            "high broom": { code: "111",  message : "The broom height is too high!"},
-            "low broom":  { code: "112",  message : "The broom height is too low!"},
+            "high broom": { code: "111",  message : "The boom height is too high!"},
+            "low broom":  { code: "112",  message : "The boom height is too low!"},
 
             "blocked nozzle 1": { code: "121",  message : "Nozzle 1 is blocked! Please check the sprayer!"},
             "blocked nozzle 2": { code: "122",  message : "Nozzle 2 is blocked! Please check the sprayer!"},
