@@ -100,8 +100,8 @@ Item{
                     {"type" : "broom",   "time" : syncTime, "duration" : 15, "value" : 20},
                     {"type" : "app1",    "time" : syncTime, "duration" : 15, "value" : 0},
                     {"type" : "app2",    "time" : syncTime, "duration" : 15, "value" : 0},
-                    {"type" : "tank1",   "time" : syncTime + 1.1, "duration" : 180, "value" : 25},
-                    {"type" : "tank2",   "time" : syncTime + 1.1, "duration" : 180, "value" : 5},
+                    {"type" : "tank1",   "time" : syncTime + 1.1, "duration" : warmupTime + tutorialTime, "value" : 25},
+                    {"type" : "tank2",   "time" : syncTime + 1.1, "duration" : warmupTime + tutorialTime, "value" : 5},
                     {"type" : "nozzel1", "time" : syncTime, "duration" : 15, "value" : "off"},
                     {"type" : "nozzel2", "time" : syncTime, "duration" : 15, "value" : "off"},
                     {"type" : "nozzel3", "time" : syncTime, "duration" : 15, "value" : "off"},
@@ -184,14 +184,13 @@ Item{
     }
 
     Component {
-        id: compSmoothAnim;
+        id: compNumberAnim;
 
-        SmoothedAnimation {
+        NumberAnimation {
             // target: onj
             // property: string
             // to: value
             // duration: int
-            velocity: -1;
             alwaysRunToEnd: true;
         }
     }
@@ -217,7 +216,6 @@ Item{
 
     function setTutorialAlerts(tutorialAlerts, endTime) {
 
-        // valueArrayFromAlert
         var filled_time = 0;
         var listAnim = [];
         var obj1;
@@ -300,9 +298,9 @@ Item{
             else if (item.type === "nozzel6") nozzel6Alerts.push(item);
         }
 
-        speedAnim.animations = makeValueAnimation(speedAlerts, wobbleSpeed, "speed", endTime);
-        rpmAnim.animations = makeValueAnimation(rpmAlerts, wobbleRpm, "rpm", endTime);
-        broomAnim.animations = makeValueAnimation(broomAlerts, wobbleBroom, "broomHeight", endTime);
+        speedAnim.animations = makeNumberAnimation(speedAlerts, wobbleSpeed, "speed", endTime);
+        rpmAnim.animations = makeNumberAnimation(rpmAlerts, wobbleRpm, "rpm", endTime);
+        broomAnim.animations = makeNumberAnimation(broomAlerts, wobbleBroom, "broomHeight", endTime);
 
         tank1Anim.animations = makeTankAnimation(tank1Alerts, endTime, 25, "tankLevel1")
         tank2Anim.animations = makeTankAnimation(tank2Alerts, endTime, 5, "tankLevel2")
@@ -314,8 +312,8 @@ Item{
         nozzelAnim5.animations = makeNozzelAnimation(nozzel5Alerts, endTime, "nozzle5Status");
         nozzelAnim6.animations = makeNozzelAnimation(nozzel6Alerts, endTime, "nozzle6Status");
 
-        appRate1Anim.animations = makeValueAnimation(apprate1Alerts, wobbleAppRate1, "appRate1", endTime);
-        appRate2Anim.animations = makeValueAnimation(apprate2Alerts, wobbleAppRate2, "appRate2", endTime);
+        appRate1Anim.animations = makeNumberAnimation(apprate1Alerts, wobbleAppRate1, "appRate1", endTime);
+        appRate2Anim.animations = makeNumberAnimation(apprate2Alerts, wobbleAppRate2, "appRate2", endTime);
     }
 
     function makeTankAnimation(alerts, endTime, fillValue, tankName) {
@@ -323,7 +321,7 @@ Item{
          * Fill a list of animation values for tank level,
          */
 
-        // valueArrayFromAlert
+        // Step 1: Value Array From Alerts
         var tank_refill_time = 3;
         var filled_time = 0;
         var values = [];
@@ -346,7 +344,7 @@ Item{
             filled_time = endTime;
         }
 
-        // createListOfAnimation
+        // Step 2: Create Animation List
         var listAnim = [];
         for (i = 0; i < values.length; i++) {
             var item = values[i];
@@ -354,7 +352,8 @@ Item{
             if (item.pause === true) {
                 obj = createPauseAnimation(item.duration);
             } else {
-                obj = createSmoothAnimation(valueSource, tankName, item.value, item.duration);
+                console.assert(item.duration >= 0, `!! ${tankName}: ${item.value}, ${item.duration}`);
+                obj = createNumberAnimation(valueSource, tankName, item.value, item.duration);
             }
             listAnim.push(obj)
         }
@@ -367,7 +366,7 @@ Item{
          * with alerts at specified times with specidifed values/durations
          */
 
-        // valueArrayFromAlert
+        // Step 1: Value Array From Alerts
         var filled_time = 0;
         var values = [];
         alerts.sort(function(a, b) { return a.time - b.time; });
@@ -396,7 +395,7 @@ Item{
             filled_time = endTime;
         }
 
-        // create list of animation
+        // Step 2: Create Animation List
         var listAnim = [];
         for (i = 0; i < values.length; i++) {
             var item = values[i];
@@ -411,46 +410,23 @@ Item{
         return listAnim
     }
 
-    function makeValueAnimation(alerts, wobbleFunction, propName, endTime) {
-        var values = valueArrayFromAlert(alerts, endTime, wobbleFunction);
-        var anims = createListOfAnimation(values, valueSource, propName);
-        return anims;
-    }
-
-
-    function createListOfAnimation(valueArray, targetObj, targetProp) {
+    function makeNumberAnimation(listAlerts, wobbleFunction, targetProp, endTime) {
         /**
-         * Create a list of smooth and pause animation based on provided
-         * valueArray for target Object and it's target Property
+         * Create a list of number and pause animations based on provided
+         * alerts and wobbleFunction until endTime.
+         * Alerts happen at specified times with specidifed values/durations
+         * alerts must have "time", "value" and "duration" properties
          */
-        var listAnim = []
 
-        for (var i = 0; i < valueArray.length; i++) {
-            var item = valueArray[i];
-            var obj;
-
-            if (item.pause === true) {
-                obj = createPauseAnimation(item.duration);
-            } else {
-                obj = createSmoothAnimation(targetObj, targetProp, item.value, item.duration);
-            }
-            listAnim.push(obj)
-        }
-        return listAnim
-    }
-
-    function valueArrayFromAlert(listAlerts, endTime, wobbleFunction) {
-        /**
-         * Fill a list of animation values with wobbleFunction until endTime,
-         * with alerts at specified times with specidifed values/durations
-         */
+        // Step 1: Value Array From Alerts
         var trans_time = 2.2;
         var pause_time = 0.8;
         var last_value = -1;
 
         var filled_time = 0;
-        var result = [];
+        var valueArray = [];
         var tmp;
+        var targetObj = valueSource
 
         listAlerts.sort(function(a, b) { return a.time - b.time; })
 
@@ -461,33 +437,50 @@ Item{
             while (filled_time < alert.time) {
                 tmp = wobbleFunction();
                 if (tmp === last_value) {
-                    result.push({value : tmp, duration : trans_time + pause_time, pause : true});
+                    valueArray.push({value : tmp, duration : trans_time + pause_time, pause : true});
                 } else {
-                    result.push({value : tmp, duration : trans_time, pause : false});
-                    result.push({value : tmp, duration : pause_time, pause : true});
+                    valueArray.push({value : tmp, duration : trans_time, pause : false});
+                    valueArray.push({value : tmp, duration : pause_time, pause : true});
                 }
                 last_value = tmp
                 filled_time += trans_time + pause_time;
             }
             // transition to alert and stay for duration
             filled_time += trans_time + alert.duration;
-            result.push({value : alert.value, duration : trans_time, pause : false});
-            result.push({value : alert.value, duration : alert.duration, pause : true});
+            valueArray.push({value : alert.value, duration : trans_time, pause : false});
+            valueArray.push({value : alert.value, duration : alert.duration, pause : true});
         }
 
         // fill until endTime with wobble
         while (filled_time < endTime) {
             tmp = wobbleFunction()
             if (tmp === last_value) {
-                result.push({value : tmp, duration : trans_time + pause_time, pause : true});
+                valueArray.push({value : tmp, duration : trans_time + pause_time, pause : true});
             } else {
-                result.push({value : tmp, duration : trans_time, pause : false});
-                result.push({value : tmp, duration : pause_time, pause : true});
+                valueArray.push({value : tmp, duration : trans_time, pause : false});
+                valueArray.push({value : tmp, duration : pause_time, pause : true});
             }
             last_value = tmp
             filled_time += trans_time + pause_time;
         }
-        return result
+
+        // Step 2: Create Animation List
+        var listAnim = []
+
+        for (i = 0; i < valueArray.length; i++) {
+            var item = valueArray[i];
+            var obj;
+
+            if (item.pause === true) {
+                obj = createPauseAnimation(item.duration);
+            } else {
+                console.assert(item.duration >= 0, `!! ${targetProp}: ${item.value}`);
+                obj = createNumberAnimation(targetObj, targetProp, item.value, item.duration);
+            }
+            listAnim.push(obj)
+        }
+        return listAnim
+
     }
 
 
@@ -509,8 +502,8 @@ Item{
                     });
     }
 
-    function createSmoothAnimation(target, propName, to, durationSec) {
-        return compSmoothAnim.createObject(
+    function createNumberAnimation(target, propName, to, durationSec) {
+        return compNumberAnim.createObject(
                     dynamicContainer,
                     {
                         "target" : target,
