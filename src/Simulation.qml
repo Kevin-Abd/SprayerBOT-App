@@ -61,49 +61,27 @@ Item{
 
     function start() {
         console.log("[Sim]", `Start Sim`)
-        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}`)
-        console.log("[Sim]", `Progress ${progressAnim.duration}, ${progressAnim.loops}`)
-        console.log("[Sim]", `Progress ${progress}, ${progressAnim.from}, ${progressAnim.to}`)
-
         running = true;
         paused = false;
-
         parAnim.start();
         progressAnim.start();
-
-
-        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}`)
-        console.log("[Sim]", `Progress ${progressAnim.duration}, ${progressAnim.loops}`)
-        console.log("[Sim]", `Progress ${progress}, ${progressAnim.from}, ${progressAnim.to}`)
     }
 
     function resume() {
-        console.log("[Sim]", `Resume Sim (${running}, ${paused})`)
-        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
-        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
-
+        console.log("[Sim]", `Resume Sim`)
         running = true;
         paused = false;
         progressAnim.resume();
         parAnim.resume();
-
-
-        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
-        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
     }
 
     function pause() {
-        console.log("[Sim]", `Pause Sim (${running}, ${paused})`)
-        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
-        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
+        console.log("[Sim]", `Pause Sim`)
 
         running = true;
         paused = true;
         progressAnim.pause();
         parAnim.pause();
-
-        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
-        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
     }
 
     function stop() {
@@ -116,11 +94,8 @@ Item{
 
 
     function changeState() {
-        console.log("[Debug]", `Change state from ${state}, progress: ${progress}`)
-
-
         if(running == true && paused == false){
-            console.log("[Debug]", `Timer change state from ${state}`)
+            console.log("[Debug]", `Timer change state from ${state} (${progress})`)
 
             if (state == "warmup") state = "tutorial";
             else if (state == "tutorial") state = "experiments_1";
