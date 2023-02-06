@@ -30,14 +30,16 @@ Item{
 
     readonly property real warmupTime: 120;
     readonly property real tutorialTime: 60;
-    readonly property real experimentTime: 300;
+    readonly property real experimentPhase1Time: 115;
+    readonly property real experimentPhase2Time: 115;
 
     state : "warmup";
     states : [
-        State { name: "warmup";      PropertyChanges { target: valueSource;  timeInState: warmupTime; }},
-        State { name: "tutorial";    PropertyChanges { target: valueSource;  timeInState: tutorialTime; }},
-        State { name: "experiments"; PropertyChanges { target: valueSource;  timeInState: experimentTime; }},
-        State { name: "finished";    PropertyChanges { target: valueSource;  timeInState: 9000; }}
+        State { name: "warmup";        PropertyChanges { target: valueSource;  timeInState: warmupTime; }},
+        State { name: "tutorial";      PropertyChanges { target: valueSource;  timeInState: tutorialTime; }},
+        State { name: "experiments_1"; PropertyChanges { target: valueSource;  timeInState: experimentPhase1Time; }},
+        State { name: "experiments_2"; PropertyChanges { target: valueSource;  timeInState: experimentPhase2Time; }},
+        State { name: "finished";      PropertyChanges { target: valueSource;  timeInState: 9000; }}
     ]
 
     Timer {
@@ -68,14 +70,14 @@ Item{
 
     function changeState() {
         if (state == "warmup") state = "tutorial";
-        else if (state == "tutorial") state = "experiments";
-        else if (state == "experiments") state = "finished"
-
+        else if (state == "tutorial") state = "experiments_1";
+        else if (state == "experiments_1") state = "experiments_2"
+        else if (state == "experiments_2") state = "finished"
         stateTimer.start()
     }
 
     Component.onCompleted : {
-        var endTime = warmupTime + tutorialTime + experimentTime;
+        var endTime = warmupTime + tutorialTime + experimentPhase1Time + experimentPhase2Time;
 
         var tutorialAlerts = [
                     {"time" : 5,  "duration" : 5, "value" : "visual"},
@@ -92,9 +94,9 @@ Item{
         // Tank 1 alert zone: 0-6.25 (6.25-11.25 yellow)
         // Tank 2 alert zone: 0-1.25 (1.25-2.25 yellow)
 
+        // Value overrides in the begginings to sync values with the video
         var syncTime = - (warmupTime + tutorialTime + 1)
-        var experimentAlerts = [
-                    // Value overrides in the begginings to sync values with the video
+        var syncAlerts = [
                     {"type" : "speed",   "time" : syncTime, "duration" : 10, "value" : 0},
                     {"type" : "rpm",     "time" : syncTime, "duration" : 10, "value" : 0},
                     {"type" : "broom",   "time" : syncTime, "duration" : 15, "value" : 20},
@@ -108,110 +110,39 @@ Item{
                     {"type" : "nozzel4", "time" : syncTime, "duration" : 15, "value" : "off"},
                     {"type" : "nozzel5", "time" : syncTime, "duration" : 15, "value" : "off"},
                     {"type" : "nozzel6", "time" : syncTime, "duration" : 15, "value" : "off"},
+                ]
 
-                    // Values to cause alerts in the experiment phase
-                    // type: which value to change
-                    //          speed, rpm, broom, app1, app2, tank1, tank2, nozzel1 - nozzel6
-                    // time: the time for the value to take effect in the experiment phase (in seconds)
-                    // duration: the duration time when the value stays the same
-                    // value: the new value
-                    {"type" : "speed",   "time" : 2,   "duration" : 4, "value" : 2.5},
-                    {"type" : "speed",   "time" : 15,  "duration" : 5, "value" : 7},
-                    {"type" : "broom",   "time" : 25,  "duration" : 3, "value" : 29},
-                    {"type" : "broom",   "time" : 40,  "duration" : 5, "value" : 21},
-                    {"type" : "speed",   "time" : 60,  "duration" : 2, "value" : 6.2},
-                    {"type" : "tank2",   "time" : 75,  "duration" : 5, "value" : 1},
-                    {"type" : "nozzel1", "time" : 90,  "duration" : 7, "value" : "blocked"},
-                    {"type" : "nozzel4", "time" : 114, "duration" : 9, "value" : "blocked"},
-                    {"type" : "rpm",     "time" : 130, "duration" : 5, "value" : 7},
-                    {"type" : "tank1",   "time" : 150, "duration" : 5, "value" : 6},
+        // Values to cause alerts in the experiment phase
+        // type: which value to change
+        //          speed, rpm, broom, app1, app2, tank1, tank2, nozzel1 - nozzel6
+        // time: the time for the value to take effect in the experiment phase (in seconds)
+        // duration: the duration time when the value stays the same
+        // value: the new value
+        var experimentPhase1Alerts = [
+                    {"type" : "speed",   "time" : 20,  "duration" : 4, "value" : 2.5},
+                    {"type" : "speed",   "time" : 40,  "duration" : 5, "value" : 7},
+                    {"type" : "broom",   "time" : 65,  "duration" : 3, "value" : 29},
+                    {"type" : "broom",   "time" : 83,  "duration" : 5, "value" : 21},
+                    {"type" : "speed",   "time" : 102, "duration" : 2, "value" : 6.2},
+                ]
+
+        var experimentPhase2Alerts = [
+                    {"type" : "tank2",   "time" : 15, "duration" : 5, "value" : 1},
+                    {"type" : "nozzel1", "time" : 34, "duration" : 7, "value" : "blocked"},
+                    {"type" : "nozzel4", "time" : 49, "duration" : 9, "value" : "blocked"},
+                    {"type" : "rpm",     "time" : 72, "duration" : 5, "value" : 7},
+                    {"type" : "tank1",   "time" : 91, "duration" : 5, "value" : 6},
                 ];
 
+
+
+        // offset the start time Phase2 to after Phase 1
+        for (var i = 0; i < experimentPhase2Alerts.length; i++)
+            experimentPhase2Alerts[i].time += experimentPhase1Time;
+
+        var experimentAlerts = [...syncAlerts, ...experimentPhase1Alerts, ...experimentPhase2Alerts]
         setTutorialAlerts(tutorialAlerts, endTime)
         setExperimentAlerts(experimentAlerts, endTime)
-    }
-
-    QtObject{
-        id : dynamicContainer
-        // A dummy object to add new objects to
-    }
-
-    ParallelAnimation {
-        id: parAnim;
-
-        loops: 1;
-
-        SequentialAnimation{ id : speedAnim }
-        SequentialAnimation{ id : rpmAnim }
-        SequentialAnimation{ id : broomAnim }
-        SequentialAnimation{ id : tank1Anim }
-        SequentialAnimation{ id : tank2Anim }
-        SequentialAnimation{ id : appRate1Anim }
-        SequentialAnimation{ id : appRate2Anim }
-        SequentialAnimation{ id : nozzelAnim1 }
-        SequentialAnimation{ id : nozzelAnim2 }
-        SequentialAnimation{ id : nozzelAnim3 }
-        SequentialAnimation{ id : nozzelAnim4 }
-        SequentialAnimation{ id : nozzelAnim5 }
-        SequentialAnimation{ id : nozzelAnim6 }
-        SequentialAnimation{ id : tutorialAnim }
-
-
-        onRunningChanged: {
-            if (running == false) {
-                appRate1 = 0;
-                appRate2 = 0;
-                speed = 0;
-                rpm = 0;
-                broomHeight = 0;
-                tankLevel1 = 0;
-                tankLevel2 = 0;
-                nozzle1Status = "off";
-                nozzle2Status = "off";
-                nozzle3Status = "off";
-                nozzle4Status = "off";
-                nozzle5Status = "off";
-                nozzle6Status = "off";
-            } else {
-                nozzle1Status = "on";
-                nozzle2Status = "on";
-                nozzle3Status = "on";
-                nozzle4Status = "on";
-                nozzle5Status = "on";
-                nozzle6Status = "on";
-            }
-        }
-    }
-
-    Component {
-        id: compNumberAnim;
-
-        NumberAnimation {
-            // target: onj
-            // property: string
-            // to: value
-            // duration: int
-            alwaysRunToEnd: true;
-        }
-    }
-
-    Component {
-        id: comptPauseAnim;
-
-        PauseAnimation {
-            // duration: int
-            alwaysRunToEnd: true;
-        }
-    }
-
-    Component {
-        id:
-            comptPropAnim;
-        PropertyAnimation {
-            // target: valueSource
-            // property: "nozzle1Status"
-            // to: "on"
-        }
     }
 
     function setTutorialAlerts(tutorialAlerts, endTime) {
@@ -449,6 +380,7 @@ Item{
             filled_time += trans_time + alert.duration;
             valueArray.push({value : alert.value, duration : trans_time, pause : false});
             valueArray.push({value : alert.value, duration : alert.duration, pause : true});
+            last_value = alert.value
         }
 
         // fill until endTime with wobble
@@ -463,6 +395,7 @@ Item{
             last_value = tmp
             filled_time += trans_time + pause_time;
         }
+        //console.log(targetProp, SON.stringify(valueArray), "\n\n")
 
         // Step 2: Create Animation List
         var listAnim = []
@@ -549,5 +482,88 @@ Item{
     function wobbleAppRate2() {
         // wobble around 20
         return randomNum(17, 26, 1)
+    }
+
+    QtObject{
+        id : dynamicContainer
+        // A dummy object to add new objects to
+    }
+
+    ParallelAnimation {
+        id: parAnim;
+
+        loops: 1;
+
+        SequentialAnimation{ id : speedAnim }
+        SequentialAnimation{ id : rpmAnim }
+        SequentialAnimation{ id : broomAnim }
+        SequentialAnimation{ id : tank1Anim }
+        SequentialAnimation{ id : tank2Anim }
+        SequentialAnimation{ id : appRate1Anim }
+        SequentialAnimation{ id : appRate2Anim }
+        SequentialAnimation{ id : nozzelAnim1 }
+        SequentialAnimation{ id : nozzelAnim2 }
+        SequentialAnimation{ id : nozzelAnim3 }
+        SequentialAnimation{ id : nozzelAnim4 }
+        SequentialAnimation{ id : nozzelAnim5 }
+        SequentialAnimation{ id : nozzelAnim6 }
+        SequentialAnimation{ id : tutorialAnim }
+
+
+        onRunningChanged: {
+            if (running == false) {
+                appRate1 = 0;
+                appRate2 = 0;
+                speed = 0;
+                rpm = 0;
+                broomHeight = 0;
+                tankLevel1 = 0;
+                tankLevel2 = 0;
+                nozzle1Status = "off";
+                nozzle2Status = "off";
+                nozzle3Status = "off";
+                nozzle4Status = "off";
+                nozzle5Status = "off";
+                nozzle6Status = "off";
+            } else {
+                nozzle1Status = "on";
+                nozzle2Status = "on";
+                nozzle3Status = "on";
+                nozzle4Status = "on";
+                nozzle5Status = "on";
+                nozzle6Status = "on";
+            }
+        }
+    }
+
+    Component {
+        id: compNumberAnim;
+
+        NumberAnimation {
+            // target: onj
+            // property: string
+            // to: value
+            // duration: int
+            alwaysRunToEnd: true;
+        }
+    }
+
+    Component {
+        id: comptPauseAnim;
+
+        PauseAnimation {
+            // duration: int
+            alwaysRunToEnd: true;
+        }
+    }
+
+    Component {
+        id:
+            comptPropAnim;
+        PropertyAnimation {
+            // target: valueSource
+            // property: "nozzle1Status"
+            // to: "on"
+        }
     }
 }

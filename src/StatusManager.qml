@@ -57,7 +57,9 @@ QtObject{
             state = "warmup"
         else if (simState === "tutorial")
             state = "tutorial"
-        else if (simState === "experiments")
+        else if (simState === "experiments_1")
+            state = "experiments"
+        else if (simState === "experiments_2")
             state = "experiments"
         else if (simState === "finished")
             state = "finished"
