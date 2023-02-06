@@ -1,5 +1,6 @@
 import QtQuick 2.10
 import QtMultimedia 5.10
+import QtQuick.Dialogs 1.2
 import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.2
 import LiveVehicleData 1.0
@@ -131,6 +132,18 @@ ApplicationWindow {
         buttonAlertPerceived2: toolbar.buttonAlertPerceived2
     }
 
+    MessageDialog {
+        id: messageDialog
+        title: "Phase Finished"
+        text: "Phase Finished. Press OK to start next phase."
+        standardButtons: StandardButton.Ok
+        onAccepted: {
+            // console.log("log")
+            sim.resume()
+            videoLayout.play()
+        }
+    }
+
 
     Simulation {
         id: sim
@@ -147,8 +160,8 @@ ApplicationWindow {
             "low speed":  { code: "101",  message : "The machine is moving too slow!"},
             "high speed": { code: "102",  message : "The machine is moving too fast!"},
 
-            "high broom": { code: "111",  message : "The broom height is too high!"},
-            "low broom":  { code: "112",  message : "The broom height is too low!"},
+            "high broom": { code: "111",  message : "The boom height is too high!"},
+            "low broom":  { code: "112",  message : "The boom height is too low!"},
 
             "blocked nozzle 1": { code: "121",  message : "Nozzle 1 is blocked! Please check the sprayer!"},
             "blocked nozzle 2": { code: "122",  message : "Nozzle 2 is blocked! Please check the sprayer!"},
@@ -163,6 +176,30 @@ ApplicationWindow {
             "high rpm": { code: "142",  message : "The engine rpm is too high!"},
         }
 
+        onStateFinished: {
+            console.log("[Debug]", "Sim state finished. New state: " + state)
+
+            statusManager.updateState(state)
+            if(state === "experiments_1")
+            {
+                videoLayout.pause()
+                sim.pause()
+                messageDialog.open()
+            }
+            if(state === "experiments_2")
+            {
+                videoLayout.pause()
+                sim.pause()
+                messageDialog.open()
+            }
+            else if(state === "finished")
+            {
+                videoLayout.stop()
+                sim.stop()
+                notifications.setSpecial("end")
+            }
+        }
+
         onSpeedChanged: {
             graphicalDisplay.speed = speed
 
@@ -175,17 +212,6 @@ ApplicationWindow {
             } else {
                 notifications.removeWarning(list_alerts["low speed"])
                 notifications.removeWarning(list_alerts["high speed"])
-            }
-        }
-
-        onStateChanged: {
-            statusManager.updateState(state)
-
-            if(state === "finished")
-            {
-                videoLayout.stop()
-                sim.stop()
-                notifications.setSpecial("end")
             }
         }
 

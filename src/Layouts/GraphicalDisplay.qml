@@ -203,7 +203,7 @@ Item {
                                 Text {
                                     id: label
 
-                                    text: "Broom Height"
+                                    text: "Boom Height"
 
                                     color: "black"
                                     bottomPadding: 3.5
