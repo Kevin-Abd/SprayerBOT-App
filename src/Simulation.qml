@@ -25,8 +25,11 @@ Item{
 
     // special alert for tutorial
     property string tutorialAlert : "NA";
-
+    property bool running : false;
+    property bool paused : false;
     property real timeInState;
+    property real tprogress;
+    property real progress : 0;
 
     readonly property real warmupTime: 120;
     readonly property real tutorialTime: 60;
@@ -35,45 +38,104 @@ Item{
 
     state : "warmup";
     states : [
-        State { name: "warmup";        PropertyChanges { target: valueSource;  timeInState: warmupTime; }},
-        State { name: "tutorial";      PropertyChanges { target: valueSource;  timeInState: tutorialTime; }},
-        State { name: "experiments_1"; PropertyChanges { target: valueSource;  timeInState: experimentPhase1Time; }},
-        State { name: "experiments_2"; PropertyChanges { target: valueSource;  timeInState: experimentPhase2Time; }},
-        State { name: "finished";      PropertyChanges { target: valueSource;  timeInState: 9000; }}
+        State { name: "warmup";        PropertyChanges { target: valueSource;  timeInState: warmupTime;           tprogress: 1; }},
+        State { name: "tutorial";      PropertyChanges { target: valueSource;  timeInState: tutorialTime;         tprogress: 2; }},
+        State { name: "experiments_1"; PropertyChanges { target: valueSource;  timeInState: experimentPhase1Time; tprogress: 3; }},
+        State { name: "experiments_2"; PropertyChanges { target: valueSource;  timeInState: experimentPhase2Time; tprogress: 4; }},
+        State { name: "finished";      PropertyChanges { target: valueSource;  timeInState: 9000;                 tprogress: 5; }}
     ]
 
-    Timer {
-        id: stateTimer
-
-        interval: timeInState * 1000;
-        running: false;
-        repeat: false;
-        triggeredOnStart: false;
-        onTriggered : changeState()
+    NumberAnimation  {
+        id: progressAnim;
+        target: valueSource
+        property: "progress";
+        to: tprogress;
+        duration: timeInState * 1000;
+        onFinished: changeState();
+        alwaysRunToEnd: false;
+        easing.type: Easing.Linear;
     }
 
+    signal stateFinished(string state);
+
+
     function start() {
-        stateTimer.start()
-        parAnim.start()
+        console.log("[Sim]", `Start Sim`)
+        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}`)
+        console.log("[Sim]", `Progress ${progressAnim.duration}, ${progressAnim.loops}`)
+        console.log("[Sim]", `Progress ${progress}, ${progressAnim.from}, ${progressAnim.to}`)
+
+        running = true;
+        paused = false;
+
+        parAnim.start();
+        progressAnim.start();
+
+
+        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}`)
+        console.log("[Sim]", `Progress ${progressAnim.duration}, ${progressAnim.loops}`)
+        console.log("[Sim]", `Progress ${progress}, ${progressAnim.from}, ${progressAnim.to}`)
+    }
+
+    function resume() {
+        console.log("[Sim]", `Resume Sim (${running}, ${paused})`)
+        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
+        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
+
+        running = true;
+        paused = false;
+        progressAnim.resume();
+        parAnim.resume();
+
+
+        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
+        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
     }
 
     function pause() {
-        stateTimer.pause()
-        parAnim.pause()
+        console.log("[Sim]", `Pause Sim (${running}, ${paused})`)
+        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
+        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
+
+        running = true;
+        paused = true;
+        progressAnim.pause();
+        parAnim.pause();
+
+        console.log("[Sim]", `Progress ${progressAnim.running}, ${progressAnim.paused}, ${progress}`)
+        console.log("[Sim]", `Values   ${parAnim.running}, ${parAnim.paused}`)
     }
 
     function stop() {
-        stateTimer.stop()
-        parAnim.stop()
+        running = false;
+        paused = false;
+        console.log("[Sim]", `Stop Sim`)
+        progressAnim.stop();
+        parAnim.stop();
     }
 
 
     function changeState() {
-        if (state == "warmup") state = "tutorial";
-        else if (state == "tutorial") state = "experiments_1";
-        else if (state == "experiments_1") state = "experiments_2"
-        else if (state == "experiments_2") state = "finished"
-        stateTimer.start()
+        console.log("[Debug]", `Change state from ${state}, progress: ${progress}`)
+
+
+        if(running == true && paused == false){
+            console.log("[Debug]", `Timer change state from ${state}`)
+
+            if (state == "warmup") state = "tutorial";
+            else if (state == "tutorial") state = "experiments_1";
+            else if (state == "experiments_1") state = "experiments_2";
+            else if (state == "experiments_2") state = "finished";
+
+            progressAnim.start()
+            stateFinished(state);
+        }
+        else {
+            console.log("[Debug]", `Ignore time call with running: ${running} & paused: ${paused} (${progress})`)
+        }
+
+
+
     }
 
     Component.onCompleted : {
