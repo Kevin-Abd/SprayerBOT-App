@@ -45,12 +45,13 @@ Item{
         State { name: "finished";      PropertyChanges { target: valueSource;  timeInState: 9000;                 tprogress: 5; }}
     ]
 
-    NumberAnimation  {
+    SmoothedAnimation  {
         id: progressAnim;
         target: valueSource
         property: "progress";
         to: tprogress;
         duration: timeInState * 1000;
+        velocity: -1;
         onFinished: changeState();
         alwaysRunToEnd: false;
         easing.type: Easing.Linear;
@@ -60,7 +61,7 @@ Item{
 
 
     function start() {
-        console.log("[Sim]", `Start Sim`)
+        console.log("[Sim]", `Start Sim @ ${time()}`)
         running = true;
         paused = false;
         parAnim.start();
@@ -68,7 +69,7 @@ Item{
     }
 
     function resume() {
-        console.log("[Sim]", `Resume Sim`)
+        console.log("[Sim]", `Resume Sim @ ${time()}`)
         running = true;
         paused = false;
         progressAnim.resume();
@@ -76,7 +77,7 @@ Item{
     }
 
     function pause() {
-        console.log("[Sim]", `Pause Sim`)
+        console.log("[Sim]", `Pause Sim @ ${time()}`)
 
         running = true;
         paused = true;
@@ -87,15 +88,16 @@ Item{
     function stop() {
         running = false;
         paused = false;
-        console.log("[Sim]", `Stop Sim`)
+        console.log("[Sim]", `Stop Sim @ ${time()}`)
         progressAnim.stop();
         parAnim.stop();
     }
 
 
     function changeState() {
-        if(running == true && paused == false){
-            console.log("[Debug]", `Timer change state from ${state} (${progress})`)
+
+        if(running == true && paused == false){    
+            console.log("[Sim]", `Change state from ${state} (${progress}) @ ${time()}`)
 
             if (state == "warmup") state = "tutorial";
             else if (state == "tutorial") state = "experiments_1";
@@ -106,7 +108,7 @@ Item{
             stateFinished(state);
         }
         else {
-            console.log("[Debug]", `Ignore time call with running: ${running} & paused: ${paused} (${progress})`)
+            console.log("[Sim]", `Ignore time call with running: ${running} & paused: ${paused} (${progress})  @ ${time()}`)
         }
 
 
@@ -160,7 +162,7 @@ Item{
                     {"type" : "speed",   "time" : 40,  "duration" : 5, "value" : 7},
                     {"type" : "broom",   "time" : 65,  "duration" : 3, "value" : 29},
                     {"type" : "broom",   "time" : 83,  "duration" : 5, "value" : 21},
-                    {"type" : "speed",   "time" : 102, "duration" : 2, "value" : 6.2},
+                    {"type" : "speed",   "time" : 95,  "duration" : 4, "value" : 6.2},
                 ]
 
         var experimentPhase2Alerts = [
@@ -481,6 +483,12 @@ Item{
                         "to" : to,
                         "duration" : durationSec * 1000
                     });
+    }
+
+    function time() {
+        return new Date().toLocaleTimeString();
+        // var t = new Date();
+        // return `${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}`
     }
 
     function randomNum(min, max, div) {
