@@ -56,8 +56,7 @@ Item {
         Text {
             id: debugText
 
-            // Layout.preferredHeight: 0
-            // Layout.preferredWidth: 1
+            Layout.preferredWidth: 120
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
             text: sim.state
