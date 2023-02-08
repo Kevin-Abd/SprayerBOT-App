@@ -33,8 +33,8 @@ Item{
 
     readonly property real warmupTime: 120;
     readonly property real tutorialTime: 60;
-    readonly property real experimentPhase1Time: 115;
-    readonly property real experimentPhase2Time: 115;
+    readonly property real experimentPhase1Time: 250;
+    readonly property real experimentPhase2Time: 250;
 
     state : "warmup";
     states : [
@@ -160,18 +160,17 @@ Item{
         var experimentPhase1Alerts = [
                     {"type" : "speed",   "time" : 20,  "duration" : 4, "value" : 2.5},
                     {"type" : "speed",   "time" : 40,  "duration" : 5, "value" : 7},
-                    {"type" : "broom",   "time" : 65,  "duration" : 3, "value" : 29},
-                    {"type" : "broom",   "time" : 83,  "duration" : 5, "value" : 21},
-                    {"type" : "speed",   "time" : 95,  "duration" : 4, "value" : 6.2},
+                    {"type" : "broom",   "time" : 60,  "duration" : 3, "value" : 29},
+                    {"type" : "broom",   "time" : 80,  "duration" : 5, "value" : 21},
+                    {"type" : "speed",   "time" : 100, "duration" : 4, "value" : 6.2},
+                    {"type" : "tank2",   "time" : 120, "duration" : 5, "value" : 1},
+                    {"type" : "nozzel1", "time" : 140, "duration" : 7, "value" : "blocked"},
+                    {"type" : "nozzel4", "time" : 160, "duration" : 9, "value" : "blocked"},
+                    {"type" : "rpm",     "time" : 180, "duration" : 5, "value" : 7},
+                    {"type" : "tank1",   "time" : 200, "duration" : 5, "value" : 6},
                 ]
 
-        var experimentPhase2Alerts = [
-                    {"type" : "tank2",   "time" : 15, "duration" : 5, "value" : 1},
-                    {"type" : "nozzel1", "time" : 34, "duration" : 7, "value" : "blocked"},
-                    {"type" : "nozzel4", "time" : 49, "duration" : 9, "value" : "blocked"},
-                    {"type" : "rpm",     "time" : 72, "duration" : 5, "value" : 7},
-                    {"type" : "tank1",   "time" : 91, "duration" : 5, "value" : 6},
-                ];
+        var experimentPhase2Alerts = experimentPhase1Alerts.slice()
 
 
 
