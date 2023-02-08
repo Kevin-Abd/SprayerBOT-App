@@ -45,12 +45,13 @@ Item{
         State { name: "finished";      PropertyChanges { target: valueSource;  timeInState: 9000;                 tprogress: 5; }}
     ]
 
-    NumberAnimation  {
+    SmoothedAnimation  {
         id: progressAnim;
         target: valueSource
         property: "progress";
         to: tprogress;
         duration: timeInState * 1000;
+        velocity: -1;
         onFinished: changeState();
         alwaysRunToEnd: false;
         easing.type: Easing.Linear;
@@ -107,7 +108,7 @@ Item{
             stateFinished(state);
         }
         else {
-            console.log("[Sim]", `Ignore time call with running: ${running} & paused: ${paused} (${progress})  @ ${time}`)
+            console.log("[Sim]", `Ignore time call with running: ${running} & paused: ${paused} (${progress})  @ ${time()}`)
         }
 
 
@@ -161,7 +162,7 @@ Item{
                     {"type" : "speed",   "time" : 40,  "duration" : 5, "value" : 7},
                     {"type" : "broom",   "time" : 65,  "duration" : 3, "value" : 29},
                     {"type" : "broom",   "time" : 83,  "duration" : 5, "value" : 21},
-                    {"type" : "speed",   "time" : 102, "duration" : 2, "value" : 6.2},
+                    {"type" : "speed",   "time" : 95,  "duration" : 4, "value" : 6.2},
                 ]
 
         var experimentPhase2Alerts = [
