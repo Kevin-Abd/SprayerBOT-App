@@ -170,15 +170,17 @@ Item{
                     {"type" : "tank1",   "time" : 200, "duration" : 5, "value" : 6},
                 ]
 
-        var experimentPhase2Alerts = experimentPhase1Alerts.slice()
-
-
+//        var experimentPhase2Alerts = experimentPhase1Alerts.slice()
+        var experimentPhase2Alerts = JSON.parse(JSON.stringify(experimentPhase1Alerts))
+//        console.log("P1\\n" + JSON.stringify(experimentPhase1Alerts) + "\n\n")
+//        console.log("P2\\n" + JSON.stringify(experimentPhase2Alerts) + "\n\n")
 
         // offset the start time Phase2 to after Phase 1
         for (var i = 0; i < experimentPhase2Alerts.length; i++)
             experimentPhase2Alerts[i].time += experimentPhase1Time;
-
+//        console.log("P3\\n" + JSON.stringify(experimentPhase2Alerts) + "\n\n")
         var experimentAlerts = [...syncAlerts, ...experimentPhase1Alerts, ...experimentPhase2Alerts]
+//        console.log("P\n" + JSON.stringify(experimentAlerts) + "\n\n")
         setTutorialAlerts(tutorialAlerts, endTime)
         setExperimentAlerts(experimentAlerts, endTime)
     }
@@ -312,6 +314,7 @@ Item{
             values.push({value : fillValue, duration : endTime-filled_time, pause : true});
             filled_time = endTime;
         }
+//        console.log("TANK \n" + JSON.stringify(values) + "\n\n")
 
         // Step 2: Create Animation List
         var listAnim = [];
