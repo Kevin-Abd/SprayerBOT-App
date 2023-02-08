@@ -138,9 +138,15 @@ ApplicationWindow {
         text: "Phase Finished. Press OK to start next phase."
         standardButtons: StandardButton.Ok
         onAccepted: {
-            // console.log("log")
-            sim.resume()
-            videoLayout.play()
+            sim.resume();
+            videoLayout.play();
+        }
+
+        onVisibilityChanged: {
+            if (!messageDialog.visible){
+                sim.resume();
+                videoLayout.play();
+            }
         }
     }
 
