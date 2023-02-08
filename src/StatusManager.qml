@@ -96,7 +96,7 @@ QtObject{
          * Function to handle new status
          * It is responsible for trigggering warning displays and feedback
          */
-        console.debug("[Debug]", `${state}: (${newAlert.status}, ${newAlert.code}) at ${Date.now()}`)
+        console.debug("[Status]", `(${newAlert.status}, ${newAlert.code}) @ ${time()} @ ${state}`)
 
         if (state === "warmup")
             processForWarmup(newAlert)
@@ -143,7 +143,7 @@ QtObject{
             phidgetFeedback.deactivate()
         }
         else
-            console.debug("[Debug]", `Unexpected alert in warmup: (Code: ${newAlert.code}, Status: ${newAlert.status}) `)
+            console.debug("[Debug]", `Unexpected alert in warmup: (${newAlert.status}, ${newAlert.code})`)
     }
 
     function processForTutorial(newAlert){
@@ -254,6 +254,12 @@ QtObject{
         lastAlert.message = newAlert.message
         lastAlert.status = "nominal"
 
+    }
+
+    function time() {
+        return new Date().toLocaleTimeString();
+        // var t = new Date();
+        // return `${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}`
     }
 
 }
