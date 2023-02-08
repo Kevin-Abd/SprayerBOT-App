@@ -60,7 +60,7 @@ Item{
 
 
     function start() {
-        console.log("[Sim]", `Start Sim`)
+        console.log("[Sim]", `Start Sim @ ${time()}`)
         running = true;
         paused = false;
         parAnim.start();
@@ -68,7 +68,7 @@ Item{
     }
 
     function resume() {
-        console.log("[Sim]", `Resume Sim`)
+        console.log("[Sim]", `Resume Sim @ ${time()}`)
         running = true;
         paused = false;
         progressAnim.resume();
@@ -76,7 +76,7 @@ Item{
     }
 
     function pause() {
-        console.log("[Sim]", `Pause Sim`)
+        console.log("[Sim]", `Pause Sim @ ${time()}`)
 
         running = true;
         paused = true;
@@ -87,15 +87,16 @@ Item{
     function stop() {
         running = false;
         paused = false;
-        console.log("[Sim]", `Stop Sim`)
+        console.log("[Sim]", `Stop Sim @ ${time()}`)
         progressAnim.stop();
         parAnim.stop();
     }
 
 
     function changeState() {
-        if(running == true && paused == false){
-            console.log("[Debug]", `Timer change state from ${state} (${progress})`)
+
+        if(running == true && paused == false){    
+            console.log("[Sim]", `Change state from ${state} (${progress}) @ ${time()}`)
 
             if (state == "warmup") state = "tutorial";
             else if (state == "tutorial") state = "experiments_1";
@@ -106,7 +107,7 @@ Item{
             stateFinished(state);
         }
         else {
-            console.log("[Debug]", `Ignore time call with running: ${running} & paused: ${paused} (${progress})`)
+            console.log("[Sim]", `Ignore time call with running: ${running} & paused: ${paused} (${progress})  @ ${time}`)
         }
 
 
@@ -481,6 +482,12 @@ Item{
                         "to" : to,
                         "duration" : durationSec * 1000
                     });
+    }
+
+    function time() {
+        return new Date().toLocaleTimeString();
+        // var t = new Date();
+        // return `${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}`
     }
 
     function randomNum(min, max, div) {
